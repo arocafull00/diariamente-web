@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next"
 
 import { Background } from "@/components/background";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
@@ -85,6 +86,7 @@ export default function RootLayout({
           </div>
           <Toaster richColors position="top-center" />
           <ServiceWorkerRegister />
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
