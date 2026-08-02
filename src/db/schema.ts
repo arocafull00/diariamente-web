@@ -1,0 +1,169 @@
+import {
+  boolean,
+  jsonb,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+export const userRoleEnum = pgEnum("user_role", [
+  "patient",
+  "psychologist",
+  "admin",
+]);
+
+export const emotionIntensityEnum = pgEnum("emotion_intensity", [
+  "LOW",
+  "MEDIUM",
+  "HIGH",
+]);
+
+export const reminderFrequencyEnum = pgEnum("reminder_frequency", [
+  "daily",
+  "weekly",
+]);
+
+export type RecordEmotion = {
+  emotion: string;
+  intensity: number;
+};
+
+export const profiles = pgTable("profiles", {
+  id: text("id").primaryKey(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  role: userRoleEnum("role"),
+  avatarUrl: text("avatar_url"),
+  onboardingCompleted: boolean("onboarding_completed")
+    .default(false)
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const patientRecords = pgTable("patient_records", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  patientId: text("patient_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
+  situation: text("situation").notNull(),
+  thoughts: text("thoughts").notNull(),
+  behaviours: text("behaviours").notNull(),
+  emotions: jsonb("emotions").$type<RecordEmotion[]>().notNull(),
+  emotionIntensity: emotionIntensityEnum("emotion_intensity").notNull(),
+  seenAt: timestamp("seen_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const psychologistPatient = pgTable(
+  "psychologist_patient",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    psychologistId: text("psychologist_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    patientId: text("patient_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    linkedAt: timestamp("linked_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [unique("psychologist_patient_patient_id_unique").on(table.patientId)],
+);
+
+export const invitations = pgTable("invitations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  code: text("code").notNull().unique(),
+  psychologistId: text("psychologist_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  patientId: text("patient_id").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  usedAt: timestamp("used_at", { withTimezone: true }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const customEmotions = pgTable(
+  "custom_emotions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [unique("custom_emotions_user_name_unique").on(table.userId, table.name)],
+);
+
+export const userReminders = pgTable("user_reminders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  enabled: boolean("enabled").default(false).notNull(),
+  frequency: reminderFrequencyEnum("frequency").default("daily").notNull(),
+  time: text("time").default("20:00").notNull(),
+  days: text("days").array().default([]).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  endpoint: text("endpoint").notNull().unique(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const auditEvents = pgTable("audit_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  actorId: text("actor_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  action: text("action").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id"),
+  metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export type Profile = typeof profiles.$inferSelect;
+export type PatientRecord = typeof patientRecords.$inferSelect;
+export type Invitation = typeof invitations.$inferSelect;
+export type UserRole = (typeof userRoleEnum.enumValues)[number];
+export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];

@@ -1,10 +1,28 @@
-import Image from "next/image";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-      </main>
-    </div>
-  );
+import { getCurrentProfile } from "@/server/auth/get-current-profile";
+
+export default async function HomePage() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    redirect("/login");
+  }
+
+  const profile = await getCurrentProfile();
+
+  if (!profile || !profile.onboardingCompleted || !profile.role) {
+    redirect("/onboarding");
+  }
+
+  if (profile.role === "patient") {
+    redirect("/inicio");
+  }
+
+  if (profile.role === "psychologist") {
+    redirect("/pacientes");
+  }
+
+  redirect("/onboarding");
 }
