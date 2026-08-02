@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { ConnectionRequestItem } from "./connection-request-item";
 
 type ConnectionRequest = {
@@ -19,11 +17,9 @@ export function ConnectionRequestsList({ requests }: ConnectionRequestsListProps
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Solicitudes de conexión</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
+    <div className="space-y-2">
+      <h3 className="font-medium">Solicitudes de conexión</h3>
+      <div className="space-y-2">
         {requests.map((request) => (
           <ConnectionRequestItem
             key={request.id}
@@ -33,7 +29,7 @@ export function ConnectionRequestsList({ requests }: ConnectionRequestsListProps
             avatarUrl={request.avatarUrl}
           />
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

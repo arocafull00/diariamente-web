@@ -16,7 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { unlinkPatient } from "@/server/actions/invitations";
 
 type PatientUnlinkButtonProps = {
@@ -51,16 +52,13 @@ export function PatientUnlinkButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger
-        render={
-          layout === "header" ? (
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden shrink-0 shadow-sm sm:inline-flex"
-            />
-          ) : (
-            <Button variant="destructive" className="w-full sm:hidden" />
-          )
+        className={
+          layout === "header"
+            ? cn(
+                buttonVariants({ variant: "destructive", size: "sm" }),
+                "hidden shrink-0 shadow-xs sm:inline-flex",
+              )
+            : cn(buttonVariants({ variant: "destructive" }), "w-full sm:hidden")
         }
       >
         {layout === "header" ? null : (

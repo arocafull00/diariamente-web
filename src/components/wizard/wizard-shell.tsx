@@ -33,7 +33,12 @@ export function WizardShell({
   error,
 }: WizardShellProps) {
   return (
-    <div className={cn("flex w-full flex-1 flex-col", className)}>
+    <div
+      className={cn(
+        "flex w-full flex-1 flex-col lg:mx-auto lg:my-auto lg:max-w-xl! lg:flex-none!",
+        className,
+      )}
+    >
       {header}
 
       <div className="pt-7 sm:pt-9">

@@ -1,6 +1,7 @@
 import { BookOpenText } from "lucide-react";
 
 import { AppHeader } from "@/components/app-shell/app-header";
+import { NewRecordHeaderButton } from "@/components/app-shell/new-record-header-button";
 import { RecordCard } from "@/components/records/record-card";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { getPatientRecords } from "@/server/queries";
@@ -11,7 +12,7 @@ export default async function MyRecordsPage() {
 
   return (
     <>
-      <AppHeader title="Mis registros" />
+      <AppHeader title="Mis registros" action={<NewRecordHeaderButton />} />
       <div className="space-y-4">
         {records.length === 0 ? (
           <section className="rounded-xl bg-secondary p-6 text-center shadow-sm">
@@ -29,7 +30,7 @@ export default async function MyRecordsPage() {
             <p className="px-1 text-sm font-medium text-muted-foreground">
               {records.length} {records.length === 1 ? "registro" : "registros"}
             </p>
-            <div className="space-y-3">
+            <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
               {records.map((record) => (
                 <RecordCard
                   key={record.id}

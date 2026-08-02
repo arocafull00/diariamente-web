@@ -12,7 +12,6 @@ const NETWORK_ONLY_PREFIXES = [
   "/mis-registros",
   "/nuevo-registro",
   "/ajustes",
-  "/invitacion",
 ];
 
 function isNetworkOnly(pathname) {

@@ -80,7 +80,7 @@ Cada consulta y mutación debe incluir filtros de autorización en el servidor. 
 /login, /registro, /recuperar-password
 /onboarding
 /inicio, /nuevo-registro, /mis-registros          → paciente
-/pacientes, /pacientes/[patientId], /invitacion   → psicólogo
+/pacientes, /pacientes/[patientId]   → psicólogo
 /perfil, /ajustes, /registro/[recordId]           → según rol y vínculo
 /offline
 /api/webhooks/clerk, /api/push/subscribe, /api/cron/reminders

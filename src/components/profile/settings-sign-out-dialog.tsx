@@ -17,7 +17,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function SettingsSignOutDialog() {
+type SettingsSignOutDialogProps = {
+  variant?: "button" | "icon";
+};
+
+export function SettingsSignOutDialog({
+  variant = "button",
+}: SettingsSignOutDialogProps) {
   const { signOut } = useClerk();
   const [pending, setPending] = useState(false);
 
@@ -31,16 +37,28 @@ export function SettingsSignOutDialog() {
     }
   }
 
+  const trigger =
+    variant === "icon" ? (
+      <AlertDialogTrigger
+        aria-label="Cerrar sesión"
+        render={<Button variant="ghost" size="icon" />}
+      >
+        <LogOut aria-hidden="true" />
+      </AlertDialogTrigger>
+    ) : (
+      <AlertDialogTrigger
+        className="w-full"
+        render={<Button variant="secondary" />}
+      >
+        <LogOut data-icon="inline-start" aria-hidden="true" />
+        Cerrar sesión
+      </AlertDialogTrigger>
+    );
+
   return (
-    <div className="w-full">
+    <div className={variant === "icon" ? undefined : "w-full"}>
       <AlertDialog>
-        <AlertDialogTrigger
-          className="w-full"
-          render={<Button variant="secondary" />}
-        >
-          <LogOut data-icon="inline-start" aria-hidden="true" />
-          Cerrar sesión
-        </AlertDialogTrigger>
+        {trigger}
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>¿Cerrar sesión?</AlertDialogTitle>
@@ -52,7 +70,11 @@ export function SettingsSignOutDialog() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction disabled={pending} onClick={handleSignOut}>
               {pending ? (
-                <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
+                <LoaderCircle
+                  className="animate-spin"
+                  data-icon="inline-start"
+                  aria-hidden="true"
+                />
               ) : (
                 <LogOut data-icon="inline-start" aria-hidden="true" />
               )}

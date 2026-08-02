@@ -16,7 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { unlinkFromPsychologist } from "@/server/actions/invitations";
 
 export function ProfileUnlinkPsychologistButton() {
@@ -39,7 +40,12 @@ export function ProfileUnlinkPsychologistButton() {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger render={<Button variant="outline" size="sm" />}>
+      <AlertDialogTrigger
+        className={cn(
+          buttonVariants({ variant: "destructive", size: "sm" }),
+          "shadow-xs",
+        )}
+      >
         Desvincular
       </AlertDialogTrigger>
       <AlertDialogContent>

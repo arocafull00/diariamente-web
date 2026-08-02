@@ -19,7 +19,7 @@ export function PsychologistProfile({
   patientCount,
 }: PsychologistProfileProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start lg:gap-6 lg:space-y-0">
       <ProfileHeader
         firstName={firstName}
         lastName={lastName}
@@ -28,7 +28,9 @@ export function PsychologistProfile({
         imageUrl={imageUrl}
         memberSince={memberSince}
       />
-      <ProfilePatientsSummaryCard patientCount={patientCount} />
+      <div className="space-y-4">
+        <ProfilePatientsSummaryCard patientCount={patientCount} />
+      </div>
     </div>
   );
 }

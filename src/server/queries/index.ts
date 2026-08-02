@@ -106,15 +106,16 @@ export async function getPatientPsychologist(patientId: string) {
   return relationship ?? null;
 }
 
-export async function getLatestPatientRecord(patientId: string) {
-  const [record] = await db
+export async function getRecentPatientRecords(
+  patientId: string,
+  limit: number,
+) {
+  return db
     .select()
     .from(patientRecords)
     .where(eq(patientRecords.patientId, patientId))
     .orderBy(desc(patientRecords.occurredAt))
-    .limit(1);
-
-  return record ?? null;
+    .limit(limit);
 }
 
 export async function getPatientRecordCount(patientId: string) {

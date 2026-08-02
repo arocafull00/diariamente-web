@@ -34,7 +34,7 @@ export function PatientDetailHeader({
         aria-hidden="true"
       />
 
-      <div className="relative flex w-full items-center gap-4 px-5 py-5 sm:px-6">
+      <div className="relative mx-auto flex w-full max-w-7xl items-center gap-4 px-5 py-5 sm:px-6 lg:px-8">
         <AppHeaderBackButton />
 
         <Avatar className="size-12 shrink-0 rounded-2xl after:rounded-2xl">

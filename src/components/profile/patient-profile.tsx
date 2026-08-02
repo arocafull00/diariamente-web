@@ -38,7 +38,7 @@ export function PatientProfile({
   pendingRequest,
 }: PatientProfileProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start lg:gap-6 lg:space-y-0">
       <ProfileHeader
         firstName={firstName}
         lastName={lastName}
@@ -47,16 +47,18 @@ export function PatientProfile({
         imageUrl={imageUrl}
         memberSince={memberSince}
       />
-      {psychologist ? (
-        <ProfileAssignedPsychologistCard
-          firstName={psychologist.firstName}
-          lastName={psychologist.lastName}
-          avatarUrl={psychologist.avatarUrl}
-        />
-      ) : (
-        <ProfileLinkPsychologistCard pendingRequest={pendingRequest} />
-      )}
-      <ProfileRecordsSummaryCard recordCount={recordCount} />
+      <div className="space-y-4">
+        {psychologist ? (
+          <ProfileAssignedPsychologistCard
+            firstName={psychologist.firstName}
+            lastName={psychologist.lastName}
+            avatarUrl={psychologist.avatarUrl}
+          />
+        ) : (
+          <ProfileLinkPsychologistCard pendingRequest={pendingRequest} />
+        )}
+        <ProfileRecordsSummaryCard recordCount={recordCount} />
+      </div>
     </div>
   );
 }

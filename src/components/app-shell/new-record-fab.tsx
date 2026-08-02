@@ -16,7 +16,7 @@ export function NewRecordFab() {
   }
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-20 z-50 pb-[env(safe-area-inset-bottom)]">
+    <div className="pointer-events-none fixed inset-x-0 bottom-20 z-50 pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="mx-auto flex max-w-lg justify-end px-4">
         <Link
           href="/nuevo-registro"

@@ -49,6 +49,8 @@
   --color-intensity-high-foreground: #991b1b;
   --color-intensity-high-accent: #ef4444;
   --color-brand-secondary-light: #e8dfff;
+  --color-brand-primary-dark: var(--brand-primary-dark);
+  --color-brand-primary-light: var(--brand-primary-light);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -91,6 +93,8 @@
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #e0e0e0;
   --sidebar-ring: #7c3aed;
+  --brand-primary-dark: #6d28d9;
+  --brand-primary-light: #8b5cf6;
 }
 
 @layer base {
@@ -102,5 +106,8 @@
   }
   html {
     @apply font-sans;
+  }
+  button:not(:disabled) {
+    @apply cursor-pointer;
   }
 }

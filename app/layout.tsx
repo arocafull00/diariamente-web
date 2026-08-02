@@ -49,10 +49,7 @@ export const metadata: Metadata = {
     title: "DiariaMente",
   },
   icons: {
-    icon: [
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
+    icon: "/icon-192x192.png",
     apple: "/apple-touch-icon.png",
   },
 };
@@ -70,16 +67,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html
-        lang="es"
-        className={`${quicksand.variable} h-full antialiased`}
+    <html
+      lang="es"
+      className={`${quicksand.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body
+        className="relative min-h-full flex flex-col"
         suppressHydrationWarning
       >
-        <body
-          className="relative min-h-full flex flex-col"
-          suppressHydrationWarning
-        >
+        <ClerkProvider>
           <Background />
           <div className="relative z-10 flex min-h-full flex-1 flex-col">
             {children}
@@ -87,8 +84,8 @@ export default function RootLayout({
           <Toaster richColors position="top-center" />
           <ServiceWorkerRegister />
           <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

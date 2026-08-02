@@ -66,7 +66,7 @@ export function RecordDetail({ profile, record }: RecordDetailProps) {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 lg:mx-auto lg:w-full lg:max-w-3xl">
       <RecordSummary
         occurredAt={record.occurredAt}
         intensity={record.emotionIntensity}

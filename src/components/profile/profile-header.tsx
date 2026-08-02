@@ -30,7 +30,7 @@ export function ProfileHeader({
   const resolvedAvatarUrl = avatarUrl ?? imageUrl ?? null;
 
   return (
-    <header className="flex flex-col items-center gap-3 pt-2 pb-6 text-center">
+    <header className="flex flex-col items-center gap-3 pt-2 pb-6 text-center lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-6">
       <div className="relative">
         <Avatar className="size-24 text-lg">
           {resolvedAvatarUrl ? (

@@ -42,7 +42,7 @@ export async function generateInviteLink(): Promise<ActionResult> {
     entityId: profile.id,
   });
 
-  revalidatePath("/invitacion");
+  revalidatePath("/pacientes");
 
   return { success: true };
 }
@@ -98,7 +98,7 @@ export async function requestConnection(): Promise<ActionResult> {
       topic: "connection_request",
       title: "Nueva solicitud de conexión",
       body: "Tienes una solicitud pendiente de revisar.",
-      url: "/invitacion",
+      url: "/pacientes",
     }),
   );
 
@@ -202,7 +202,6 @@ export async function acceptConnectionRequest(
     }),
   );
 
-  revalidatePath("/invitacion");
   revalidatePath("/pacientes");
 
   return { success: true };
@@ -245,7 +244,7 @@ export async function rejectConnectionRequest(
     }),
   );
 
-  revalidatePath("/invitacion");
+  revalidatePath("/pacientes");
 
   return { success: true };
 }

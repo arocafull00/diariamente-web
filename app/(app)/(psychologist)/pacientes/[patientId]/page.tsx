@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { PatientDetailHeader } from "@/components/patients/patient-detail-header";
 import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
 import { RecordCard } from "@/components/records/record-card";
@@ -42,7 +40,7 @@ export default async function PatientDetailPage({
             Este paciente aún no tiene registros.
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
             {records.map((record) => (
               <RecordCard
                 key={record.id}
@@ -59,13 +57,6 @@ export default async function PatientDetailPage({
           patientName={patientName}
           layout="footer"
         />
-
-        <Link
-          href="/pacientes"
-          className="block text-center text-sm font-medium text-primary"
-        >
-          Volver a pacientes
-        </Link>
       </div>
     </>
   );
