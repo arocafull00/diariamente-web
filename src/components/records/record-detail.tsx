@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 import { RecordDetailField } from "@/components/records/record-detail-field";
 import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
-import { RecordNoteSection } from "@/components/records/record-note-section";
+import { RecordNotePanel } from "@/components/records/record-note-panel";
 import { RecordSummary } from "@/components/records/record-summary";
 import { Button } from "@/components/ui/button";
 import type { PatientRecord, Profile, RecordNote } from "@/db/schema";
@@ -67,8 +67,10 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
     });
   }
 
-  return (
-    <div className="space-y-5 lg:mx-auto lg:w-full lg:max-w-3xl">
+  const showNotePanel = isPsychologist && note;
+
+  const recordContent = (
+    <>
       <RecordSummary
         occurredAt={record.occurredAt}
         intensity={record.emotionIntensity}
@@ -103,10 +105,6 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
 
       <RecordEmotionsSection emotions={record.emotions} />
 
-      {isPsychologist ? (
-        <RecordNoteSection recordId={record.id} note={note} />
-      ) : null}
-
       {isPatient && (hasChanges || pending) ? (
         <Button
           size="lg"
@@ -126,6 +124,23 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
           {pending ? "Guardando..." : "Guardar cambios"}
         </Button>
       ) : null}
+    </>
+  );
+
+  if (showNotePanel) {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
+          <div className="min-w-0 space-y-5">{recordContent}</div>
+          <RecordNotePanel note={note} />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full space-y-5 lg:mx-auto lg:max-w-3xl">
+      {recordContent}
     </div>
   );
 }

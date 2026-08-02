@@ -28,11 +28,11 @@ export function RecordCard({ record, href, showUnseen, hasNote }: RecordCardProp
   return (
     <Link
       href={href}
-      className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="group block h-full rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      <Card className="gap-0 py-0 shadow-sm ring-0 transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md group-active:translate-y-0 motion-reduce:transform-none">
-        <div className={cn("h-1 w-full", intensityStyles.accent)} />
-        <CardContent className="space-y-4 p-4 sm:p-5">
+      <Card className="h-full gap-0 py-0 shadow-sm ring-0 transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md group-active:translate-y-0 motion-reduce:transform-none">
+        <div className={cn("h-1 w-full shrink-0", intensityStyles.accent)} />
+        <CardContent className="flex flex-1 flex-col space-y-4 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
@@ -57,11 +57,11 @@ export function RecordCard({ record, href, showUnseen, hasNote }: RecordCardProp
             </div>
           </div>
 
-          <p className="line-clamp-3 text-[0.95rem] leading-6 font-semibold text-pretty sm:text-base">
+          <p className="line-clamp-3 min-h-18 flex-1 text-[0.95rem] leading-6 font-semibold text-pretty sm:text-base">
             {record.situation}
           </p>
 
-          <div className="flex items-center justify-between gap-3">
+          <div className="mt-auto flex items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               {dominantEmotion && emotionColor ? (
                 <span

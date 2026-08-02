@@ -22,9 +22,15 @@ import { deleteRecordNote } from "@/server/actions/record-notes";
 
 type RecordNoteDeleteDialogProps = {
   recordId: string;
+  onDeleted?: () => void;
+  className?: string;
 };
 
-export function RecordNoteDeleteDialog({ recordId }: RecordNoteDeleteDialogProps) {
+export function RecordNoteDeleteDialog({
+  recordId,
+  onDeleted,
+  className,
+}: RecordNoteDeleteDialogProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -38,6 +44,7 @@ export function RecordNoteDeleteDialog({ recordId }: RecordNoteDeleteDialogProps
       }
 
       toast.success("Nota eliminada");
+      onDeleted?.();
       router.refresh();
     });
   }
@@ -45,7 +52,10 @@ export function RecordNoteDeleteDialog({ recordId }: RecordNoteDeleteDialogProps
   return (
     <AlertDialog>
       <AlertDialogTrigger
-        className={cn(buttonVariants({ variant: "destructive", size: "sm" }))}
+        className={cn(
+          buttonVariants({ variant: "destructive" }),
+          className,
+        )}
       >
         <Trash2 data-icon="inline-start" aria-hidden="true" />
         Eliminar

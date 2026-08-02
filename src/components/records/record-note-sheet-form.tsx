@@ -2,46 +2,36 @@
 
 import { LoaderCircle, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { RecordNoteDeleteDialog } from "@/components/records/record-note-delete-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { upsertRecordNote } from "@/server/actions/record-notes";
 
-type RecordNoteDialogProps = {
+type RecordNoteSheetFormProps = {
   recordId: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   initialContent: string;
+  isEditing: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function RecordNoteDialog({
+export function RecordNoteSheetForm({
   recordId,
-  open,
-  onOpenChange,
   initialContent,
-}: RecordNoteDialogProps) {
+  isEditing,
+  onOpenChange,
+}: RecordNoteSheetFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [content, setContent] = useState(initialContent);
-  const isEditing = initialContent.length > 0;
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    setContent(initialContent);
-  }, [open, initialContent]);
 
   function handleSave() {
     startTransition(async () => {
@@ -59,32 +49,49 @@ export function RecordNoteDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? "Editar nota" : "Añadir nota"}</DialogTitle>
-          <DialogDescription>
-            Esta nota es privada. Solo tú puedes verla; el paciente no tiene
-            acceso a ella.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <SheetHeader>
+        <SheetTitle>{isEditing ? "Editar nota" : "Añadir nota"}</SheetTitle>
+        <SheetDescription>
+          Esta nota es privada. Solo tú puedes verla; el paciente no tiene
+          acceso a ella.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="flex min-h-0 flex-1 flex-col gap-4 px-4">
         <Textarea
           value={content}
           onChange={(event) => setContent(event.target.value)}
           placeholder="Escribe tu nota clínica..."
-          rows={6}
+          rows={8}
           disabled={pending}
           aria-label="Contenido de la nota"
+          className="min-h-40 flex-1 resize-none"
         />
-        <DialogFooter>
+      </div>
+      <SheetFooter className="flex-row items-center justify-between gap-2">
+        {isEditing ? (
+          <RecordNoteDeleteDialog
+            recordId={recordId}
+            className="w-28"
+            onDeleted={() => onOpenChange(false)}
+          />
+        ) : (
+          <span aria-hidden="true" />
+        )}
+        <div className="flex gap-2">
           <Button
-            variant="outline"
+            variant="ghost"
+            className="w-28"
             disabled={pending}
             onClick={() => onOpenChange(false)}
           >
             Cancelar
           </Button>
-          <Button disabled={pending || content.trim().length === 0} onClick={handleSave}>
+          <Button
+            className="w-28"
+            disabled={pending || content.trim().length === 0}
+            onClick={handleSave}
+          >
             {pending ? (
               <LoaderCircle
                 className="animate-spin"
@@ -96,8 +103,8 @@ export function RecordNoteDialog({
             )}
             {pending ? "Guardando..." : "Guardar"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </SheetFooter>
+    </>
   );
 }

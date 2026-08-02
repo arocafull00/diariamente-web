@@ -1,5 +1,6 @@
 import { AppHeader } from "@/components/app-shell/app-header";
 import { RecordDetail } from "@/components/records/record-detail";
+import { RecordNoteSheet } from "@/components/records/record-note-sheet";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import { getRecordNote } from "@/server/queries";
 
@@ -18,6 +19,11 @@ export default async function RecordPage({ params }: RecordPageProps) {
       <AppHeader
         title="Detalle del registro"
         showBack
+        action={
+          profile.role === "psychologist" ? (
+            <RecordNoteSheet recordId={recordId} note={note} />
+          ) : undefined
+        }
       />
       <RecordDetail profile={profile} record={record} note={note} />
     </>
