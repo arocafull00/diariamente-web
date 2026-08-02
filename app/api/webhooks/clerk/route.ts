@@ -1,7 +1,10 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import type { WebhookEvent } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
 import { ensureProfile } from "@/server/profiles/ensure-profile";
 
 export async function POST(req: Request) {
@@ -36,7 +39,17 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "user.created") {
-    await ensureProfile(event.data.id);
+    await ensureProfile(event.data.id, event.data.image_url ?? null);
+  }
+
+  if (event.type === "user.updated") {
+    await db
+      .update(profiles)
+      .set({
+        avatarUrl: event.data.image_url ?? null,
+        updatedAt: new Date(),
+      })
+      .where(eq(profiles.id, event.data.id));
   }
 
   return new Response("OK", { status: 200 });

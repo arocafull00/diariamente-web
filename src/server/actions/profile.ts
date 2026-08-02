@@ -76,6 +76,7 @@ export async function updateProfile(input: unknown): Promise<ActionResult> {
   revalidatePath("/perfil");
   revalidatePath("/ajustes");
   revalidatePath("/inicio");
+  revalidatePath("/pacientes", "layout");
 
   return { success: true };
 }

@@ -1,6 +1,7 @@
 import { and, count, desc, eq, isNull } from "drizzle-orm";
 
 import { db } from "@/db";
+import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 import {
   connectionRequests,
   customEmotions,
@@ -55,10 +56,12 @@ export async function getPsychologistPatients(psychologistId: string) {
     unseenCounts.map((item) => [item.patientId, Number(item.unseenCount)]),
   );
 
-  return patients.map((patient) => ({
-    ...patient,
-    unseenCount: unseenMap.get(patient.id) ?? 0,
-  }));
+  return resolveAvatarUrls(
+    patients.map((patient) => ({
+      ...patient,
+      unseenCount: unseenMap.get(patient.id) ?? 0,
+    })),
+  );
 }
 
 export async function getCustomEmotions(userId: string) {

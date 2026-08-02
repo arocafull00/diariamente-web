@@ -36,6 +36,9 @@ export async function completeOnboarding(
 
   const { firstName, lastName, role } = parsed.data;
 
+  const client = await clerkClient();
+  const clerkUser = await client.users.getUser(userId);
+
   await db
     .insert(profiles)
     .values({
@@ -43,6 +46,7 @@ export async function completeOnboarding(
       firstName,
       lastName,
       role,
+      avatarUrl: clerkUser.imageUrl ?? null,
       onboardingCompleted: true,
     })
     .onConflictDoUpdate({
@@ -51,12 +55,12 @@ export async function completeOnboarding(
         firstName,
         lastName,
         role,
+        avatarUrl: clerkUser.imageUrl ?? null,
         onboardingCompleted: true,
         updatedAt: new Date(),
       },
     });
 
-  const client = await clerkClient();
   await client.users.updateUserMetadata(userId, {
     publicMetadata: { role },
   });

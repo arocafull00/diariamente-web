@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/db";
 import { profiles, psychologistPatient } from "@/db/schema";
+import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 
 import { requireProfile } from "./get-current-profile";
 
@@ -38,5 +39,12 @@ export async function requirePatientRelationship(patientId: string) {
     notFound();
   }
 
-  return { profile, patient: relationship };
+  const [resolved] = await resolveAvatarUrls([
+    { id: relationship.patientId, avatarUrl: relationship.avatarUrl },
+  ]);
+
+  return {
+    profile,
+    patient: { ...relationship, avatarUrl: resolved.avatarUrl },
+  };
 }
