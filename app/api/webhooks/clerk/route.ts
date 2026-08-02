@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { isPredefinedAvatarUrl } from "@/lib/avatars";
 import { ensureProfile } from "@/server/profiles/ensure-profile";
 
 export async function POST(req: Request) {
@@ -43,13 +44,21 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "user.updated") {
-    await db
-      .update(profiles)
-      .set({
-        avatarUrl: event.data.image_url ?? null,
-        updatedAt: new Date(),
-      })
-      .where(eq(profiles.id, event.data.id));
+    const [current] = await db
+      .select({ avatarUrl: profiles.avatarUrl })
+      .from(profiles)
+      .where(eq(profiles.id, event.data.id))
+      .limit(1);
+
+    if (!isPredefinedAvatarUrl(current?.avatarUrl ?? null)) {
+      await db
+        .update(profiles)
+        .set({
+          avatarUrl: event.data.image_url ?? null,
+          updatedAt: new Date(),
+        })
+        .where(eq(profiles.id, event.data.id));
+    }
   }
 
   return new Response("OK", { status: 200 });

@@ -24,20 +24,27 @@ export async function completeOnboarding(
 ): Promise<ActionResult> {
   const userId = await requireUser();
 
+  const rawAvatarUrl = formData.get("avatarUrl");
+
   const parsed = onboardingSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     role: formData.get("role"),
+    avatarUrl:
+      typeof rawAvatarUrl === "string" && rawAvatarUrl.length > 0
+        ? rawAvatarUrl
+        : null,
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { firstName, lastName, role } = parsed.data;
+  const { firstName, lastName, role, avatarUrl } = parsed.data;
 
   const client = await clerkClient();
   const clerkUser = await client.users.getUser(userId);
+  const resolvedAvatarUrl = avatarUrl ?? clerkUser.imageUrl ?? null;
 
   await db
     .insert(profiles)
@@ -46,7 +53,7 @@ export async function completeOnboarding(
       firstName,
       lastName,
       role,
-      avatarUrl: clerkUser.imageUrl ?? null,
+      avatarUrl: resolvedAvatarUrl,
       onboardingCompleted: true,
     })
     .onConflictDoUpdate({
@@ -55,7 +62,7 @@ export async function completeOnboarding(
         firstName,
         lastName,
         role,
-        avatarUrl: clerkUser.imageUrl ?? null,
+        avatarUrl: resolvedAvatarUrl,
         onboardingCompleted: true,
         updatedAt: new Date(),
       },

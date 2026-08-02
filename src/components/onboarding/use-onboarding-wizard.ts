@@ -26,6 +26,7 @@ export function useOnboardingWizard() {
       firstName: "",
       lastName: "",
       role: undefined,
+      avatarUrl: null,
     },
     mode: "onTouched",
   });

@@ -1,6 +1,8 @@
 "use client";
 
 import { useClerk, useSignIn, useSignUp } from "@clerk/nextjs";
+
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -154,13 +156,9 @@ export function SsoCallbackHandler() {
     return (
       <div className="space-y-4 text-center">
         <p className="text-sm text-destructive">{error}</p>
-        <button
-          type="button"
-          onClick={() => router.push("/login")}
-          className="text-sm text-primary hover:underline"
-        >
+        <Button type="button" variant="link" onClick={() => router.push("/login")}>
           Volver al login
-        </button>
+        </Button>
       </div>
     );
   }

@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { unlinkFromPsychologist } from "@/server/actions/invitations";
 
 export function ProfileUnlinkPsychologistButton() {
@@ -38,9 +39,7 @@ export function ProfileUnlinkPsychologistButton() {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
-      >
+      <AlertDialogTrigger render={<Button variant="outline" size="sm" />}>
         Desvincular
       </AlertDialogTrigger>
       <AlertDialogContent>

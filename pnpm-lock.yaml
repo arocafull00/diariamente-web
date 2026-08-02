@@ -14,6 +14,12 @@ importers:
       '@clerk/nextjs':
         specifier: ^7.6.4
         version: 7.6.4(next@16.2.12(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@dicebear/core':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@dicebear/styles':
+        specifier: ^10.3.0
+        version: 10.3.0
       '@hookform/resolvers':
         specifier: ^5.7.1
         version: 5.7.1(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.84.0(react@19.2.4))(zod@4.4.3)
@@ -317,6 +323,13 @@ packages:
 
   '@date-fns/tz@1.5.0':
     resolution: {integrity: sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==}
+
+  '@dicebear/core@10.4.0':
+    resolution: {integrity: sha512-IeMZboyput2XB2Lypf650AZ7YDdqzsp3HIaHWEYe+M9AX9/mylDgHLNdSA0OquUy1clFtGNYWnzibb1ZMJzLFw==}
+    engines: {node: '>=22.0.0'}
+
+  '@dicebear/styles@10.3.0':
+    resolution: {integrity: sha512-cgQXYLQpefkhCIhMMTX9CXOF6yGxjj55W8kV8d/LRUNk4XhZ8iHZfyLRS8Y6Qss0qNnL8CLV7PnzLbWvQ00coA==}
 
   '@dotenvx/dotenvx@1.75.1':
     resolution: {integrity: sha512-/BITOC9dmS/edY2zQwZNicQ059O6RKabtQfyEafV0nGtfYRNHYy1DIPiYVcov40+tob9hfmBnbR963dS+EQ1DQ==}
@@ -4083,6 +4096,10 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
 
   '@date-fns/tz@1.5.0': {}
+
+  '@dicebear/core@10.4.0': {}
+
+  '@dicebear/styles@10.3.0': {}
 
   '@dotenvx/dotenvx@1.75.1':
     dependencies:

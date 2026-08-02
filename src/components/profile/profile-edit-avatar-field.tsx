@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
 
+import { AvatarPicker } from "@/components/avatars/avatar-picker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getInitials } from "@/lib/utils-app";
@@ -14,7 +15,9 @@ type ProfileEditAvatarFieldProps = {
   lastName: string | null;
   avatarUrl: string | null;
   imageUrl: string | null;
+  presetAvatarUrl: string | null;
   onFileChange: (file: File | null) => void;
+  onPresetSelect: (url: string) => void;
   onError: (message: string) => void;
 };
 
@@ -23,12 +26,15 @@ export function ProfileEditAvatarField({
   lastName,
   avatarUrl,
   imageUrl,
+  presetAvatarUrl,
   onFileChange,
+  onPresetSelect,
   onError,
 }: ProfileEditAvatarFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const resolvedAvatarUrl = previewUrl ?? avatarUrl ?? imageUrl ?? null;
+  const resolvedAvatarUrl =
+    previewUrl ?? presetAvatarUrl ?? avatarUrl ?? imageUrl ?? null;
 
   useEffect(() => {
     return () => {
@@ -65,8 +71,21 @@ export function ProfileEditAvatarField({
     onFileChange(file);
   }
 
+  function handlePresetSelect(url: string) {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+
+    setPreviewUrl(null);
+    onPresetSelect(url);
+  }
+
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-4">
       <Avatar className="size-24 text-lg">
         {resolvedAvatarUrl ? (
           <AvatarImage src={resolvedAvatarUrl} alt="" />
@@ -84,14 +103,17 @@ export function ProfileEditAvatarField({
       />
       <Button
         type="button"
-        variant="outline"
-        size="sm"
-        className="gap-2"
+        variant="secondary"
+        className="gap-2 rounded-full px-4 shadow-xs"
         onClick={() => inputRef.current?.click()}
       >
         <Camera className="size-4" />
         Cambiar foto
       </Button>
+      <AvatarPicker
+        selectedUrl={previewUrl ? null : presetAvatarUrl}
+        onSelect={handlePresetSelect}
+      />
     </div>
   );
 }

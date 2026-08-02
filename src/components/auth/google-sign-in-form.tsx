@@ -4,6 +4,7 @@ import { useAuth, useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type GoogleSignInFormProps = {
@@ -81,17 +82,18 @@ export function GoogleSignInForm({
       {error ? (
         <p className="text-center text-sm text-destructive">{error}</p>
       ) : null}
-      <button
+      <Button
         type="button"
+        variant="outline"
         disabled={isLoading}
         onClick={handleGoogleSignIn}
-        className="relative flex w-full items-center justify-center rounded-xl border border-border bg-card px-4 py-3.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
+        className="relative h-12 w-full rounded-xl bg-card px-4 shadow-xs"
       >
         <span className="absolute left-4">
           <GoogleIcon />
         </span>
         {isLoading ? "Redirigiendo..." : "Continuar con Google"}
-      </button>
+      </Button>
     </div>
   );
 }

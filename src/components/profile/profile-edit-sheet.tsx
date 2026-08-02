@@ -49,6 +49,9 @@ export function ProfileEditSheet({
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedPresetUrl, setSelectedPresetUrl] = useState<string | null>(
+    null,
+  );
   const form = useForm<ProfileEditFormValues>({
     resolver: zodResolver(profileEditFormSchema),
     defaultValues: {
@@ -64,9 +67,23 @@ export function ProfileEditSheet({
         lastName: lastName ?? "",
       });
       setSelectedFile(null);
+      setSelectedPresetUrl(null);
     }
 
     setOpen(nextOpen);
+  }
+
+  function handleFileChange(file: File | null) {
+    setSelectedFile(file);
+
+    if (file) {
+      setSelectedPresetUrl(null);
+    }
+  }
+
+  function handlePresetSelect(url: string) {
+    setSelectedPresetUrl(url);
+    setSelectedFile(null);
   }
 
   function handleSubmit(values: ProfileEditFormValues) {
@@ -87,6 +104,8 @@ export function ProfileEditSheet({
           toast.error("No se pudo actualizar la foto de perfil");
           return;
         }
+      } else if (selectedPresetUrl) {
+        nextAvatarUrl = selectedPresetUrl;
       }
 
       const result = await updateProfile({
@@ -130,7 +149,9 @@ export function ProfileEditSheet({
             lastName={form.watch("lastName")}
             avatarUrl={avatarUrl}
             imageUrl={imageUrl}
-            onFileChange={setSelectedFile}
+            presetAvatarUrl={selectedPresetUrl}
+            onFileChange={handleFileChange}
+            onPresetSelect={handlePresetSelect}
             onError={(message) => toast.error(message)}
           />
           <div className="space-y-4">

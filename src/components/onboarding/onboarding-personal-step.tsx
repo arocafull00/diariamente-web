@@ -1,21 +1,35 @@
 import { CircleAlert, UserRound } from "lucide-react";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
+import { AvatarPicker } from "@/components/avatars/avatar-picker";
 import type { OnboardingFormValues } from "@/components/onboarding/onboarding-types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 type OnboardingPersonalStepProps = {
+  control: Control<OnboardingFormValues>;
   errors: FieldErrors<OnboardingFormValues>;
   register: UseFormRegister<OnboardingFormValues>;
 };
 
 export function OnboardingPersonalStep({
+  control,
   errors,
   register,
 }: OnboardingPersonalStepProps) {
   return (
     <div className="grid gap-5">
+      <div className="space-y-2.5">
+        <Label className="font-semibold">Elige tu foto de perfil</Label>
+        <Controller
+          control={control}
+          name="avatarUrl"
+          render={({ field }) => (
+            <AvatarPicker selectedUrl={field.value} onSelect={field.onChange} />
+          )}
+        />
+      </div>
       <div className="space-y-2.5">
         <Label htmlFor="firstName" className="font-semibold">Nombre</Label>
         <div className="relative">

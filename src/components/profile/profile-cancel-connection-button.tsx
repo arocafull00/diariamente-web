@@ -34,8 +34,9 @@ export function ProfileCancelConnectionButton({
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="sm"
+      className="shrink-0 shadow-xs"
       disabled={pending}
       onClick={handleCancel}
     >

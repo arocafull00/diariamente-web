@@ -90,6 +90,7 @@ export function OnboardingWizard() {
       >
         {step === 0 ? (
           <OnboardingPersonalStep
+            control={form.control}
             errors={form.formState.errors}
             register={form.register}
           />
@@ -118,6 +119,11 @@ export function OnboardingWizard() {
             <input type="hidden" name="firstName" value={values.firstName} />
             <input type="hidden" name="lastName" value={values.lastName} />
             <input type="hidden" name="role" value={values.role} />
+            <input
+              type="hidden"
+              name="avatarUrl"
+              value={values.avatarUrl ?? ""}
+            />
           </>
         ) : null}
       </WizardShell>
