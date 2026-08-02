@@ -26,15 +26,6 @@ export default async function ProfilePage() {
         getReminderSettings(profile.id),
       ]);
 
-    const resolvedReminderSettings = reminderSettings
-      ? {
-          enabled: reminderSettings.enabled,
-          frequency: reminderSettings.frequency,
-          time: reminderSettings.time,
-          days: reminderSettings.days,
-        }
-      : null;
-
     return (
       <>
         <AppHeader
@@ -42,7 +33,7 @@ export default async function ProfilePage() {
           action={
             <SettingsSheet
               role={profile.role}
-              reminderSettings={resolvedReminderSettings}
+              remindersEnabled={reminderSettings?.enabled ?? false}
             />
           }
         />
@@ -55,7 +46,6 @@ export default async function ProfilePage() {
           recordCount={recordCount}
           psychologist={psychologist}
           pendingRequest={pendingRequest}
-          reminderSettings={resolvedReminderSettings}
         />
       </>
     );
@@ -67,9 +57,7 @@ export default async function ProfilePage() {
     <>
       <AppHeader
         title="Perfil"
-        action={
-          <SettingsSheet role={profile.role!} reminderSettings={null} />
-        }
+        action={<SettingsSheet role={profile.role!} remindersEnabled={false} />}
       />
       <PsychologistProfile
         firstName={profile.firstName}

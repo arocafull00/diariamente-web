@@ -5,21 +5,11 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
-import { profiles, userReminders } from "@/db/schema";
+import { profiles } from "@/db/schema";
 import { requireProfile } from "@/server/auth/get-current-profile";
 import { updateProfileSchema } from "@/validation/schemas";
 
 import type { ActionResult } from "./onboarding";
-
-const defaultReminderDays = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-];
 
 export async function updateProfile(input: unknown): Promise<ActionResult> {
   const profile = await requireProfile();
@@ -30,7 +20,7 @@ export async function updateProfile(input: unknown): Promise<ActionResult> {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { firstName, lastName, avatarUrl, remindersEnabled } = parsed.data;
+  const { firstName, lastName, avatarUrl } = parsed.data;
 
   await db
     .update(profiles)
@@ -47,31 +37,6 @@ export async function updateProfile(input: unknown): Promise<ActionResult> {
     firstName,
     lastName,
   });
-
-  if (profile.role === "patient" && remindersEnabled !== undefined) {
-    const [existingReminder] = await db
-      .select()
-      .from(userReminders)
-      .where(eq(userReminders.userId, profile.id))
-      .limit(1);
-
-    await db
-      .insert(userReminders)
-      .values({
-        userId: profile.id,
-        enabled: remindersEnabled,
-        frequency: existingReminder?.frequency ?? "daily",
-        time: existingReminder?.time ?? "20:00",
-        days: existingReminder?.days ?? defaultReminderDays,
-      })
-      .onConflictDoUpdate({
-        target: userReminders.userId,
-        set: {
-          enabled: remindersEnabled,
-          updatedAt: new Date(),
-        },
-      });
-  }
 
   revalidatePath("/perfil");
   revalidatePath("/ajustes");

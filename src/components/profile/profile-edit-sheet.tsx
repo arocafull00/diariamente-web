@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, Pencil, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -22,14 +22,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
-import type { UserRole } from "@/db/schema";
 import { updateProfile } from "@/server/actions/profile";
 
 const profileEditFormSchema = z.object({
   firstName: z.string().trim().min(1, "El nombre es obligatorio"),
   lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
-  remindersEnabled: z.boolean(),
 });
 
 type ProfileEditFormValues = z.infer<typeof profileEditFormSchema>;
@@ -39,13 +36,6 @@ type ProfileEditSheetProps = {
   lastName: string | null;
   avatarUrl: string | null;
   imageUrl: string | null;
-  role: UserRole;
-  reminderSettings: {
-    enabled: boolean;
-    frequency: "daily" | "weekly";
-    time: string;
-    days: string[];
-  } | null;
 };
 
 export function ProfileEditSheet({
@@ -53,8 +43,6 @@ export function ProfileEditSheet({
   lastName,
   avatarUrl,
   imageUrl,
-  role,
-  reminderSettings,
 }: ProfileEditSheetProps) {
   const router = useRouter();
   const { isLoaded, user } = useUser();
@@ -66,7 +54,6 @@ export function ProfileEditSheet({
     defaultValues: {
       firstName: firstName ?? "",
       lastName: lastName ?? "",
-      remindersEnabled: reminderSettings?.enabled ?? false,
     },
   });
 
@@ -75,7 +62,6 @@ export function ProfileEditSheet({
       form.reset({
         firstName: firstName ?? "",
         lastName: lastName ?? "",
-        remindersEnabled: reminderSettings?.enabled ?? false,
       });
       setSelectedFile(null);
     }
@@ -107,8 +93,6 @@ export function ProfileEditSheet({
         firstName: values.firstName,
         lastName: values.lastName,
         avatarUrl: nextAvatarUrl,
-        remindersEnabled:
-          role === "patient" ? values.remindersEnabled : undefined,
       });
 
       if (result.error) {
@@ -134,9 +118,7 @@ export function ProfileEditSheet({
         <SheetHeader>
           <SheetTitle>Editar perfil</SheetTitle>
           <SheetDescription>
-            {role === "patient"
-              ? "Actualiza tu foto, nombre y preferencias de recordatorios."
-              : "Actualiza tu foto y nombre."}
+            Actualiza tu foto y nombre.
           </SheetDescription>
         </SheetHeader>
         <form
@@ -180,27 +162,6 @@ export function ProfileEditSheet({
                 </p>
               ) : null}
             </div>
-            {role === "patient" ? (
-              <div className="flex items-center justify-between rounded-xl bg-secondary p-4">
-                <div className="space-y-1">
-                  <Label htmlFor="profile-reminders">Recordatorios</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Recibe avisos para registrar tu día.
-                  </p>
-                </div>
-                <Controller
-                  control={form.control}
-                  name="remindersEnabled"
-                  render={({ field }) => (
-                    <Switch
-                      id="profile-reminders"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  )}
-                />
-              </div>
-            ) : null}
           </div>
           <SheetFooter className="px-0 pb-4">
             <Button type="submit" className="w-full" disabled={pending}>

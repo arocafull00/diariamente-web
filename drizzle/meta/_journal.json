@@ -15,6 +15,13 @@
       "when": 1785692400000,
       "tag": "0001_wooden_deadpool",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785689153630,
+      "tag": "0002_natural_penance",
+      "breakpoints": true
     }
   ]
 }

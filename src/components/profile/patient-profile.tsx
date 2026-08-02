@@ -25,12 +25,6 @@ type PatientProfileProps = {
   recordCount: number;
   psychologist: PatientPsychologist | null;
   pendingRequest: PatientPendingRequest | null;
-  reminderSettings: {
-    enabled: boolean;
-    frequency: "daily" | "weekly";
-    time: string;
-    days: string[];
-  } | null;
 };
 
 export function PatientProfile({
@@ -42,7 +36,6 @@ export function PatientProfile({
   recordCount,
   psychologist,
   pendingRequest,
-  reminderSettings,
 }: PatientProfileProps) {
   return (
     <div className="space-y-4">
@@ -53,7 +46,6 @@ export function PatientProfile({
         avatarUrl={avatarUrl}
         imageUrl={imageUrl}
         memberSince={memberSince}
-        reminderSettings={reminderSettings}
       />
       {psychologist ? (
         <ProfileAssignedPsychologistCard

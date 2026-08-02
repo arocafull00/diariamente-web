@@ -27,7 +27,6 @@ export function PsychologistProfile({
         avatarUrl={avatarUrl}
         imageUrl={imageUrl}
         memberSince={memberSince}
-        reminderSettings={null}
       />
       <ProfilePatientsSummaryCard patientCount={patientCount} />
     </div>

@@ -21,11 +21,6 @@ export const emotionIntensityEnum = pgEnum("emotion_intensity", [
   "HIGH",
 ]);
 
-export const reminderFrequencyEnum = pgEnum("reminder_frequency", [
-  "daily",
-  "weekly",
-]);
-
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
   "accepted",
@@ -149,9 +144,6 @@ export const userReminders = pgTable("user_reminders", {
     .unique()
     .references(() => profiles.id, { onDelete: "cascade" }),
   enabled: boolean("enabled").default(false).notNull(),
-  frequency: reminderFrequencyEnum("frequency").default("daily").notNull(),
-  time: text("time").default("20:00").notNull(),
-  days: text("days").array().default([]).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

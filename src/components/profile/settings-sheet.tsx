@@ -34,82 +34,40 @@ import type { UserRole } from "@/db/schema";
 import { deleteAccount } from "@/server/actions/onboarding";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
-const reminderDays = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-] as const;
-
 type SettingsSheetProps = {
   role: UserRole;
-  reminderSettings: {
-    enabled: boolean;
-    frequency: "daily" | "weekly";
-    time: string;
-    days: string[];
-  } | null;
+  remindersEnabled: boolean;
 };
 
-export function SettingsSheet({ role, reminderSettings }: SettingsSheetProps) {
+export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [, startSaveTransition] = useTransition();
   const [deletePending, startDeleteTransition] = useTransition();
-  const [enabled, setEnabled] = useState(reminderSettings?.enabled ?? false);
-  const [frequency, setFrequency] = useState<"daily" | "weekly">(
-    reminderSettings?.frequency ?? "daily",
-  );
-  const [time, setTime] = useState(reminderSettings?.time ?? "20:00");
+  const [enabled, setEnabled] = useState(remindersEnabled);
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
-      setEnabled(reminderSettings?.enabled ?? false);
-      setFrequency(reminderSettings?.frequency ?? "daily");
-      setTime(reminderSettings?.time ?? "20:00");
+      setEnabled(remindersEnabled);
     }
 
     setOpen(nextOpen);
   }
 
-  function persistReminders(nextSettings: {
-    enabled: boolean;
-    frequency: "daily" | "weekly";
-    time: string;
-  }) {
+  function handleEnabledChange(checked: boolean) {
+    setEnabled(checked);
+
     startSaveTransition(async () => {
-      const result = await saveReminderSettings({
-        enabled: nextSettings.enabled,
-        frequency: nextSettings.frequency,
-        time: nextSettings.time,
-        days: [...reminderDays],
-      });
+      const result = await saveReminderSettings({ enabled: checked });
 
       if (result.error) {
         toast.error(result.error);
+        setEnabled(remindersEnabled);
         return;
       }
 
       router.refresh();
     });
-  }
-
-  function handleEnabledChange(checked: boolean) {
-    setEnabled(checked);
-    persistReminders({ enabled: checked, frequency, time });
-  }
-
-  function handleFrequencyChange(nextFrequency: "daily" | "weekly") {
-    setFrequency(nextFrequency);
-    persistReminders({ enabled, frequency: nextFrequency, time });
-  }
-
-  function handleTimeChange(nextTime: string) {
-    setTime(nextTime);
-    persistReminders({ enabled, frequency, time: nextTime });
   }
 
   function handleDeleteAccount() {
@@ -142,51 +100,19 @@ export function SettingsSheet({ role, reminderSettings }: SettingsSheetProps) {
         <div className="flex min-h-0 flex-1 flex-col px-4">
           <div className="space-y-4 overflow-y-auto">
             {role === "patient" ? (
-              <>
-                <div className="flex items-center justify-between rounded-xl bg-secondary p-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="reminders">Recordatorios</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Recibe avisos para registrar tu día.
-                    </p>
-                  </div>
-                  <Switch
-                    id="reminders"
-                    checked={enabled}
-                    onCheckedChange={handleEnabledChange}
-                  />
+              <div className="flex items-center justify-between rounded-xl bg-secondary p-4">
+                <div className="space-y-1">
+                  <Label htmlFor="reminders">Recordatorios</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Recibe un aviso diario a las 21:00 para registrar tu día.
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="time">Hora</Label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="time"
-                      type="time"
-                      value={time}
-                      onChange={(e) => handleTimeChange(e.target.value)}
-                      className="h-9 w-[40%] shrink-0 rounded-lg border border-input bg-background px-3 text-sm"
-                    />
-                    <div className="flex min-w-0 flex-1 gap-1">
-                      <Button
-                        type="button"
-                        variant={frequency === "daily" ? "default" : "outline"}
-                        className="h-9 flex-1"
-                        onClick={() => handleFrequencyChange("daily")}
-                      >
-                        Diario
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={frequency === "weekly" ? "default" : "outline"}
-                        className="h-9 flex-1"
-                        onClick={() => handleFrequencyChange("weekly")}
-                      >
-                        Semanal
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </>
+                <Switch
+                  id="reminders"
+                  checked={enabled}
+                  onCheckedChange={handleEnabledChange}
+                />
+              </div>
             ) : null}
 
             <PushSubscribeButton />

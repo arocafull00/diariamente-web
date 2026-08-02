@@ -25,17 +25,11 @@ export async function saveReminderSettings(
     .values({
       userId: profile.id,
       enabled: parsed.data.enabled,
-      frequency: parsed.data.frequency,
-      time: parsed.data.time,
-      days: parsed.data.days,
     })
     .onConflictDoUpdate({
       target: userReminders.userId,
       set: {
         enabled: parsed.data.enabled,
-        frequency: parsed.data.frequency,
-        time: parsed.data.time,
-        days: parsed.data.days,
         updatedAt: new Date(),
       },
     });

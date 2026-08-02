@@ -10,7 +10,6 @@ export const updateProfileSchema = z.object({
   firstName: z.string().trim().min(1, "El nombre es obligatorio"),
   lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
   avatarUrl: z.string().trim().nullable(),
-  remindersEnabled: z.boolean().optional(),
 });
 
 export const recordEmotionSchema = z.object({
@@ -40,7 +39,4 @@ export const customEmotionSchema = z.object({
 
 export const reminderSchema = z.object({
   enabled: z.boolean(),
-  frequency: z.enum(["daily", "weekly"]),
-  time: z.string().regex(/^\d{2}:\d{2}$/),
-  days: z.array(z.string()),
 });

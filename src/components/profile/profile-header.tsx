@@ -17,12 +17,6 @@ type ProfileHeaderProps = {
   avatarUrl: string | null;
   imageUrl?: string | null;
   memberSince: Date;
-  reminderSettings: {
-    enabled: boolean;
-    frequency: "daily" | "weekly";
-    time: string;
-    days: string[];
-  } | null;
 };
 
 export function ProfileHeader({
@@ -32,7 +26,6 @@ export function ProfileHeader({
   avatarUrl,
   imageUrl,
   memberSince,
-  reminderSettings,
 }: ProfileHeaderProps) {
   const resolvedAvatarUrl = avatarUrl ?? imageUrl ?? null;
 
@@ -52,8 +45,6 @@ export function ProfileHeader({
           lastName={lastName}
           avatarUrl={avatarUrl}
           imageUrl={imageUrl ?? null}
-          role={role}
-          reminderSettings={reminderSettings}
         />
       </div>
       <div className="space-y-2">
