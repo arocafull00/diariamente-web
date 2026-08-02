@@ -13,9 +13,10 @@ import { toast } from "sonner";
 
 import { RecordDetailField } from "@/components/records/record-detail-field";
 import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
+import { RecordNoteSection } from "@/components/records/record-note-section";
 import { RecordSummary } from "@/components/records/record-summary";
 import { Button } from "@/components/ui/button";
-import type { PatientRecord, Profile } from "@/db/schema";
+import type { PatientRecord, Profile, RecordNote } from "@/db/schema";
 import {
   markRecordAsSeen,
   updatePatientRecord,
@@ -24,9 +25,10 @@ import {
 type RecordDetailProps = {
   profile: Profile;
   record: PatientRecord;
+  note: RecordNote | null;
 };
 
-export function RecordDetail({ profile, record }: RecordDetailProps) {
+export function RecordDetail({ profile, record, note }: RecordDetailProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [situation, setSituation] = useState(record.situation);
@@ -100,6 +102,10 @@ export function RecordDetail({ profile, record }: RecordDetailProps) {
       </section>
 
       <RecordEmotionsSection emotions={record.emotions} />
+
+      {isPsychologist ? (
+        <RecordNoteSection recordId={record.id} note={note} />
+      ) : null}
 
       {isPatient && (hasChanges || pending) ? (
         <Button

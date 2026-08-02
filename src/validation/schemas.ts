@@ -72,3 +72,11 @@ export const customEmotionSchema = z.object({
 export const reminderSchema = z.object({
   enabled: z.boolean(),
 });
+
+export const recordNoteSchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .min(1, "La nota no puede estar vacía")
+    .max(2000),
+});

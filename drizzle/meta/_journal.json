@@ -22,6 +22,13 @@
       "when": 1785689153630,
       "tag": "0002_natural_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785694009627,
+      "tag": "0003_fast_cable",
+      "breakpoints": true
     }
   ]
 }

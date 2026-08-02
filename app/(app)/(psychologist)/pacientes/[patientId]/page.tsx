@@ -2,7 +2,7 @@ import { PatientDetailHeader } from "@/components/patients/patient-detail-header
 import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
 import { RecordCard } from "@/components/records/record-card";
 import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
-import { getPatientRecords } from "@/server/queries";
+import { getPatientRecordsForPsychologist } from "@/server/queries";
 import { getFullName } from "@/lib/utils-app";
 
 type PatientDetailPageProps = {
@@ -19,8 +19,11 @@ export default async function PatientDetailPage({
     return null;
   }
 
-  const { patient } = result;
-  const records = await getPatientRecords(patientId);
+  const { profile, patient } = result;
+  const records = await getPatientRecordsForPsychologist(
+    patientId,
+    profile.id,
+  );
   const patientName = getFullName(patient.firstName, patient.lastName);
   const lastActivityAt = records[0]?.occurredAt ?? null;
 
@@ -47,6 +50,7 @@ export default async function PatientDetailPage({
                 record={record}
                 href={`/registro/${record.id}`}
                 showUnseen
+                hasNote={record.hasNote}
               />
             ))}
           </div>

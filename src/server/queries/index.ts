@@ -9,6 +9,7 @@ import {
   patientRecords,
   profiles,
   psychologistPatient,
+  recordNotes,
   userReminders,
 } from "@/db/schema";
 
@@ -18,6 +19,52 @@ export async function getPatientRecords(patientId: string) {
     .from(patientRecords)
     .where(eq(patientRecords.patientId, patientId))
     .orderBy(desc(patientRecords.occurredAt));
+}
+
+export async function getPatientRecordsForPsychologist(
+  patientId: string,
+  psychologistId: string,
+) {
+  const records = await db
+    .select({
+      id: patientRecords.id,
+      patientId: patientRecords.patientId,
+      occurredAt: patientRecords.occurredAt,
+      situation: patientRecords.situation,
+      thoughts: patientRecords.thoughts,
+      behaviours: patientRecords.behaviours,
+      emotions: patientRecords.emotions,
+      emotionIntensity: patientRecords.emotionIntensity,
+      seenAt: patientRecords.seenAt,
+      createdAt: patientRecords.createdAt,
+      updatedAt: patientRecords.updatedAt,
+      noteId: recordNotes.id,
+    })
+    .from(patientRecords)
+    .leftJoin(
+      recordNotes,
+      and(
+        eq(recordNotes.recordId, patientRecords.id),
+        eq(recordNotes.psychologistId, psychologistId),
+      ),
+    )
+    .where(eq(patientRecords.patientId, patientId))
+    .orderBy(desc(patientRecords.occurredAt));
+
+  return records.map(({ noteId, ...record }) => ({
+    ...record,
+    hasNote: noteId !== null,
+  }));
+}
+
+export async function getRecordNote(recordId: string) {
+  const [note] = await db
+    .select()
+    .from(recordNotes)
+    .where(eq(recordNotes.recordId, recordId))
+    .limit(1);
+
+  return note;
 }
 
 export async function getPsychologistPatients(psychologistId: string) {
@@ -215,6 +262,28 @@ export async function getPatientPendingRequest(patientId: string) {
       and(
         eq(connectionRequests.patientId, patientId),
         eq(connectionRequests.status, "pending"),
+      ),
+    )
+    .limit(1);
+
+  return request ?? null;
+}
+
+export async function getConnectionRequestForPair(
+  patientId: string,
+  psychologistId: string,
+) {
+  const [request] = await db
+    .select({
+      id: connectionRequests.id,
+      status: connectionRequests.status,
+      createdAt: connectionRequests.createdAt,
+    })
+    .from(connectionRequests)
+    .where(
+      and(
+        eq(connectionRequests.patientId, patientId),
+        eq(connectionRequests.psychologistId, psychologistId),
       ),
     )
     .limit(1);

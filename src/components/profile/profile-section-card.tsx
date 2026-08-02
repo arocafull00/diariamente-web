@@ -10,9 +10,9 @@ export function ProfileSectionCard({
   children,
 }: ProfileSectionCardProps) {
   return (
-    <section className="rounded-2xl bg-secondary p-4">
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <h2 className="text-sm font-semibold text-primary">{title}</h2>
+    <section className="flex h-full flex-col rounded-2xl bg-secondary p-4 lg:border lg:border-border lg:bg-card lg:p-5 lg:shadow-sm">
+      <div className="mb-3 flex items-start justify-between gap-3 lg:mb-4">
+        <h2 className="text-sm font-semibold text-primary lg:text-base">{title}</h2>
         {action}
       </div>
       {children}

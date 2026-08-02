@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarDays } from "lucide-react";
+import { ArrowUpRight, CalendarDays, StickyNote } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,9 +13,10 @@ type RecordCardProps = {
   record: PatientRecord;
   href: string;
   showUnseen?: boolean;
+  hasNote?: boolean;
 };
 
-export function RecordCard({ record, href, showUnseen }: RecordCardProps) {
+export function RecordCard({ record, href, showUnseen, hasNote }: RecordCardProps) {
   const dominantEmotion = [...record.emotions].sort(
     (a, b) => b.intensity - a.intensity,
   )[0];
@@ -41,9 +42,19 @@ export function RecordCard({ record, href, showUnseen }: RecordCardProps) {
                 {formatRecordDate(record.occurredAt)}
               </time>
             </div>
-            {showUnseen && !record.seenAt ? (
-              <Badge className="shrink-0">Nuevo</Badge>
-            ) : null}
+            <div className="flex shrink-0 items-center gap-2">
+              {hasNote ? (
+                <span
+                  className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary"
+                  aria-label="Registro con nota"
+                >
+                  <StickyNote className="size-4" aria-hidden="true" />
+                </span>
+              ) : null}
+              {showUnseen && !record.seenAt ? (
+                <Badge className="shrink-0">Nuevo</Badge>
+              ) : null}
+            </div>
           </div>
 
           <p className="line-clamp-3 text-[0.95rem] leading-6 font-semibold text-pretty sm:text-base">

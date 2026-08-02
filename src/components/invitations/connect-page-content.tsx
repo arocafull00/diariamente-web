@@ -3,8 +3,8 @@ import { AlertTriangle, Link2Off, UserCheck, UserRoundCheck } from "lucide-react
 import { ConnectRequestCard } from "@/components/invitations/connect-request-card";
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
 import {
+  getConnectionRequestForPair,
   getInviteLinkByToken,
-  getPatientPendingRequest,
   getPatientPsychologist,
   getProfileById,
 } from "@/server/queries";
@@ -72,9 +72,12 @@ export async function ConnectPageContent({
     );
   }
 
-  const pendingRequest = await getPatientPendingRequest(profileId);
+  const pendingRequest = await getConnectionRequestForPair(
+    profileId,
+    link.psychologistId,
+  );
 
-  if (pendingRequest) {
+  if (pendingRequest?.status === "pending") {
     return (
       <ConnectStatusCard
         icon={UserCheck}

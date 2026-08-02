@@ -30,9 +30,9 @@ export function ProfileHeader({
   const resolvedAvatarUrl = avatarUrl ?? imageUrl ?? null;
 
   return (
-    <header className="flex flex-col items-center gap-3 pt-2 pb-6 text-center lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-6">
+    <header className="flex flex-col items-center gap-4 pt-2 pb-6 text-center lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-8 lg:shadow-sm">
       <div className="relative">
-        <Avatar className="size-24 text-lg">
+        <Avatar className="size-24 text-lg lg:size-28">
           {resolvedAvatarUrl ? (
             <AvatarImage src={resolvedAvatarUrl} alt="" />
           ) : null}
@@ -48,7 +48,7 @@ export function ProfileHeader({
         />
       </div>
       <div className="space-y-2">
-        <h1 className="text-xl font-bold tracking-tight">
+        <h1 className="text-xl font-bold tracking-tight lg:text-2xl">
           {getFullName(firstName, lastName)}
         </h1>
         <Badge variant="secondary" className="bg-accent text-primary">

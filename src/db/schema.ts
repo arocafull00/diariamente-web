@@ -86,6 +86,24 @@ export const psychologistPatient = pgTable(
   (table) => [unique("psychologist_patient_patient_id_unique").on(table.patientId)],
 );
 
+export const recordNotes = pgTable("record_notes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  recordId: uuid("record_id")
+    .notNull()
+    .references(() => patientRecords.id, { onDelete: "cascade" })
+    .unique(),
+  psychologistId: text("psychologist_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export const inviteLinks = pgTable("invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
@@ -181,6 +199,7 @@ export const auditEvents = pgTable("audit_events", {
 
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;
+export type RecordNote = typeof recordNotes.$inferSelect;
 export type InviteLink = typeof inviteLinks.$inferSelect;
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];

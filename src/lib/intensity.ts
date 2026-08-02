@@ -17,7 +17,7 @@ export function getRecordIntensity(
     return "LOW";
   }
 
-  if (intensity < 6) {
+  if (intensity < 7) {
     return "MEDIUM";
   }
 

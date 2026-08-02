@@ -15,8 +15,8 @@ import { logAuditEvent } from "@/server/audit";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { sendPushToUser } from "@/server/push/send-push";
 import {
+  getConnectionRequestForPair,
   getInviteLinkByToken,
-  getPatientPendingRequest,
   getPatientPsychologist,
 } from "@/server/queries";
 
@@ -69,19 +69,29 @@ export async function requestConnection(): Promise<ActionResult> {
     return { error: "Ya estás vinculado con un psicólogo" };
   }
 
-  const pendingRequest = await getPatientPendingRequest(profile.id);
+  const existingRequest = await getConnectionRequestForPair(
+    profile.id,
+    link.psychologistId,
+  );
 
-  if (pendingRequest) {
+  if (existingRequest?.status === "pending") {
     return { error: "Ya tienes una solicitud de conexión pendiente" };
   }
 
-  try {
-    await db.insert(connectionRequests).values({
-      psychologistId: link.psychologistId,
-      patientId: profile.id,
-    });
-  } catch {
-    return { error: "No se pudo enviar la solicitud" };
+  if (existingRequest) {
+    await db
+      .update(connectionRequests)
+      .set({ status: "pending", resolvedAt: null, createdAt: new Date() })
+      .where(eq(connectionRequests.id, existingRequest.id));
+  } else {
+    try {
+      await db.insert(connectionRequests).values({
+        psychologistId: link.psychologistId,
+        patientId: profile.id,
+      });
+    } catch {
+      return { error: "No se pudo enviar la solicitud" };
+    }
   }
 
   await logAuditEvent({
@@ -272,6 +282,7 @@ export async function unlinkFromPsychologist(): Promise<ActionResult> {
 
   revalidatePath("/perfil");
   revalidatePath("/ajustes");
+  revalidatePath("/conectar");
 
   return { success: true };
 }
@@ -313,6 +324,7 @@ export async function unlinkPatient(patientId: string): Promise<ActionResult> {
   revalidatePath("/pacientes");
   revalidatePath(`/pacientes/${patientId}`);
   revalidatePath("/perfil");
+  revalidatePath("/conectar");
 
   return { success: true };
 }
