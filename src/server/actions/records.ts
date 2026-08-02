@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { db } from "@/db";
 import { customEmotions, patientRecords } from "@/db/schema";
@@ -9,6 +10,8 @@ import { getRecordIntensity } from "@/lib/intensity";
 import { logAuditEvent } from "@/server/audit";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import { requireRole } from "@/server/auth/get-current-profile";
+import { sendPushToUser } from "@/server/push/send-push";
+import { getPatientPsychologist } from "@/server/queries";
 import {
   createRecordSchema,
   customEmotionSchema,
@@ -48,6 +51,21 @@ export async function createPatientRecord(
     action: "record.created",
     entityType: "patient_record",
     entityId: record.id,
+  });
+
+  after(async () => {
+    const link = await getPatientPsychologist(profile.id);
+
+    if (!link) {
+      return;
+    }
+
+    await sendPushToUser(link.psychologistId, {
+      topic: "patient_record",
+      title: "Nuevo registro",
+      body: "Un paciente ha añadido un registro nuevo.",
+      url: `/pacientes/${profile.id}`,
+    });
   });
 
   revalidatePath("/mis-registros");

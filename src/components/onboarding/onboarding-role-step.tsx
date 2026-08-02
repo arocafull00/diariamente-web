@@ -23,7 +23,7 @@ export function OnboardingRoleStep({
     <div>
       <fieldset
         aria-describedby={error ? "role-error" : undefined}
-        className="grid gap-3 sm:grid-cols-2"
+        className="grid gap-3"
       >
         <legend className="sr-only">Tipo de perfil</legend>
         <OnboardingRoleOption

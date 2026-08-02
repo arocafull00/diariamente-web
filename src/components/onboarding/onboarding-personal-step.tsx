@@ -15,7 +15,7 @@ export function OnboardingPersonalStep({
   register,
 }: OnboardingPersonalStepProps) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2">
+    <div className="grid gap-5">
       <div className="space-y-2.5">
         <Label htmlFor="firstName" className="font-semibold">Nombre</Label>
         <div className="relative">

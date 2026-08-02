@@ -1,17 +1,18 @@
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
 
 import { AppHeader } from "@/components/app-shell/app-header";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { HomeEmptyRecords } from "@/components/home/home-empty-records";
+import { HomePsychologistPanel } from "@/components/home/home-psychologist-panel";
+import { HomeWelcomePanel } from "@/components/home/home-welcome-panel";
+import { RecordCard } from "@/components/records/record-card";
+import { getFullName } from "@/lib/utils-app";
 import { requireRole } from "@/server/auth/get-current-profile";
 import {
   getLatestPatientRecord,
-  getPatientRecordCount,
   getPatientPsychologist,
+  getPatientRecordCount,
 } from "@/server/queries";
-import { formatRecordDate, getFullName } from "@/lib/utils-app";
 
 export default async function PatientHomePage() {
   const profile = await requireRole("patient");
@@ -24,51 +25,40 @@ export default async function PatientHomePage() {
   return (
     <>
       <AppHeader title="Inicio" />
-      <div className="space-y-4">
-        <Card className="border-none bg-secondary">
-          <CardHeader>
-            <CardTitle>Hola, {profile.firstName}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Llevas {recordCount} {recordCount === 1 ? "registro" : "registros"}.
-            </p>
-            <Link href="/nuevo-registro" className={cn(buttonVariants(), "w-full")}>
-              <PlusCircle className="size-4" />
-              Nuevo registro
-            </Link>
-          </CardContent>
-        </Card>
+      <div className="space-y-5">
+        <HomeWelcomePanel
+          firstName={profile.firstName}
+          recordCount={recordCount}
+        />
 
         {latestRecord ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Último registro</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p className="line-clamp-2 text-sm">{latestRecord.situation}</p>
-              <p className="text-xs text-muted-foreground">
-                {formatRecordDate(latestRecord.occurredAt)}
-              </p>
+          <section className="space-y-3">
+            <div className="flex items-center justify-between gap-4 px-1">
+              <h2 className="font-semibold">Tu registro más reciente</h2>
               <Link
-                href={`/registro/${latestRecord.id}`}
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+                href="/mis-registros"
+                className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary outline-none hover:underline focus-visible:rounded-sm focus-visible:ring-3 focus-visible:ring-ring/50"
               >
-                Ver detalle
+                Ver todos
+                <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
-            </CardContent>
-          </Card>
-        ) : null}
+            </div>
+            <RecordCard
+              record={latestRecord}
+              href={`/registro/${latestRecord.id}`}
+            />
+          </section>
+        ) : (
+          <HomeEmptyRecords />
+        )}
 
         {psychologist ? (
-          <Card>
-            <CardContent className="p-4 text-sm">
-              <p className="font-medium">Tu psicólogo</p>
-              <p className="text-muted-foreground">
-                {getFullName(psychologist.firstName, psychologist.lastName)}
-              </p>
-            </CardContent>
-          </Card>
+          <HomePsychologistPanel
+            name={getFullName(
+              psychologist.firstName,
+              psychologist.lastName,
+            )}
+          />
         ) : null}
       </div>
     </>

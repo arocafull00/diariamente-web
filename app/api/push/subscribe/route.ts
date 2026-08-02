@@ -1,8 +1,14 @@
-import webpush from "web-push";
+import { auth } from "@clerk/nextjs/server";
 
 import { savePushSubscription } from "@/server/actions/reminders";
 
 export async function POST(req: Request) {
+  const { isAuthenticated } = await auth();
+
+  if (!isAuthenticated) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json();
 
   if (!body?.subscription?.endpoint || !body?.subscription?.keys) {

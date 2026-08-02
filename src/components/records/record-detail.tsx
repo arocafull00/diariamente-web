@@ -1,18 +1,21 @@
 "use client";
 
+import {
+  Footprints,
+  LoaderCircle,
+  MapPin,
+  MessageCircleMore,
+  Save,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import { AppHeader } from "@/components/app-shell/app-header";
+import { RecordDetailField } from "@/components/records/record-detail-field";
+import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
+import { RecordSummary } from "@/components/records/record-summary";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import type { PatientRecord } from "@/db/schema";
-import type { Profile } from "@/db/schema";
-import { getEmotionColor } from "@/lib/emotions";
-import { formatIntensity, INTENSITY_BADGE_COLORS } from "@/lib/intensity";
-import { formatRecordDate } from "@/lib/utils-app";
+import type { PatientRecord, Profile } from "@/db/schema";
 import {
   markRecordAsSeen,
   updatePatientRecord,
@@ -31,7 +34,10 @@ export function RecordDetail({ profile, record }: RecordDetailProps) {
   const [behaviours, setBehaviours] = useState(record.behaviours);
   const isPatient = profile.role === "patient";
   const isPsychologist = profile.role === "psychologist";
-  const intensityColors = INTENSITY_BADGE_COLORS[record.emotionIntensity];
+  const hasChanges =
+    situation !== record.situation ||
+    thoughts !== record.thoughts ||
+    behaviours !== record.behaviours;
 
   useEffect(() => {
     if (!isPsychologist || record.seenAt) {
@@ -60,91 +66,60 @@ export function RecordDetail({ profile, record }: RecordDetailProps) {
   }
 
   return (
-    <>
-      <AppHeader
-        title="Detalle del registro"
-        backHref={isPatient ? "/mis-registros" : "/pacientes"}
+    <div className="space-y-5">
+      <RecordSummary
+        occurredAt={record.occurredAt}
+        intensity={record.emotionIntensity}
       />
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          {formatRecordDate(record.occurredAt)}
-        </p>
-        <span
-          className="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
-          style={{
-            backgroundColor: intensityColors.bg,
-            color: intensityColors.text,
-          }}
+
+      <section className="divide-y divide-border overflow-hidden rounded-xl bg-card shadow-sm">
+        <RecordDetailField
+          id="situation"
+          icon={MapPin}
+          label="Situación"
+          value={situation}
+          editable={isPatient}
+          onChange={setSituation}
+        />
+        <RecordDetailField
+          id="thoughts"
+          icon={MessageCircleMore}
+          label="Pensamientos"
+          value={thoughts}
+          editable={isPatient}
+          onChange={setThoughts}
+        />
+        <RecordDetailField
+          id="behaviours"
+          icon={Footprints}
+          label="Conductas"
+          value={behaviours}
+          editable={isPatient}
+          onChange={setBehaviours}
+        />
+      </section>
+
+      <RecordEmotionsSection emotions={record.emotions} />
+
+      {isPatient && (hasChanges || pending) ? (
+        <Button
+          size="lg"
+          className="w-full rounded-xl shadow-sm"
+          disabled={pending}
+          onClick={handleSave}
         >
-          Intensidad {formatIntensity(record.emotionIntensity)}
-        </span>
-
-        <div className="space-y-2">
-          <Label htmlFor="situation">Situación</Label>
-          <Textarea
-            id="situation"
-            rows={4}
-            value={situation}
-            readOnly={!isPatient}
-            onChange={(e) => setSituation(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="thoughts">Pensamientos</Label>
-          <Textarea
-            id="thoughts"
-            rows={4}
-            value={thoughts}
-            readOnly={!isPatient}
-            onChange={(e) => setThoughts(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="behaviours">Conductas</Label>
-          <Textarea
-            id="behaviours"
-            rows={4}
-            value={behaviours}
-            readOnly={!isPatient}
-            onChange={(e) => setBehaviours(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <Label>Emociones</Label>
-          {record.emotions.map((emotion) => {
-            const colors = getEmotionColor(emotion.emotion);
-
-            return (
-              <div
-                key={emotion.emotion}
-                className="rounded-lg p-3"
-                style={{ backgroundColor: colors.bg }}
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className="text-sm font-medium"
-                    style={{ color: colors.text }}
-                  >
-                    {emotion.emotion}
-                  </span>
-                  <span className="text-sm" style={{ color: colors.text }}>
-                    {emotion.intensity}/10
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {isPatient ? (
-          <Button className="w-full" disabled={pending} onClick={handleSave}>
-            {pending ? "Guardando..." : "Guardar cambios"}
-          </Button>
-        ) : null}
-      </div>
-    </>
+          {pending ? (
+            <LoaderCircle
+              className="animate-spin"
+              data-icon="inline-start"
+              aria-hidden="true"
+            />
+          ) : (
+            <Save data-icon="inline-start" aria-hidden="true" />
+          )}
+          {pending ? "Guardando..." : "Guardar cambios"}
+        </Button>
+      ) : null}
+    </div>
   );
 }

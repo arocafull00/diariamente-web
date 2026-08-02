@@ -1,3 +1,4 @@
+import { AppHeader } from "@/components/app-shell/app-header";
 import { RecordDetail } from "@/components/records/record-detail";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 
@@ -9,5 +10,13 @@ export default async function RecordPage({ params }: RecordPageProps) {
   const { recordId } = await params;
   const { profile, record } = await requireRecordAccess(recordId);
 
-  return <RecordDetail profile={profile} record={record} />;
+  return (
+    <>
+      <AppHeader
+        title="Detalle del registro"
+        showBack
+      />
+      <RecordDetail profile={profile} record={record} />
+    </>
+  );
 }

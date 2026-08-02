@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
+import { Background } from "@/components/background";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -75,10 +76,13 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <body
-          className="min-h-full flex flex-col bg-background"
+          className="relative min-h-full flex flex-col"
           suppressHydrationWarning
         >
-          {children}
+          <Background />
+          <div className="relative z-10 flex min-h-full flex-1 flex-col">
+            {children}
+          </div>
           <Toaster richColors position="top-center" />
           <ServiceWorkerRegister />
         </body>

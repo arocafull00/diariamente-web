@@ -1,10 +1,12 @@
+import { ArrowUpRight, CalendarDays } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { PatientRecord } from "@/db/schema";
 import { getEmotionColor } from "@/lib/emotions";
-import { formatIntensity, INTENSITY_BADGE_COLORS } from "@/lib/intensity";
+import { formatIntensity, INTENSITY_STYLES } from "@/lib/intensity";
+import { cn } from "@/lib/utils";
 import { formatRecordDate } from "@/lib/utils-app";
 
 type RecordCardProps = {
@@ -20,43 +22,63 @@ export function RecordCard({ record, href, showUnseen }: RecordCardProps) {
   const emotionColor = dominantEmotion
     ? getEmotionColor(dominantEmotion.emotion)
     : null;
-  const intensityColors = INTENSITY_BADGE_COLORS[record.emotionIntensity];
+  const intensityStyles = INTENSITY_STYLES[record.emotionIntensity];
 
   return (
-    <Link href={href}>
-      <Card className="transition-colors hover:bg-secondary/50">
-        <CardContent className="space-y-3 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <p className="line-clamp-2 font-medium">{record.situation}</p>
+    <Link
+      href={href}
+      className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+    >
+      <Card className="gap-0 py-0 shadow-sm ring-0 transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md group-active:translate-y-0 motion-reduce:transform-none">
+        <div className={cn("h-1 w-full", intensityStyles.accent)} />
+        <CardContent className="space-y-4 p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
+                <CalendarDays className="size-4" aria-hidden="true" />
+              </span>
+              <time dateTime={new Date(record.occurredAt).toISOString()}>
+                {formatRecordDate(record.occurredAt)}
+              </time>
+            </div>
             {showUnseen && !record.seenAt ? (
-              <Badge variant="default">Nuevo</Badge>
+              <Badge className="shrink-0">Nuevo</Badge>
             ) : null}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {dominantEmotion && emotionColor ? (
+
+          <p className="line-clamp-3 text-[0.95rem] leading-6 font-semibold text-pretty sm:text-base">
+            {record.situation}
+          </p>
+
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              {dominantEmotion && emotionColor ? (
+                <span
+                  className="inline-block max-w-44 truncate rounded-full px-2.5 py-1 text-xs font-semibold"
+                  style={{
+                    backgroundColor: emotionColor.bg,
+                    color: emotionColor.text,
+                  }}
+                >
+                  {dominantEmotion.emotion} {dominantEmotion.intensity}/10
+                </span>
+              ) : null}
               <span
-                className="rounded-full px-2 py-0.5 text-xs font-medium"
-                style={{
-                  backgroundColor: emotionColor.bg,
-                  color: emotionColor.text,
-                }}
+                className={cn(
+                  "rounded-full px-2.5 py-1 text-xs font-semibold",
+                  intensityStyles.badge,
+                )}
               >
-                {dominantEmotion.emotion}
+                Intensidad {formatIntensity(record.emotionIntensity)}
               </span>
-            ) : null}
+            </div>
             <span
-              className="rounded-full px-2 py-0.5 text-xs font-medium"
-              style={{
-                backgroundColor: intensityColors.bg,
-                color: intensityColors.text,
-              }}
+              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none"
+              aria-hidden="true"
             >
-              {formatIntensity(record.emotionIntensity)}
+              <ArrowUpRight className="size-4" />
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {formatRecordDate(record.occurredAt)}
-          </p>
         </CardContent>
       </Card>
     </Link>

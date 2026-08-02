@@ -20,6 +20,11 @@ export function SsoCallbackHandler() {
 
       hasRun.current = true;
 
+      if (clerk.session) {
+        router.replace("/");
+        return;
+      }
+
       const navigateHome = async (decorateUrl: (url: string) => string) => {
         const url = decorateUrl("/");
 
@@ -68,6 +73,11 @@ export function SsoCallbackHandler() {
 
           if (signInStatus === "complete") {
             await finalizeSignIn();
+            return;
+          }
+
+          if (clerk.session) {
+            router.replace("/");
             return;
           }
 

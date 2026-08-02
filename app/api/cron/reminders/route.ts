@@ -1,8 +1,6 @@
-import { eq } from "drizzle-orm";
-import webpush from "web-push";
-
 import { db } from "@/db";
-import { pushSubscriptions, userReminders } from "@/db/schema";
+import { userReminders } from "@/db/schema";
+import { sendPushToUser } from "@/server/push/send-push";
 
 function shouldSendReminder(
   settings: typeof userReminders.$inferSelect,
@@ -46,54 +44,18 @@ export async function GET(req: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-  const privateKey = process.env.VAPID_PRIVATE_KEY;
-
-  if (!publicKey || !privateKey) {
-    return Response.json({ error: "VAPID not configured" }, { status: 500 });
-  }
-
-  webpush.setVapidDetails(
-    "mailto:support@diariamente.app",
-    publicKey,
-    privateKey,
-  );
-
   const now = new Date();
   const reminders = await db.select().from(userReminders);
   const eligible = reminders.filter((reminder) => shouldSendReminder(reminder, now));
 
-  let sent = 0;
-
   for (const reminder of eligible) {
-    const subscriptions = await db
-      .select()
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.userId, reminder.userId));
-
-    for (const subscription of subscriptions) {
-      try {
-        await webpush.sendNotification(
-          {
-            endpoint: subscription.endpoint,
-            keys: {
-              p256dh: subscription.p256dh,
-              auth: subscription.auth,
-            },
-          },
-          JSON.stringify({
-            title: "¿Deseas crear algún registro?",
-            body: "Es hora de registrar tu estado emocional del día.",
-          }),
-        );
-        sent += 1;
-      } catch {
-        await db
-          .delete(pushSubscriptions)
-          .where(eq(pushSubscriptions.id, subscription.id));
-      }
-    }
+    await sendPushToUser(reminder.userId, {
+      topic: "reminder",
+      title: "¿Deseas crear algún registro?",
+      body: "Es hora de registrar tu estado emocional del día.",
+      url: "/nuevo-registro",
+    });
   }
 
-  return Response.json({ sent, eligible: eligible.length });
+  return Response.json({ sent: eligible.length, eligible: eligible.length });
 }

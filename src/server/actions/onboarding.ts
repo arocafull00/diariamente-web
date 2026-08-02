@@ -2,11 +2,13 @@
 
 import { clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { INVITE_COOKIE_NAME } from "@/lib/invitations";
 import { logAuditEvent } from "@/server/audit";
 import { requireUser } from "@/server/auth/get-current-profile";
 import { onboardingSchema } from "@/validation/schemas";
@@ -60,27 +62,16 @@ export async function completeOnboarding(
   });
 
   if (role === "patient") {
+    const cookieStore = await cookies();
+
+    if (cookieStore.get(INVITE_COOKIE_NAME)?.value) {
+      redirect("/conectar");
+    }
+
     redirect("/inicio");
   }
 
   redirect("/pacientes");
-}
-
-export async function ensureProfile(userId: string) {
-  const [existing] = await db
-    .select({ id: profiles.id })
-    .from(profiles)
-    .where(eq(profiles.id, userId))
-    .limit(1);
-
-  if (existing) {
-    return;
-  }
-
-  await db.insert(profiles).values({
-    id: userId,
-    onboardingCompleted: false,
-  });
 }
 
 export async function deleteAccount(): Promise<ActionResult> {

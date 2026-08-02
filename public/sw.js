@@ -1,5 +1,27 @@
-const CACHE_NAME = "diariamente-shell-v1";
-const SHELL_ASSETS = ["/", "/offline", "/icon-192x192.png", "/icon-512x512.png"];
+const CACHE_NAME = "diariamente-shell-v4";
+const SHELL_ASSETS = ["/offline", "/icon-192x192.png", "/icon-512x512.png"];
+
+const NETWORK_ONLY_PREFIXES = [
+  "/login",
+  "/registro",
+  "/recuperar-password",
+  "/onboarding",
+  "/inicio",
+  "/pacientes",
+  "/perfil",
+  "/mis-registros",
+  "/nuevo-registro",
+  "/ajustes",
+  "/invitacion",
+];
+
+function isNetworkOnly(pathname) {
+  if (pathname === "/") {
+    return true;
+  }
+
+  return NETWORK_ONLY_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -34,39 +56,21 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (
-    url.pathname.startsWith("/inicio") ||
-    url.pathname.startsWith("/pacientes") ||
-    url.pathname.startsWith("/registro") ||
-    url.pathname.startsWith("/perfil") ||
-    url.pathname.startsWith("/mis-registros") ||
-    url.pathname.startsWith("/nuevo-registro")
+    isNetworkOnly(url.pathname) ||
+    url.pathname.startsWith("/_next/") ||
+    request.destination === "style" ||
+    request.destination === "script" ||
+    request.destination === "font"
   ) {
     return;
   }
 
+  if (request.destination !== "document") {
+    return;
+  }
+
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-
-      return fetch(request)
-        .then((response) => {
-          if (
-            response.ok &&
-            (request.destination === "style" ||
-              request.destination === "script" ||
-              request.destination === "font" ||
-              request.destination === "image")
-          ) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-
-          return response;
-        })
-        .catch(() => caches.match("/offline"));
-    }),
+    fetch(request).catch(() => caches.match("/offline")),
   );
 });
 
@@ -74,20 +78,37 @@ self.addEventListener("push", (event) => {
   const data = event.data?.json() ?? {
     title: "¿Deseas crear algún registro?",
     body: "Es hora de registrar tu estado emocional del día.",
+    url: "/nuevo-registro",
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: "/icon-192x192.png",
-      data: { url: "/nuevo-registro" },
-    }),
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        for (const client of clients) {
+          client.postMessage({ type: "realtime-refresh", topic: data.topic });
+        }
+
+        const hasVisibleClient = clients.some(
+          (client) => client.visibilityState === "visible",
+        );
+
+        if (hasVisibleClient) {
+          return null;
+        }
+
+        return self.registration.showNotification(data.title, {
+          body: data.body,
+          icon: "/icon-192x192.png",
+          data: { url: data.url ?? "/" },
+        });
+      }),
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const url = event.notification.data?.url ?? "/nuevo-registro";
+  const url = event.notification.data?.url ?? "/";
 
   event.waitUntil(
     self.clients.matchAll({ type: "window" }).then((clients) => {

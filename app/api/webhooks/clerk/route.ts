@@ -2,7 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import type { WebhookEvent } from "@clerk/nextjs/server";
 
-import { ensureProfile } from "@/server/actions/onboarding";
+import { ensureProfile } from "@/server/profiles/ensure-profile";
 
 export async function POST(req: Request) {
   const webhookSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;

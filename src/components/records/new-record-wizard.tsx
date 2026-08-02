@@ -1,16 +1,20 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import { AppHeader } from "@/components/app-shell/app-header";
+import { EmotionChip } from "@/components/records/emotion-chip";
+import { RecordDatePicker } from "@/components/records/record-date-picker";
+import { RecordTimeInput } from "@/components/records/record-time-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { WizardFooter } from "@/components/wizard/wizard-footer";
+import { WizardShell } from "@/components/wizard/wizard-shell";
 import type { RecordEmotion } from "@/db/schema";
 import { PREDEFINED_EMOTIONS } from "@/lib/emotions";
 import { createPatientRecord, createCustomEmotion } from "@/server/actions/records";
@@ -26,12 +30,14 @@ const STEPS = [
   "¿Qué pensamientos tuviste?",
   "¿Cómo reaccionaste?",
   "¿Qué emociones sentiste?",
-];
+] as const;
 
 export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [addingEmotion, startAddEmotion] = useTransition();
   const [newEmotion, setNewEmotion] = useState("");
+  const [optimisticCustomEmotions, setOptimisticCustomEmotions] = useState<string[]>([]);
   const {
     step,
     occurredAt,
@@ -45,8 +51,10 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
     reset,
   } = useNewRecordStore();
 
-  const allEmotions = [...PREDEFINED_EMOTIONS, ...customEmotions];
-  const progress = ((step + 1) / STEPS.length) * 100;
+  const allEmotions = Array.from(
+    new Set([...PREDEFINED_EMOTIONS, ...customEmotions, ...optimisticCustomEmotions]),
+  );
+  const isLastStep = step === STEPS.length - 1;
 
   function toggleEmotion(emotion: string) {
     const existing = emotions.find((item) => item.emotion === emotion);
@@ -91,6 +99,15 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
     return true;
   }
 
+  function handlePrimaryAction() {
+    if (isLastStep) {
+      handleSubmit();
+      return;
+    }
+
+    nextStep();
+  }
+
   function handleSubmit() {
     startTransition(async () => {
       const result = await createPatientRecord({
@@ -112,67 +129,74 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
     });
   }
 
-  async function handleAddCustomEmotion() {
-    if (!newEmotion.trim()) {
+  function handleAddCustomEmotion() {
+    const trimmed = newEmotion.trim();
+
+    if (!trimmed) {
       return;
     }
 
-    const result = await createCustomEmotion(newEmotion.trim());
-
-    if (result.error) {
-      toast.error(result.error);
+    if (allEmotions.includes(trimmed)) {
+      toast.error("Esta emoción ya existe");
       return;
     }
 
+    setOptimisticCustomEmotions((current) => [...current, trimmed]);
     setNewEmotion("");
-    toast.success("Emoción añadida");
-    router.refresh();
+    toggleEmotion(trimmed);
+
+    startAddEmotion(async () => {
+      const result = await createCustomEmotion(trimmed);
+
+      if (result.error) {
+        setOptimisticCustomEmotions((current) =>
+          current.filter((emotion) => emotion !== trimmed),
+        );
+        setField(
+          "emotions",
+          useNewRecordStore
+            .getState()
+            .emotions.filter((item) => item.emotion !== trimmed),
+        );
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success("Emoción añadida");
+    });
   }
 
   return (
-    <>
-      <AppHeader title="Nuevo registro" backHref="/inicio" />
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-medium">{STEPS[step]}</span>
-            <span className="text-muted-foreground">
-              {step + 1}/{STEPS.length}
-            </span>
-          </div>
-          <Progress value={progress} />
-        </div>
-
+    <WizardShell
+      className="flex-1"
+        step={step}
+        steps={STEPS}
+        centerContent={step < 4}
+        progressAriaLabel="Progreso del registro"
+        footer={
+          <WizardFooter
+            showBack={step > 0}
+            onBack={previousStep}
+            primaryLabel={
+              isLastStep ? (pending ? "Guardando..." : "Guardar registro") : "Continuar"
+            }
+            primaryDisabled={!canContinue()}
+            primaryPending={isLastStep && pending}
+            onPrimaryClick={handlePrimaryAction}
+            primaryIcon={isLastStep ? "save" : "continue"}
+          />
+        }
+      >
         {step === 0 ? (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="date">Fecha</Label>
-              <Input
-                id="date"
-                type="date"
-                value={occurredAt.toISOString().slice(0, 10)}
-                onChange={(e) => {
-                  const next = new Date(occurredAt);
-                  const [year, month, day] = e.target.value.split("-").map(Number);
-                  next.setFullYear(year, month - 1, day);
-                  setField("occurredAt", next);
-                }}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="time">Hora</Label>
-              <Input
-                id="time"
-                type="time"
-                value={occurredAt.toTimeString().slice(0, 5)}
-                onChange={(e) => {
-                  const next = new Date(occurredAt);
-                  const [hours, minutes] = e.target.value.split(":").map(Number);
-                  next.setHours(hours, minutes, 0, 0);
-                  setField("occurredAt", next);
-                }}
-              />
-            </div>
+            <RecordDatePicker
+              value={occurredAt}
+              onChange={(date) => setField("occurredAt", date)}
+            />
+            <RecordTimeInput
+              value={occurredAt}
+              onChange={(date) => setField("occurredAt", date)}
+            />
           </div>
         ) : null}
 
@@ -217,31 +241,35 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
 
         {step === 4 ? (
           <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {allEmotions.map((emotion) => {
                 const selected = emotions.some((item) => item.emotion === emotion);
 
                 return (
-                  <Button
+                  <EmotionChip
                     key={emotion}
-                    type="button"
-                    size="sm"
-                    variant={selected ? "default" : "outline"}
+                    emotion={emotion}
+                    selected={selected}
                     onClick={() => toggleEmotion(emotion)}
-                  >
-                    {emotion}
-                  </Button>
+                  />
                 );
               })}
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-stretch gap-2">
               <Input
                 value={newEmotion}
                 onChange={(e) => setNewEmotion(e.target.value)}
                 placeholder="Nueva emoción"
               />
-              <Button type="button" variant="outline" onClick={handleAddCustomEmotion}>
-                Añadir
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 shrink-0 px-4"
+                disabled={addingEmotion}
+                onClick={handleAddCustomEmotion}
+              >
+                <Plus data-icon="inline-start" aria-hidden="true" />
+                {addingEmotion ? "Añadiendo..." : "Añadir"}
               </Button>
             </div>
             <div className="space-y-4">
@@ -268,34 +296,6 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
             </div>
           </div>
         ) : null}
-
-        <div className="flex gap-2">
-          {step > 0 ? (
-            <Button variant="outline" className="flex-1" onClick={previousStep}>
-              Atrás
-            </Button>
-          ) : (
-            <div className="flex-1" />
-          )}
-          {step < STEPS.length - 1 ? (
-            <Button
-              className="flex-1"
-              disabled={!canContinue()}
-              onClick={nextStep}
-            >
-              Continuar
-            </Button>
-          ) : (
-            <Button
-              className="flex-1"
-              disabled={!canContinue() || pending}
-              onClick={handleSubmit}
-            >
-              {pending ? "Guardando..." : "Guardar registro"}
-            </Button>
-          )}
-        </div>
-      </div>
-    </>
+      </WizardShell>
   );
 }

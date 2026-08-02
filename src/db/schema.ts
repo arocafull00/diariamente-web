@@ -26,6 +26,12 @@ export const reminderFrequencyEnum = pgEnum("reminder_frequency", [
   "weekly",
 ]);
 
+export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
+  "pending",
+  "accepted",
+  "rejected",
+]);
+
 export type RecordEmotion = {
   emotion: string;
   intensity: number;
@@ -85,22 +91,41 @@ export const psychologistPatient = pgTable(
   (table) => [unique("psychologist_patient_patient_id_unique").on(table.patientId)],
 );
 
-export const invitations = pgTable("invitations", {
+export const inviteLinks = pgTable("invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),
-  code: text("code").notNull().unique(),
+  token: text("token").notNull().unique(),
   psychologistId: text("psychologist_id")
     .notNull()
+    .unique()
     .references(() => profiles.id, { onDelete: "cascade" }),
-  patientId: text("patient_id").references(() => profiles.id, {
-    onDelete: "set null",
-  }),
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-  usedAt: timestamp("used_at", { withTimezone: true }),
-  revokedAt: timestamp("revoked_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 });
+
+export const connectionRequests = pgTable(
+  "connection_requests",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    psychologistId: text("psychologist_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    patientId: text("patient_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    status: connectionRequestStatusEnum("status").default("pending").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  },
+  (table) => [
+    unique("connection_requests_pair_unique").on(
+      table.psychologistId,
+      table.patientId,
+    ),
+  ],
+);
 
 export const customEmotions = pgTable(
   "custom_emotions",
@@ -164,6 +189,7 @@ export const auditEvents = pgTable("audit_events", {
 
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;
-export type Invitation = typeof invitations.$inferSelect;
+export type InviteLink = typeof inviteLinks.$inferSelect;
+export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];

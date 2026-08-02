@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UserPlus } from "lucide-react";
 
 import { AppHeader } from "@/components/app-shell/app-header";
 import { PatientCard } from "@/components/patients/patient-card";
@@ -21,6 +22,7 @@ export default async function PatientsPage() {
               Aún no tienes pacientes vinculados.
             </p>
             <Link href="/invitacion" className={cn(buttonVariants(), "mt-4")}>
+              <UserPlus data-icon="inline-start" aria-hidden="true" />
               Invitar paciente
             </Link>
           </div>

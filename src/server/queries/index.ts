@@ -1,12 +1,14 @@
-import { and, count, desc, eq, gt, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
+  connectionRequests,
   customEmotions,
-  invitations,
+  inviteLinks,
   patientRecords,
   profiles,
   psychologistPatient,
+  userReminders,
 } from "@/db/schema";
 
 export async function getPatientRecords(patientId: string) {
@@ -65,6 +67,21 @@ export async function getCustomEmotions(userId: string) {
     .from(customEmotions)
     .where(eq(customEmotions.userId, userId))
     .orderBy(customEmotions.name);
+}
+
+export async function getProfileById(profileId: string) {
+  const [profile] = await db
+    .select({
+      id: profiles.id,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      avatarUrl: profiles.avatarUrl,
+    })
+    .from(profiles)
+    .where(eq(profiles.id, profileId))
+    .limit(1);
+
+  return profile ?? null;
 }
 
 export async function getPatientPsychologist(patientId: string) {
@@ -128,20 +145,75 @@ export async function getUnseenRecordCountForPatient(
   return Number(result?.total ?? 0);
 }
 
-export async function getActiveInvitation(psychologistId: string) {
-  const [invitation] = await db
+export async function getReminderSettings(userId: string) {
+  const [settings] = await db
     .select()
-    .from(invitations)
-    .where(
-      and(
-        eq(invitations.psychologistId, psychologistId),
-        isNull(invitations.usedAt),
-        isNull(invitations.revokedAt),
-        gt(invitations.expiresAt, new Date()),
-      ),
-    )
-    .orderBy(desc(invitations.createdAt))
+    .from(userReminders)
+    .where(eq(userReminders.userId, userId))
     .limit(1);
 
-  return invitation ?? null;
+  return settings ?? null;
+}
+
+export async function getInviteLink(psychologistId: string) {
+  const [link] = await db
+    .select()
+    .from(inviteLinks)
+    .where(eq(inviteLinks.psychologistId, psychologistId))
+    .limit(1);
+
+  return link ?? null;
+}
+
+export async function getInviteLinkByToken(token: string) {
+  const [link] = await db
+    .select()
+    .from(inviteLinks)
+    .where(eq(inviteLinks.token, token))
+    .limit(1);
+
+  return link ?? null;
+}
+
+export async function getPendingConnectionRequests(psychologistId: string) {
+  return db
+    .select({
+      id: connectionRequests.id,
+      createdAt: connectionRequests.createdAt,
+      patientId: profiles.id,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      avatarUrl: profiles.avatarUrl,
+    })
+    .from(connectionRequests)
+    .innerJoin(profiles, eq(profiles.id, connectionRequests.patientId))
+    .where(
+      and(
+        eq(connectionRequests.psychologistId, psychologistId),
+        eq(connectionRequests.status, "pending"),
+      ),
+    )
+    .orderBy(desc(connectionRequests.createdAt));
+}
+
+export async function getPatientPendingRequest(patientId: string) {
+  const [request] = await db
+    .select({
+      id: connectionRequests.id,
+      createdAt: connectionRequests.createdAt,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      avatarUrl: profiles.avatarUrl,
+    })
+    .from(connectionRequests)
+    .innerJoin(profiles, eq(profiles.id, connectionRequests.psychologistId))
+    .where(
+      and(
+        eq(connectionRequests.patientId, patientId),
+        eq(connectionRequests.status, "pending"),
+      ),
+    )
+    .limit(1);
+
+  return request ?? null;
 }

@@ -1,85 +1,67 @@
 "use server";
 
-import { and, eq, gt, isNull } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { db } from "@/db";
-import { invitations, psychologistPatient } from "@/db/schema";
+import { connectionRequests, inviteLinks, psychologistPatient } from "@/db/schema";
 import {
-  generateInvitationCode,
-  getInvitationExpiryDate,
+  generateInviteToken,
+  INVITE_COOKIE_NAME,
 } from "@/lib/invitations";
 import { logAuditEvent } from "@/server/audit";
 import { requireRole } from "@/server/auth/get-current-profile";
-import { getPatientPsychologist } from "@/server/queries";
-import { redeemInvitationSchema } from "@/validation/schemas";
+import { sendPushToUser } from "@/server/push/send-push";
+import {
+  getInviteLinkByToken,
+  getPatientPendingRequest,
+  getPatientPsychologist,
+} from "@/server/queries";
 
 import type { ActionResult } from "./onboarding";
 
-export async function generateInvitation(): Promise<
-  ActionResult & { code?: string }
-> {
+export async function generateInviteLink(): Promise<ActionResult> {
   const profile = await requireRole("psychologist");
 
+  const token = generateInviteToken();
+
   await db
-    .update(invitations)
-    .set({ revokedAt: new Date() })
-    .where(
-      and(
-        eq(invitations.psychologistId, profile.id),
-        isNull(invitations.usedAt),
-        isNull(invitations.revokedAt),
-      ),
-    );
+    .insert(inviteLinks)
+    .values({ token, psychologistId: profile.id })
+    .onConflictDoUpdate({
+      target: inviteLinks.psychologistId,
+      set: { token, createdAt: new Date() },
+    });
 
-  const code = generateInvitationCode();
-  const expiresAt = getInvitationExpiryDate();
-
-  await db.insert(invitations).values({
-    code,
-    psychologistId: profile.id,
-    expiresAt,
+  await logAuditEvent({
+    actorId: profile.id,
+    action: "invitation.link_generated",
+    entityType: "invite_link",
+    entityId: profile.id,
   });
-
-  revalidatePath("/invitacion");
-
-  return { success: true, code };
-}
-
-export async function revokeInvitation(invitationId: string): Promise<ActionResult> {
-  const profile = await requireRole("psychologist");
-
-  await db
-    .update(invitations)
-    .set({ revokedAt: new Date() })
-    .where(
-      and(
-        eq(invitations.id, invitationId),
-        eq(invitations.psychologistId, profile.id),
-        isNull(invitations.usedAt),
-      ),
-    );
 
   revalidatePath("/invitacion");
 
   return { success: true };
 }
 
-export async function redeemInvitation(
-  _prevState: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
+export async function requestConnection(): Promise<ActionResult> {
   const profile = await requireRole("patient");
 
-  const parsed = redeemInvitationSchema.safeParse({
-    code: formData.get("code"),
-  });
+  const cookieStore = await cookies();
+  const token = cookieStore.get(INVITE_COOKIE_NAME)?.value;
 
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Código inválido" };
+  if (!token) {
+    return { error: "El enlace de invitación no es válido" };
   }
 
-  const code = parsed.data.code.toUpperCase();
+  const link = await getInviteLinkByToken(token);
+
+  if (!link) {
+    return { error: "El enlace de invitación no es válido" };
+  }
 
   const existingLink = await getPatientPsychologist(profile.id);
 
@@ -87,79 +69,183 @@ export async function redeemInvitation(
     return { error: "Ya estás vinculado con un psicólogo" };
   }
 
-  const result = await db.transaction(async (tx) => {
-    const [invitation] = await tx
-      .update(invitations)
-      .set({
-        usedAt: new Date(),
-        patientId: profile.id,
-      })
-      .where(
-        and(
-          eq(invitations.code, code),
-          isNull(invitations.usedAt),
-          isNull(invitations.revokedAt),
-          gt(invitations.expiresAt, new Date()),
-        ),
-      )
-      .returning();
+  const pendingRequest = await getPatientPendingRequest(profile.id);
 
-    if (!invitation) {
-      const [existing] = await tx
-        .select()
-        .from(invitations)
-        .where(eq(invitations.code, code))
-        .limit(1);
+  if (pendingRequest) {
+    return { error: "Ya tienes una solicitud de conexión pendiente" };
+  }
 
-      if (!existing) {
-        return { error: "Código inexistente" };
-      }
-
-      if (existing.revokedAt) {
-        return { error: "Este código ha sido revocado" };
-      }
-
-      if (existing.usedAt) {
-        return { error: "Este código ya ha sido utilizado" };
-      }
-
-      if (existing.expiresAt < new Date()) {
-        return { error: "Este código ha caducado" };
-      }
-
-      return { error: "No se pudo utilizar el código" };
-    }
-
-    if (invitation.psychologistId === profile.id) {
-      return { error: "No puedes usar tu propio código" };
-    }
-
-    try {
-      await tx.insert(psychologistPatient).values({
-        psychologistId: invitation.psychologistId,
-        patientId: profile.id,
-      });
-    } catch {
-      return { error: "Ya estás vinculado con un psicólogo" };
-    }
-
-    return { success: true as const, psychologistId: invitation.psychologistId };
-  });
-
-  if ("error" in result && result.error) {
-    return { error: result.error };
+  try {
+    await db.insert(connectionRequests).values({
+      psychologistId: link.psychologistId,
+      patientId: profile.id,
+    });
+  } catch {
+    return { error: "No se pudo enviar la solicitud" };
   }
 
   await logAuditEvent({
     actorId: profile.id,
-    action: "patient.linked",
-    entityType: "psychologist_patient",
-    entityId: profile.id,
-    metadata: { psychologistId: result.psychologistId },
+    action: "connection.requested",
+    entityType: "connection_request",
+    metadata: { psychologistId: link.psychologistId },
   });
 
+  cookieStore.delete(INVITE_COOKIE_NAME);
+
+  after(() =>
+    sendPushToUser(link.psychologistId, {
+      topic: "connection_request",
+      title: "Nueva solicitud de conexión",
+      body: "Tienes una solicitud pendiente de revisar.",
+      url: "/invitacion",
+    }),
+  );
+
+  revalidatePath("/conectar");
   revalidatePath("/perfil");
-  revalidatePath("/ajustes");
+
+  return { success: true };
+}
+
+export async function cancelConnectionRequest(
+  requestId: string,
+): Promise<ActionResult> {
+  const profile = await requireRole("patient");
+
+  await db
+    .update(connectionRequests)
+    .set({ status: "rejected", resolvedAt: new Date() })
+    .where(
+      and(
+        eq(connectionRequests.id, requestId),
+        eq(connectionRequests.patientId, profile.id),
+        eq(connectionRequests.status, "pending"),
+      ),
+    );
+
+  revalidatePath("/perfil");
+
+  return { success: true };
+}
+
+export async function acceptConnectionRequest(
+  requestId: string,
+): Promise<ActionResult> {
+  const profile = await requireRole("psychologist");
+
+  const [request] = await db
+    .select()
+    .from(connectionRequests)
+    .where(
+      and(
+        eq(connectionRequests.id, requestId),
+        eq(connectionRequests.psychologistId, profile.id),
+        eq(connectionRequests.status, "pending"),
+      ),
+    )
+    .limit(1);
+
+  if (!request) {
+    return { error: "La solicitud ya no está disponible" };
+  }
+
+  const existingLink = await getPatientPsychologist(request.patientId);
+
+  if (existingLink) {
+    await db
+      .update(connectionRequests)
+      .set({ status: "rejected", resolvedAt: new Date() })
+      .where(eq(connectionRequests.id, requestId));
+
+    return { error: "El paciente ya está vinculado con otro psicólogo" };
+  }
+
+  try {
+    await db.insert(psychologistPatient).values({
+      psychologistId: profile.id,
+      patientId: request.patientId,
+    });
+  } catch {
+    return { error: "El paciente ya está vinculado con otro psicólogo" };
+  }
+
+  await db
+    .update(connectionRequests)
+    .set({ status: "accepted", resolvedAt: new Date() })
+    .where(eq(connectionRequests.id, requestId));
+
+  await db
+    .update(connectionRequests)
+    .set({ status: "rejected", resolvedAt: new Date() })
+    .where(
+      and(
+        eq(connectionRequests.patientId, request.patientId),
+        eq(connectionRequests.status, "pending"),
+        ne(connectionRequests.id, requestId),
+      ),
+    );
+
+  await logAuditEvent({
+    actorId: profile.id,
+    action: "connection.accepted",
+    entityType: "psychologist_patient",
+    entityId: request.patientId,
+  });
+
+  after(() =>
+    sendPushToUser(request.patientId, {
+      topic: "connection_resolved",
+      title: "Solicitud aceptada",
+      body: "Tu profesional ha aceptado tu solicitud de conexión.",
+      url: "/perfil",
+    }),
+  );
+
+  revalidatePath("/invitacion");
+  revalidatePath("/pacientes");
+
+  return { success: true };
+}
+
+export async function rejectConnectionRequest(
+  requestId: string,
+): Promise<ActionResult> {
+  const profile = await requireRole("psychologist");
+
+  const [request] = await db
+    .update(connectionRequests)
+    .set({ status: "rejected", resolvedAt: new Date() })
+    .where(
+      and(
+        eq(connectionRequests.id, requestId),
+        eq(connectionRequests.psychologistId, profile.id),
+        eq(connectionRequests.status, "pending"),
+      ),
+    )
+    .returning({ patientId: connectionRequests.patientId });
+
+  if (!request) {
+    return { error: "La solicitud ya no está disponible" };
+  }
+
+  await logAuditEvent({
+    actorId: profile.id,
+    action: "connection.rejected",
+    entityType: "connection_request",
+    entityId: requestId,
+  });
+
+  after(() =>
+    sendPushToUser(request.patientId, {
+      topic: "connection_resolved",
+      title: "Solicitud rechazada",
+      body: "Tu profesional ha rechazado tu solicitud de conexión.",
+      url: "/perfil",
+    }),
+  );
+
+  revalidatePath("/invitacion");
 
   return { success: true };
 }
@@ -187,6 +273,47 @@ export async function unlinkFromPsychologist(): Promise<ActionResult> {
 
   revalidatePath("/perfil");
   revalidatePath("/ajustes");
+
+  return { success: true };
+}
+
+export async function unlinkPatient(patientId: string): Promise<ActionResult> {
+  const profile = await requireRole("psychologist");
+
+  const [relationship] = await db
+    .select({ patientId: psychologistPatient.patientId })
+    .from(psychologistPatient)
+    .where(
+      and(
+        eq(psychologistPatient.patientId, patientId),
+        eq(psychologistPatient.psychologistId, profile.id),
+      ),
+    )
+    .limit(1);
+
+  if (!relationship) {
+    return { error: "No estás vinculado con este paciente" };
+  }
+
+  await db
+    .delete(psychologistPatient)
+    .where(
+      and(
+        eq(psychologistPatient.patientId, patientId),
+        eq(psychologistPatient.psychologistId, profile.id),
+      ),
+    );
+
+  await logAuditEvent({
+    actorId: profile.id,
+    action: "psychologist.unlinked",
+    entityType: "psychologist_patient",
+    entityId: patientId,
+  });
+
+  revalidatePath("/pacientes");
+  revalidatePath(`/pacientes/${patientId}`);
+  revalidatePath("/perfil");
 
   return { success: true };
 }

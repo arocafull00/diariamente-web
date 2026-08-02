@@ -6,6 +6,13 @@ export const onboardingSchema = z.object({
   role: z.enum(["patient", "psychologist"]),
 });
 
+export const updateProfileSchema = z.object({
+  firstName: z.string().trim().min(1, "El nombre es obligatorio"),
+  lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
+  avatarUrl: z.string().trim().nullable(),
+  remindersEnabled: z.boolean().optional(),
+});
+
 export const recordEmotionSchema = z.object({
   emotion: z.string().trim().min(1),
   intensity: z.number().int().min(1).max(10),
@@ -29,10 +36,6 @@ export const updateRecordSchema = z.object({
 
 export const customEmotionSchema = z.object({
   name: z.string().trim().min(1, "El nombre es obligatorio").max(50),
-});
-
-export const redeemInvitationSchema = z.object({
-  code: z.string().trim().min(1, "Introduce un código"),
 });
 
 export const reminderSchema = z.object({

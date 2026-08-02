@@ -1,15 +1,9 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
-import { useState } from "react";
+import { useAuth, useSignIn } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type GoogleSignInFormProps = {
@@ -42,22 +36,21 @@ function GoogleIcon() {
 export function GoogleSignInForm({
   redirectUrl = "/",
 }: GoogleSignInFormProps) {
+  const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
   const { signIn, fetchStatus } = useSignIn();
   const [error, setError] = useState<string | null>(null);
 
-  if (!signIn) {
-    return (
-      <Card className="w-full max-w-sm shadow-sm">
-        <CardHeader className="text-center">
-          <Skeleton className="mx-auto h-7 w-40" />
-          <Skeleton className="mx-auto mt-2 h-4 w-56" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Skeleton className="h-11 w-full rounded-lg" />
-          <Skeleton className="mx-auto h-8 w-full max-w-xs" />
-        </CardContent>
-      </Card>
-    );
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) {
+      return;
+    }
+
+    router.replace(redirectUrl);
+  }, [isLoaded, isSignedIn, redirectUrl, router]);
+
+  if (!isLoaded || isSignedIn || !signIn) {
+    return <Skeleton className="h-12 w-full rounded-xl" />;
   }
 
   const isLoading = fetchStatus === "fetching";
@@ -75,46 +68,30 @@ export function GoogleSignInForm({
       return;
     }
 
+    if (ssoError.message?.toLowerCase().includes("already signed in")) {
+      router.replace(redirectUrl);
+      return;
+    }
+
     setError(ssoError.message ?? "No se pudo iniciar sesión");
   };
 
   return (
-    <Card className="w-full max-w-sm shadow-sm">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-semibold text-foreground">
-          Iniciar sesión
-        </CardTitle>
-        <CardDescription>
-          Continúa con tu cuenta de Google
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {error ? (
-          <p className="text-sm text-destructive">{error}</p>
-        ) : null}
-        <button
-          type="button"
-          disabled={isLoading}
-          onClick={handleGoogleSignIn}
-          className="relative flex w-full items-center justify-center rounded-lg border border-border bg-white px-4 py-3 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
-        >
-          <span className="absolute left-4">
-            <GoogleIcon />
-          </span>
-          {isLoading ? "Redirigiendo..." : "Google"}
-        </button>
-        <p className="text-center text-xs leading-relaxed text-muted-foreground">
-          Al hacer clic en continuar, aceptas nuestros{" "}
-          <a href="#" className="text-primary hover:underline">
-            Términos de Servicio
-          </a>{" "}
-          y{" "}
-          <a href="#" className="text-primary hover:underline">
-            Política de Privacidad
-          </a>
-          .
-        </p>
-      </CardContent>
-    </Card>
+    <div className="w-full space-y-3">
+      {error ? (
+        <p className="text-center text-sm text-destructive">{error}</p>
+      ) : null}
+      <button
+        type="button"
+        disabled={isLoading}
+        onClick={handleGoogleSignIn}
+        className="relative flex w-full items-center justify-center rounded-xl border border-border bg-card px-4 py-3.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted disabled:opacity-50"
+      >
+        <span className="absolute left-4">
+          <GoogleIcon />
+        </span>
+        {isLoading ? "Redirigiendo..." : "Continuar con Google"}
+      </button>
+    </div>
   );
 }

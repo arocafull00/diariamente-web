@@ -1,18 +1,20 @@
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-import { AppShell } from "@/components/app-shell/app-shell";
-import { requireProfile } from "@/server/auth/get-current-profile";
+import { AppLayoutContent } from "@/components/app-shell/app-layout-content";
+import { AppLoading } from "@/components/app-shell/app-loading";
+import { RealtimeRefresh } from "@/components/pwa/realtime-refresh";
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const profile = await requireProfile();
-
-  if (!profile.role) {
-    redirect("/onboarding");
-  }
-
-  return <AppShell profile={profile}>{children}</AppShell>;
+  return (
+    <>
+      <RealtimeRefresh />
+      <Suspense fallback={<AppLoading />}>
+        <AppLayoutContent>{children}</AppLayoutContent>
+      </Suspense>
+    </>
+  );
 }

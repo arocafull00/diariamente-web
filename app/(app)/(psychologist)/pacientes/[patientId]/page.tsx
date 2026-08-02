@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { AppHeader } from "@/components/app-shell/app-header";
+import { PatientDetailHeader } from "@/components/patients/patient-detail-header";
+import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
 import { RecordCard } from "@/components/records/record-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
 import { getPatientRecords } from "@/server/queries";
-import { getFullName, getInitials } from "@/lib/utils-app";
+import { getFullName } from "@/lib/utils-app";
 
 type PatientDetailPageProps = {
   params: Promise<{ patientId: string }>;
@@ -23,31 +23,20 @@ export default async function PatientDetailPage({
 
   const { patient } = result;
   const records = await getPatientRecords(patientId);
+  const patientName = getFullName(patient.firstName, patient.lastName);
+  const lastActivityAt = records[0]?.occurredAt ?? null;
 
   return (
     <>
-      <AppHeader title={getFullName(patient.firstName, patient.lastName)} backHref="/pacientes" />
+      <PatientDetailHeader
+        patientId={patientId}
+        firstName={patient.firstName}
+        lastName={patient.lastName}
+        avatarUrl={patient.avatarUrl}
+        recordCount={records.length}
+        lastActivityAt={lastActivityAt}
+      />
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="size-14">
-            {patient.avatarUrl ? (
-              <AvatarImage src={patient.avatarUrl} alt="" />
-            ) : null}
-            <AvatarFallback>
-              {getInitials(patient.firstName, patient.lastName)}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold">
-              {getFullName(patient.firstName, patient.lastName)}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {records.length}{" "}
-              {records.length === 1 ? "registro" : "registros"}
-            </p>
-          </div>
-        </div>
-
         {records.length === 0 ? (
           <div className="rounded-lg bg-secondary p-6 text-center text-sm text-muted-foreground">
             Este paciente aún no tiene registros.
@@ -64,6 +53,12 @@ export default async function PatientDetailPage({
             ))}
           </div>
         )}
+
+        <PatientUnlinkButton
+          patientId={patientId}
+          patientName={patientName}
+          layout="footer"
+        />
 
         <Link
           href="/pacientes"

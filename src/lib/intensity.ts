@@ -24,13 +24,33 @@ export function getRecordIntensity(
   return "HIGH";
 }
 
-export const INTENSITY_BADGE_COLORS: Record<
+export const INTENSITY_STYLES: Record<
   EmotionIntensity,
-  { bg: string; text: string }
+  {
+    accent: string;
+    badge: string;
+    panel: string;
+    text: string;
+  }
 > = {
-  LOW: { bg: "#dbfce7", text: "#166534" },
-  MEDIUM: { bg: "#fff9c3", text: "#854d0e" },
-  HIGH: { bg: "#fec9c8", text: "#991b1b" },
+  LOW: {
+    accent: "bg-intensity-low-accent",
+    badge: "bg-intensity-low text-intensity-low-foreground",
+    panel: "bg-intensity-low",
+    text: "text-intensity-low-foreground",
+  },
+  MEDIUM: {
+    accent: "bg-intensity-medium-accent",
+    badge: "bg-intensity-medium text-intensity-medium-foreground",
+    panel: "bg-intensity-medium",
+    text: "text-intensity-medium-foreground",
+  },
+  HIGH: {
+    accent: "bg-intensity-high-accent",
+    badge: "bg-intensity-high text-intensity-high-foreground",
+    panel: "bg-intensity-high",
+    text: "text-intensity-high-foreground",
+  },
 };
 
 export function formatIntensity(intensity: EmotionIntensity) {

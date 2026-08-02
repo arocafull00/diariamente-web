@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BookOpen,
-  Home,
-  PlusCircle,
-  User,
-  Users,
-  UserPlus,
-} from "lucide-react";
+import { BookOpen, Home, User, Users, UserPlus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -21,7 +14,6 @@ type NavItem = {
 
 const patientItems: NavItem[] = [
   { href: "/inicio", label: "Inicio", icon: Home },
-  { href: "/nuevo-registro", label: "Nuevo", icon: PlusCircle },
   { href: "/mis-registros", label: "Registros", icon: BookOpen },
   { href: "/perfil", label: "Perfil", icon: User },
 ];

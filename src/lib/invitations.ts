@@ -1,14 +1,13 @@
 import { customAlphabet } from "nanoid";
 
-export const generateInvitationCode = customAlphabet(
-  "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",
-  8,
+export const generateInviteToken = customAlphabet(
+  "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789",
+  21,
 );
 
-export const INVITATION_EXPIRY_DAYS = 7;
-
-export function getInvitationExpiryDate(from = new Date()) {
-  const expiresAt = new Date(from);
-  expiresAt.setDate(expiresAt.getDate() + INVITATION_EXPIRY_DAYS);
-  return expiresAt;
+export function buildInviteUrl(origin: string, token: string) {
+  return `${origin}/conectar/${token}`;
 }
+
+export const INVITE_COOKIE_NAME = "dm_invite";
+export const INVITE_COOKIE_MAX_AGE_SECONDS = 30 * 60;

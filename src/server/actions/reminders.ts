@@ -1,6 +1,5 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -70,14 +69,4 @@ export async function savePushSubscription(input: {
     });
 
   return { success: true };
-}
-
-export async function getReminderSettings(userId: string) {
-  const [settings] = await db
-    .select()
-    .from(userReminders)
-    .where(eq(userReminders.userId, userId))
-    .limit(1);
-
-  return settings ?? null;
 }
