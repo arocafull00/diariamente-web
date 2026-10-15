@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
-import { ProfileSectionCard } from "./profile-section-card";
+import { ProfileStatCard } from "./profile-stat-card";
 
 type ProfileRecordsSummaryCardProps = {
   recordCount: number;
@@ -10,13 +10,12 @@ export function ProfileRecordsSummaryCard({
   recordCount,
 }: ProfileRecordsSummaryCardProps) {
   return (
-    <Link href="/mis-registros" className="block h-full transition-opacity hover:opacity-90">
-      <ProfileSectionCard title="Mis registros">
-        <div className="mt-auto flex flex-1 flex-col justify-end gap-1 lg:gap-2">
-          <p className="text-sm text-muted-foreground">Total de registros</p>
-          <p className="text-3xl font-bold text-primary lg:text-4xl">{recordCount}</p>
-        </div>
-      </ProfileSectionCard>
-    </Link>
+    <ProfileStatCard
+      href="/mis-registros"
+      title="Mis registros"
+      label={recordCount === 1 ? "registro en total" : "registros en total"}
+      value={recordCount}
+      icon={BookOpen}
+    />
   );
 }

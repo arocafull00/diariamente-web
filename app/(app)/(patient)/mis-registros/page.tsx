@@ -1,8 +1,11 @@
-import { BookOpenText } from "lucide-react";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 import { AppHeader } from "@/components/app-shell/app-header";
 import { NewRecordHeaderButton } from "@/components/app-shell/new-record-header-button";
-import { RecordCard } from "@/components/records/record-card";
+import { MoodBubble } from "@/components/records/mood-bubble";
+import { RecordMoodOverview } from "@/components/records/record-mood-overview";
+import { RecordTimeline } from "@/components/records/record-timeline";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { getPatientRecords } from "@/server/queries";
 
@@ -13,32 +16,32 @@ export default async function MyRecordsPage() {
   return (
     <>
       <AppHeader title="Mis registros" action={<NewRecordHeaderButton />} />
-      <div className="space-y-4">
+      <div className="space-y-6">
         {records.length === 0 ? (
-          <section className="rounded-xl bg-secondary p-6 text-center shadow-sm">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <BookOpenText className="size-5" aria-hidden="true" />
-            </span>
-            <h2 className="mt-4 font-semibold">Tu espacio está listo</h2>
-            <p className="mx-auto mt-1 max-w-xs text-sm leading-6 text-muted-foreground">
-              Crea tu primer registro para empezar a recoger lo que ocurre entre
+          <section className="relative overflow-hidden rounded-3xl bg-card p-8 text-center shadow-sm ring-1 ring-border/60">
+            <div className="mx-auto mb-6 flex w-fit -space-x-3" aria-hidden="true">
+              <MoodBubble quadrant="HIGH_UNPLEASANT" tone={3} className="size-12" />
+              <MoodBubble quadrant="HIGH_PLEASANT" tone={3} className="size-12" />
+              <MoodBubble quadrant="LOW_UNPLEASANT" tone={3} className="size-12" />
+              <MoodBubble quadrant="LOW_PLEASANT" tone={3} className="size-12" />
+            </div>
+            <h2 className="font-display text-2xl font-medium">Tu espacio está listo</h2>
+            <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
+              Registra cómo te sientes y aquí irás viendo tu recorrido entre
               sesiones.
             </p>
+            <Link
+              href="/nuevo-registro"
+              className="mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background shadow-lg outline-none transition-transform active:scale-95 focus-visible:ring-4 focus-visible:ring-ring/50"
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              Crear primer registro
+            </Link>
           </section>
         ) : (
           <>
-            <p className="px-1 text-sm font-medium text-muted-foreground">
-              {records.length} {records.length === 1 ? "registro" : "registros"}
-            </p>
-            <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-              {records.map((record) => (
-                <RecordCard
-                  key={record.id}
-                  record={record}
-                  href={`/registro/${record.id}`}
-                />
-              ))}
-            </div>
+            <RecordMoodOverview title="Tu balance emocional" records={records} />
+            <RecordTimeline records={records} showUnseen={false} />
           </>
         )}
       </div>

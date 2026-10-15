@@ -1,10 +1,13 @@
 "use client";
 
-import { Download, LoaderCircle } from "lucide-react";
+import { Smartphone } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import {
+  SettingsRowContent,
+  settingsRowClassName,
+} from "@/components/profile/settings-row-content";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -117,23 +120,20 @@ export function PwaInstallButton() {
   }
 
   return (
-    <Button
+    <button
       type="button"
-      variant="outline"
-      className="w-full"
+      data-slot="settings-row"
+      className={settingsRowClassName}
       disabled={loading}
       onClick={handleInstall}
     >
-      {loading ? (
-        <LoaderCircle
-          className="animate-spin"
-          data-icon="inline-start"
-          aria-hidden="true"
-        />
-      ) : (
-        <Download data-icon="inline-start" aria-hidden="true" />
-      )}
-      {loading ? "Instalando..." : "Descargar app"}
-    </Button>
+      <SettingsRowContent
+        icon={Smartphone}
+        tone="green"
+        title={loading ? "Instalando..." : "Descargar app"}
+        description="Añade DiariaMente a tu pantalla de inicio."
+        loading={loading}
+      />
+    </button>
   );
 }

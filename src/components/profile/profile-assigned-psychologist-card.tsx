@@ -16,21 +16,19 @@ export function ProfileAssignedPsychologistCard({
   avatarUrl,
 }: ProfileAssignedPsychologistCardProps) {
   return (
-    <ProfileSectionCard
-      title="Psicólogo/a asignado"
-      action={<ProfileUnlinkPsychologistButton />}
-    >
+    <ProfileSectionCard title="Tu psicólogo/a">
       <div className="flex items-center gap-3">
-        <Avatar className="size-12">
+        <Avatar className="size-12 ring-2 ring-accent">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
           <AvatarFallback>{getInitials(firstName, lastName)}</AvatarFallback>
         </Avatar>
-        <div className="min-w-0">
-          <p className="truncate font-medium">
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-semibold">
             {getFullName(firstName, lastName)}
           </p>
-          <p className="text-sm text-muted-foreground">Psicólogo/a asignado</p>
+          <p className="text-sm text-muted-foreground">Vinculado contigo</p>
         </div>
+        <ProfileUnlinkPsychologistButton />
       </div>
     </ProfileSectionCard>
   );

@@ -104,10 +104,9 @@ export function ProfileEditAvatarField({
       <Button
         type="button"
         variant="secondary"
-        className="gap-2 rounded-full px-4 shadow-xs"
         onClick={() => inputRef.current?.click()}
       >
-        <Camera className="size-4" />
+        <Camera data-icon="inline-start" aria-hidden="true" />
         Cambiar foto
       </Button>
       <AvatarPicker

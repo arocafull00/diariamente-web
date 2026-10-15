@@ -43,7 +43,7 @@ export function ProfileUnlinkPsychologistButton() {
       <AlertDialogTrigger
         className={cn(
           buttonVariants({ variant: "destructive", size: "sm" }),
-          "shadow-xs",
+          "shrink-0",
         )}
       >
         Desvincular
@@ -58,7 +58,11 @@ export function ProfileUnlinkPsychologistButton() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction disabled={pending} onClick={handleUnlink}>
+          <AlertDialogAction
+            variant="destructive"
+            disabled={pending}
+            onClick={handleUnlink}
+          >
             {pending ? (
               <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
             ) : (

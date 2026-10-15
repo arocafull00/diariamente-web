@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 import { WizardProgress } from "@/components/wizard/wizard-progress";
@@ -50,7 +53,11 @@ export function WizardShell({
       </div>
 
       <div className="flex flex-1 flex-col pt-9 sm:pt-11">
-        <div
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className={cn(
             "flex flex-1 flex-col",
             centerContent ? "justify-center" : "justify-start",
@@ -86,7 +93,7 @@ export function WizardShell({
               {error}
             </p>
           ) : null}
-        </div>
+        </motion.div>
 
         <div className="mt-auto pt-10 sm:pt-12">{footer}</div>
       </div>

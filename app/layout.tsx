@@ -1,9 +1,11 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
+import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next"
 
 import { Background } from "@/components/background";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -40,6 +42,12 @@ const quicksand = localFont({
   ],
 });
 
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   title: "DiariaMente",
   description: "Registro emocional diario para pacientes y psicólogos",
@@ -69,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${quicksand.variable} h-full antialiased`}
+      className={`${quicksand.variable} ${fraunces.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body
@@ -78,9 +86,11 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <Background />
-          <div className="relative z-10 flex min-h-full flex-1 flex-col">
-            {children}
-          </div>
+          <MotionProvider>
+            <div className="relative z-10 flex min-h-full flex-1 flex-col">
+              {children}
+            </div>
+          </MotionProvider>
           <Toaster richColors position="top-center" />
           <ServiceWorkerRegister />
           <Analytics />

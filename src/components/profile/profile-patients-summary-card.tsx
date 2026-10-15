@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { Users } from "lucide-react";
 
-import { ProfileSectionCard } from "./profile-section-card";
+import { ProfileStatCard } from "./profile-stat-card";
 
 type ProfilePatientsSummaryCardProps = {
   patientCount: number;
@@ -10,13 +10,12 @@ export function ProfilePatientsSummaryCard({
   patientCount,
 }: ProfilePatientsSummaryCardProps) {
   return (
-    <Link href="/pacientes" className="block h-full transition-opacity hover:opacity-90">
-      <ProfileSectionCard title="Mis pacientes">
-        <div className="mt-auto flex flex-1 flex-col justify-end gap-1 lg:gap-2">
-          <p className="text-sm text-muted-foreground">Total de pacientes</p>
-          <p className="text-3xl font-bold text-primary lg:text-4xl">{patientCount}</p>
-        </div>
-      </ProfileSectionCard>
-    </Link>
+    <ProfileStatCard
+      href="/pacientes"
+      title="Mis pacientes"
+      label={patientCount === 1 ? "paciente vinculado" : "pacientes vinculados"}
+      value={patientCount}
+      icon={Users}
+    />
   );
 }

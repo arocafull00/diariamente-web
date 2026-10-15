@@ -49,24 +49,44 @@ export const recordEmotionSchema = z.object({
   intensity: z.number().int().min(1).max(10),
 });
 
+const moodQuadrantSchema = z.enum([
+  "HIGH_UNPLEASANT",
+  "HIGH_PLEASANT",
+  "LOW_UNPLEASANT",
+  "LOW_PLEASANT",
+]);
+
+const contextTagsSchema = z
+  .array(z.string().trim().min(1).max(40))
+  .max(12);
+
+const reflectionSchema = z.string().trim().max(5000);
+
 export const createRecordSchema = z.object({
   occurredAt: z.coerce.date(),
-  situation: z.string().trim().min(1, "La situación es obligatoria"),
-  thoughts: z.string().trim().min(1, "Los pensamientos son obligatorios"),
-  behaviours: z.string().trim().min(1, "Las conductas son obligatorias"),
+  quadrant: moodQuadrantSchema,
   emotions: z
     .array(recordEmotionSchema)
     .min(1, "Selecciona al menos una emoción"),
+  context: z.object({
+    topics: contextTagsSchema,
+    people: contextTagsSchema,
+    places: contextTagsSchema,
+  }),
+  situation: reflectionSchema,
+  thoughts: reflectionSchema,
+  behaviours: reflectionSchema,
 });
 
 export const updateRecordSchema = z.object({
-  situation: z.string().trim().min(1),
-  thoughts: z.string().trim().min(1),
-  behaviours: z.string().trim().min(1),
+  situation: reflectionSchema,
+  thoughts: reflectionSchema,
+  behaviours: reflectionSchema,
 });
 
 export const customEmotionSchema = z.object({
   name: z.string().trim().min(1, "El nombre es obligatorio").max(50),
+  quadrant: moodQuadrantSchema,
 });
 
 export const reminderSchema = z.object({

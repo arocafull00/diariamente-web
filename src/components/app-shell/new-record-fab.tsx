@@ -1,12 +1,15 @@
 "use client";
 
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-const FAB_ROUTES = new Set(["/inicio", "/mis-registros"]);
+const MotionLink = motion.create(Link);
+
+const FAB_ROUTES = new Set(["/mis-registros"]);
 
 export function NewRecordFab() {
   const pathname = usePathname();
@@ -18,15 +21,27 @@ export function NewRecordFab() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-20 z-50 pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="mx-auto flex max-w-lg justify-end px-4">
-        <Link
+        <MotionLink
           href="/nuevo-registro"
+          initial={{ opacity: 0, scale: 0.6, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.92 }}
+          transition={{ type: "spring", stiffness: 420, damping: 24, delay: 0.1 }}
           className={cn(
-            "pointer-events-auto flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-lg transition-transform hover:bg-primary/90 active:scale-95",
+            "pointer-events-auto flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90",
           )}
         >
-          <Plus className="size-5 shrink-0" strokeWidth={2.5} />
+          <motion.span
+            initial={{ rotate: -90 }}
+            animate={{ rotate: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
+            className="flex"
+          >
+            <Plus className="size-5 shrink-0" strokeWidth={2.5} />
+          </motion.span>
           <span>Nuevo registro</span>
-        </Link>
+        </MotionLink>
       </div>
     </div>
   );

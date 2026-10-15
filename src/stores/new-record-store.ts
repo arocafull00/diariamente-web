@@ -1,35 +1,84 @@
-import type { RecordEmotion } from "@/db/schema";
+import type { MoodQuadrant, RecordContext } from "@/db/schema";
+import { EMPTY_RECORD_CONTEXT, type ContextGroup } from "@/lib/context-tags";
 import { create } from "zustand";
 
-type NewRecordState = {
-  step: number;
-  occurredAt: Date;
+export const NEW_RECORD_STEPS = [
+  "quadrant",
+  "emotion",
+  "intensity",
+  "context",
+  "situation",
+  "thoughts",
+  "behaviours",
+  "when",
+] as const;
+
+export type NewRecordStep = (typeof NEW_RECORD_STEPS)[number];
+
+type NewRecordData = {
+  stepIndex: number;
+  direction: 1 | -1;
+  quadrant: MoodQuadrant | null;
+  emotion: string | null;
+  intensity: number;
+  context: RecordContext;
   situation: string;
   thoughts: string;
   behaviours: string;
-  emotions: RecordEmotion[];
-  setField: <K extends keyof Omit<NewRecordState, "setField" | "nextStep" | "previousStep" | "reset">>(
-    key: K,
-    value: NewRecordState[K],
-  ) => void;
+  occurredAt: Date;
+};
+
+type NewRecordState = NewRecordData & {
+  setField: <K extends keyof NewRecordData>(key: K, value: NewRecordData[K]) => void;
+  selectQuadrant: (quadrant: MoodQuadrant) => void;
+  selectEmotion: (emotion: string, quadrant: MoodQuadrant) => void;
+  toggleContextTag: (group: ContextGroup, tag: string) => void;
   nextStep: () => void;
   previousStep: () => void;
   reset: () => void;
 };
 
-const initialState = {
-  step: 0,
-  occurredAt: new Date(),
-  situation: "",
-  thoughts: "",
-  behaviours: "",
-  emotions: [] as RecordEmotion[],
-};
+function getInitialState(): NewRecordData {
+  return {
+    stepIndex: 0,
+    direction: 1,
+    quadrant: null,
+    emotion: null,
+    intensity: 5,
+    context: EMPTY_RECORD_CONTEXT,
+    situation: "",
+    thoughts: "",
+    behaviours: "",
+    occurredAt: new Date(),
+  };
+}
 
 export const useNewRecordStore = create<NewRecordState>((set) => ({
-  ...initialState,
+  ...getInitialState(),
   setField: (key, value) => set({ [key]: value }),
-  nextStep: () => set((state) => ({ step: state.step + 1 })),
-  previousStep: () => set((state) => ({ step: Math.max(0, state.step - 1) })),
-  reset: () => set({ ...initialState, occurredAt: new Date() }),
+  selectQuadrant: (quadrant) =>
+    set((state) => ({
+      quadrant,
+      emotion: state.quadrant === quadrant ? state.emotion : null,
+      stepIndex: 1,
+      direction: 1,
+    })),
+  selectEmotion: (emotion, quadrant) => set({ emotion, quadrant }),
+  toggleContextTag: (group, tag) =>
+    set((state) => {
+      const current = state.context[group];
+      const next = current.includes(tag)
+        ? current.filter((item) => item !== tag)
+        : [...current, tag];
+
+      return { context: { ...state.context, [group]: next } };
+    }),
+  nextStep: () =>
+    set((state) => ({
+      stepIndex: Math.min(state.stepIndex + 1, NEW_RECORD_STEPS.length - 1),
+      direction: 1,
+    })),
+  previousStep: () =>
+    set((state) => ({ stepIndex: Math.max(0, state.stepIndex - 1), direction: -1 })),
+  reset: () => set(getInitialState()),
 }));

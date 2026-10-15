@@ -7,16 +7,19 @@ import {
   MessageCircleMore,
   Save,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { RecordContextSection } from "@/components/records/record-context-section";
 import { RecordDetailField } from "@/components/records/record-detail-field";
 import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
+import { RecordMoodHero } from "@/components/records/record-mood-hero";
 import { RecordNotePanel } from "@/components/records/record-note-panel";
-import { RecordSummary } from "@/components/records/record-summary";
 import { Button } from "@/components/ui/button";
 import type { PatientRecord, Profile, RecordNote } from "@/db/schema";
+import { getDominantEmotion, getRecordQuadrant } from "@/lib/emotions";
 import {
   markRecordAsSeen,
   updatePatientRecord,
@@ -68,50 +71,81 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
   }
 
   const showNotePanel = isPsychologist && note;
+  const quadrant = getRecordQuadrant(record);
+  const pendingFields = [situation, thoughts, behaviours].filter(
+    (value) => value.trim().length === 0,
+  ).length;
 
   const recordContent = (
     <>
-      <RecordSummary
+      <RecordMoodHero
+        emotion={getDominantEmotion(record.emotions)}
+        quadrant={quadrant}
         occurredAt={record.occurredAt}
-        intensity={record.emotionIntensity}
       />
 
-      <section className="divide-y divide-border overflow-hidden rounded-xl bg-card shadow-sm">
-        <RecordDetailField
-          id="situation"
-          icon={MapPin}
-          label="Situación"
-          value={situation}
-          editable={isPatient}
-          onChange={setSituation}
-        />
-        <RecordDetailField
-          id="thoughts"
-          icon={MessageCircleMore}
-          label="Pensamientos"
-          value={thoughts}
-          editable={isPatient}
-          onChange={setThoughts}
-        />
-        <RecordDetailField
-          id="behaviours"
-          icon={Footprints}
-          label="Conductas"
-          value={behaviours}
-          editable={isPatient}
-          onChange={setBehaviours}
-        />
+      <RecordContextSection context={record.context} quadrant={quadrant} />
+
+      <section className="space-y-3">
+        <div className="flex items-baseline justify-between gap-3 px-1">
+          <h2 className="font-display text-xl font-medium">Profundizar</h2>
+          {pendingFields > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {pendingFields} {pendingFields === 1 ? "pendiente" : "pendientes"}
+            </p>
+          ) : null}
+        </div>
+        <div className="divide-y divide-border overflow-hidden rounded-3xl bg-card shadow-sm ring-1 ring-border/60">
+          <RecordDetailField
+            id="situation"
+            icon={MapPin}
+            label="Situación"
+            placeholder="¿Qué ha pasado?"
+            value={situation}
+            editable={isPatient}
+            onChange={setSituation}
+          />
+          <RecordDetailField
+            id="thoughts"
+            icon={MessageCircleMore}
+            label="Pensamientos"
+            placeholder="¿Qué pasó por tu cabeza?"
+            value={thoughts}
+            editable={isPatient}
+            onChange={setThoughts}
+          />
+          <RecordDetailField
+            id="behaviours"
+            icon={Footprints}
+            label="Conductas"
+            placeholder="¿Qué hiciste?"
+            value={behaviours}
+            editable={isPatient}
+            onChange={setBehaviours}
+          />
+        </div>
       </section>
 
-      <RecordEmotionsSection emotions={record.emotions} />
+      {record.emotions.length > 1 ? (
+        <RecordEmotionsSection emotions={record.emotions} />
+      ) : null}
 
-      {isPatient && (hasChanges || pending) ? (
-        <Button
-          size="lg"
-          className="w-full rounded-xl shadow-sm"
-          disabled={pending}
-          onClick={handleSave}
-        >
+      <AnimatePresence>
+        {isPatient && (hasChanges || pending) ? (
+          <motion.div
+            key="save"
+            initial={{ opacity: 0, y: 24, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            className="sticky bottom-24 lg:bottom-6"
+          >
+            <Button
+              size="lg"
+              className="h-14 w-full rounded-full shadow-lg"
+              disabled={pending}
+              onClick={handleSave}
+            >
           {pending ? (
             <LoaderCircle
               className="animate-spin"
@@ -121,9 +155,11 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
           ) : (
             <Save data-icon="inline-start" aria-hidden="true" />
           )}
-          {pending ? "Guardando..." : "Guardar cambios"}
-        </Button>
-      ) : null}
+              {pending ? "Guardando..." : "Guardar cambios"}
+            </Button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </>
   );
 
@@ -131,7 +167,7 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
     return (
       <div className="w-full">
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6">
-          <div className="min-w-0 space-y-5">{recordContent}</div>
+          <div className="min-w-0 space-y-6">{recordContent}</div>
           <RecordNotePanel note={note} />
         </div>
       </div>
@@ -139,7 +175,7 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
   }
 
   return (
-    <div className="w-full space-y-5 lg:mx-auto lg:max-w-3xl">
+    <div className="w-full space-y-6 lg:mx-auto lg:max-w-3xl">
       {recordContent}
     </div>
   );

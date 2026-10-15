@@ -1,21 +1,17 @@
 type ProfileSectionCardProps = {
   title: string;
-  action?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export function ProfileSectionCard({
-  title,
-  action,
-  children,
-}: ProfileSectionCardProps) {
+export function ProfileSectionCard({ title, children }: ProfileSectionCardProps) {
   return (
-    <section className="flex h-full flex-col rounded-2xl bg-secondary p-4 lg:border lg:border-border lg:bg-card lg:p-5 lg:shadow-sm">
-      <div className="mb-3 flex items-start justify-between gap-3 lg:mb-4">
-        <h2 className="text-sm font-semibold text-primary lg:text-base">{title}</h2>
-        {action}
+    <section className="flex h-full flex-col gap-2">
+      <h2 className="px-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+        {title}
+      </h2>
+      <div className="flex flex-1 flex-col rounded-3xl border border-border/60 bg-card p-4 shadow-xs lg:p-5">
+        {children}
       </div>
-      {children}
     </section>
   );
 }

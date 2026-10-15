@@ -39,24 +39,29 @@ export function RecordDatePicker({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id}>{label}</Label>
+    <div className={cn("min-w-0 space-y-2", className)}>
+      <Label
+        htmlFor={id}
+        className="px-1 text-xs font-semibold text-muted-foreground"
+      >
+        {label}
+      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           disabled={disabled}
           render={
             <Button
               id={id}
-              variant="outline"
+              variant="ghost"
               disabled={disabled}
-              className="h-11 w-full justify-start gap-2 px-3 font-normal"
+              className="h-12 w-full justify-start gap-2 rounded-2xl bg-secondary px-3.5 text-sm font-semibold text-foreground hover:bg-secondary/70 focus-visible:ring-3 focus-visible:ring-ring/50 aria-expanded:bg-secondary/70"
             />
           }
         >
-          <CalendarIcon className="size-4 text-muted-foreground" />
-          {formatOccurrenceDate(value)}
+          <CalendarIcon className="size-4 shrink-0 text-primary" />
+          <span className="truncate">{formatOccurrenceDate(value)}</span>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto rounded-3xl p-0" align="start">
           <Calendar
             mode="single"
             selected={value}

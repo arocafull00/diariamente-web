@@ -1,9 +1,13 @@
 "use client";
 
+import { BellRing } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import {
+  SettingsRowContent,
+  settingsRowClassName,
+} from "@/components/profile/settings-row-content";
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -79,14 +83,20 @@ export function PushSubscribeButton() {
   }
 
   return (
-    <Button
+    <button
       type="button"
-      variant="outline"
-      className="w-full"
+      data-slot="settings-row"
+      className={settingsRowClassName}
       disabled={loading}
       onClick={handleSubscribe}
     >
-      {loading ? "Activando..." : "Activar notificaciones push"}
-    </Button>
+      <SettingsRowContent
+        icon={BellRing}
+        tone="blue"
+        title={loading ? "Activando..." : "Notificaciones push"}
+        description="Permite los avisos en este dispositivo."
+        loading={loading}
+      />
+    </button>
   );
 }

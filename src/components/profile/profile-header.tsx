@@ -30,13 +30,13 @@ export function ProfileHeader({
   const resolvedAvatarUrl = avatarUrl ?? imageUrl ?? null;
 
   return (
-    <header className="flex flex-col items-center gap-4 pt-2 pb-6 text-center lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-8 lg:shadow-sm">
+    <header className="flex flex-col items-center gap-4 pt-4 pb-4 text-center lg:rounded-3xl lg:border lg:border-border/60 lg:bg-card lg:p-8 lg:shadow-xs">
       <div className="relative">
-        <Avatar className="size-24 text-lg lg:size-28">
+        <Avatar className="size-28 text-lg shadow-lg ring-4 ring-card lg:size-32">
           {resolvedAvatarUrl ? (
             <AvatarImage src={resolvedAvatarUrl} alt="" />
           ) : null}
-          <AvatarFallback className="text-xl">
+          <AvatarFallback className="bg-accent text-2xl font-semibold text-primary">
             {getInitials(firstName, lastName)}
           </AvatarFallback>
         </Avatar>
@@ -47,11 +47,14 @@ export function ProfileHeader({
           imageUrl={imageUrl ?? null}
         />
       </div>
-      <div className="space-y-2">
-        <h1 className="text-xl font-bold tracking-tight lg:text-2xl">
+      <div className="flex flex-col items-center gap-2">
+        <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
           {getFullName(firstName, lastName)}
         </h1>
-        <Badge variant="secondary" className="bg-accent text-primary">
+        <Badge
+          variant="secondary"
+          className="h-6 rounded-full bg-accent px-3 font-semibold text-primary"
+        >
           {getRoleLabel(role)}
         </Badge>
         <p className="text-sm text-muted-foreground">

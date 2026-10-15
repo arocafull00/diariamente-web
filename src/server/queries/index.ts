@@ -1,4 +1,4 @@
-import { and, count, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull } from "drizzle-orm";
 
 import { db } from "@/db";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
@@ -34,6 +34,8 @@ export async function getPatientRecordsForPsychologist(
       thoughts: patientRecords.thoughts,
       behaviours: patientRecords.behaviours,
       emotions: patientRecords.emotions,
+      quadrant: patientRecords.quadrant,
+      context: patientRecords.context,
       emotionIntensity: patientRecords.emotionIntensity,
       seenAt: patientRecords.seenAt,
       createdAt: patientRecords.createdAt,
@@ -103,10 +105,33 @@ export async function getPsychologistPatients(psychologistId: string) {
     unseenCounts.map((item) => [item.patientId, Number(item.unseenCount)]),
   );
 
+  const latestRecords = patients.length
+    ? await db
+        .selectDistinctOn([patientRecords.patientId], {
+          patientId: patientRecords.patientId,
+          occurredAt: patientRecords.occurredAt,
+          quadrant: patientRecords.quadrant,
+          emotions: patientRecords.emotions,
+        })
+        .from(patientRecords)
+        .where(
+          inArray(
+            patientRecords.patientId,
+            patients.map((patient) => patient.id),
+          ),
+        )
+        .orderBy(patientRecords.patientId, desc(patientRecords.occurredAt))
+    : [];
+
+  const latestMap = new Map(
+    latestRecords.map(({ patientId, ...record }) => [patientId, record]),
+  );
+
   return resolveAvatarUrls(
     patients.map((patient) => ({
       ...patient,
       unseenCount: unseenMap.get(patient.id) ?? 0,
+      latestRecord: latestMap.get(patient.id) ?? null,
     })),
   );
 }
@@ -163,6 +188,24 @@ export async function getRecentPatientRecords(
     .where(eq(patientRecords.patientId, patientId))
     .orderBy(desc(patientRecords.occurredAt))
     .limit(limit);
+}
+
+export async function getPatientRecordsSince(patientId: string, since: Date) {
+  return db
+    .select({
+      id: patientRecords.id,
+      occurredAt: patientRecords.occurredAt,
+      quadrant: patientRecords.quadrant,
+      emotions: patientRecords.emotions,
+    })
+    .from(patientRecords)
+    .where(
+      and(
+        eq(patientRecords.patientId, patientId),
+        gte(patientRecords.occurredAt, since),
+      ),
+    )
+    .orderBy(desc(patientRecords.occurredAt));
 }
 
 export async function getPatientRecordCount(patientId: string) {

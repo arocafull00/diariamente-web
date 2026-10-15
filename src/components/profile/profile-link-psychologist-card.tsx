@@ -22,7 +22,7 @@ export function ProfileLinkPsychologistCard({
     return (
       <ProfileSectionCard title="Solicitud de conexión">
         <div className="flex items-center gap-3">
-          <Avatar className="size-12">
+          <Avatar className="size-12 ring-2 ring-accent">
             {pendingRequest.avatarUrl ? (
               <AvatarImage src={pendingRequest.avatarUrl} alt="" />
             ) : null}
@@ -31,7 +31,7 @@ export function ProfileLinkPsychologistCard({
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate font-medium">
+            <p className="truncate font-semibold">
               {getFullName(pendingRequest.firstName, pendingRequest.lastName)}
             </p>
             <p className="text-sm text-muted-foreground">
@@ -45,8 +45,8 @@ export function ProfileLinkPsychologistCard({
   }
 
   return (
-    <ProfileSectionCard title="Psicólogo/a asignado">
-      <p className="text-sm text-muted-foreground">
+    <ProfileSectionCard title="Tu psicólogo/a">
+      <p className="text-sm leading-relaxed text-muted-foreground">
         Pide a tu psicólogo/a que te comparta su enlace de invitación para
         vincularos.
       </p>

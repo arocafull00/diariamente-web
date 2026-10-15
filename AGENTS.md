@@ -251,6 +251,7 @@ Los colores viven en `app/globals.css` como variables CSS en `:root` y se expone
 | Focus            | `ring-ring`                                          |
 | Error / destructivo | `text-destructive`, `bg-destructive`              |
 | Intensidad emocional | `bg-intensity-low`, `bg-intensity-medium`, `bg-intensity-high` |
+| Cuadrantes de ánimo | `bg-mood-{hu,hp,lu,lp}-{1,2,3,soft}`, `text-mood-*-strong` vía `getMoodStyles` de `@/lib/emotions` |
 
 **Prohibido en UI:** valores hex/rgb literales en componentes, paletas Tailwind no definidas en el tema (`zinc-*`, `red-500`, etc.) y `style` con colores fijos.
 

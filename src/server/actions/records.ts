@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
 import { db } from "@/db";
-import { customEmotions, patientRecords } from "@/db/schema";
+import { customEmotions, patientRecords, type MoodQuadrant } from "@/db/schema";
 import { getRecordIntensity } from "@/lib/intensity";
 import { logAuditEvent } from "@/server/audit";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
@@ -42,6 +42,8 @@ export async function createPatientRecord(
       thoughts: parsed.data.thoughts,
       behaviours: parsed.data.behaviours,
       emotions: parsed.data.emotions,
+      quadrant: parsed.data.quadrant,
+      context: parsed.data.context,
       emotionIntensity,
     })
     .returning({ id: patientRecords.id });
@@ -109,6 +111,7 @@ export async function updatePatientRecord(
 
   revalidatePath(`/registro/${recordId}`);
   revalidatePath("/mis-registros");
+  revalidatePath("/inicio");
 
   return { success: true };
 }
@@ -142,10 +145,13 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
   return { success: true };
 }
 
-export async function createCustomEmotion(name: string): Promise<ActionResult> {
+export async function createCustomEmotion(
+  name: string,
+  quadrant: MoodQuadrant,
+): Promise<ActionResult> {
   const profile = await requireRole("patient");
 
-  const parsed = customEmotionSchema.safeParse({ name });
+  const parsed = customEmotionSchema.safeParse({ name, quadrant });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Nombre inválido" };
@@ -155,6 +161,7 @@ export async function createCustomEmotion(name: string): Promise<ActionResult> {
     await db.insert(customEmotions).values({
       userId: profile.id,
       name: parsed.data.name,
+      quadrant: parsed.data.quadrant,
     });
   } catch {
     return { error: "Esta emoción ya existe" };

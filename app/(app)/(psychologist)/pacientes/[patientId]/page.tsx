@@ -1,6 +1,7 @@
 import { PatientDetailHeader } from "@/components/patients/patient-detail-header";
 import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
-import { RecordCard } from "@/components/records/record-card";
+import { RecordMoodOverview } from "@/components/records/record-mood-overview";
+import { RecordTimeline } from "@/components/records/record-timeline";
 import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
 import { getPatientRecordsForPsychologist } from "@/server/queries";
 import { getFullName } from "@/lib/utils-app";
@@ -37,23 +38,16 @@ export default async function PatientDetailPage({
         recordCount={records.length}
         lastActivityAt={lastActivityAt}
       />
-      <div className="space-y-4">
+      <div className="space-y-6">
         {records.length === 0 ? (
-          <div className="rounded-lg bg-secondary p-6 text-center text-sm text-muted-foreground">
+          <div className="rounded-3xl bg-card p-8 text-center text-sm text-muted-foreground shadow-sm ring-1 ring-border/60">
             Este paciente aún no tiene registros.
           </div>
         ) : (
-          <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-            {records.map((record) => (
-              <RecordCard
-                key={record.id}
-                record={record}
-                href={`/registro/${record.id}`}
-                showUnseen
-                hasNote={record.hasNote}
-              />
-            ))}
-          </div>
+          <>
+            <RecordMoodOverview title="Balance emocional" records={records} />
+            <RecordTimeline records={records} showUnseen />
+          </>
         )}
 
         <PatientUnlinkButton

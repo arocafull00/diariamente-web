@@ -2,6 +2,8 @@ import { headers } from "next/headers";
 
 import { AppHeader } from "@/components/app-shell/app-header";
 import { InvitationsSheet } from "@/components/invitations/invitations-sheet";
+import { StaggerItem } from "@/components/motion/stagger-item";
+import { StaggerList } from "@/components/motion/stagger-list";
 import { PatientCard } from "@/components/patients/patient-card";
 import { requireRole } from "@/server/auth/get-current-profile";
 import {
@@ -35,9 +37,9 @@ export default async function PatientsPage() {
           />
         }
       />
-      <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 xl:grid-cols-3">
+      <StaggerList className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 xl:grid-cols-3">
         {patients.length === 0 ? (
-          <div className="rounded-lg bg-secondary p-6 text-center">
+          <div className="rounded-3xl bg-card p-8 text-center shadow-sm ring-1 ring-border/60">
             <p className="text-sm text-muted-foreground">
               Aún no tienes pacientes vinculados.
             </p>
@@ -52,17 +54,19 @@ export default async function PatientsPage() {
           </div>
         ) : (
           patients.map((patient) => (
-            <PatientCard
-              key={patient.id}
-              id={patient.id}
-              firstName={patient.firstName}
-              lastName={patient.lastName}
-              avatarUrl={patient.avatarUrl}
-              unseenCount={patient.unseenCount}
-            />
+            <StaggerItem key={patient.id}>
+              <PatientCard
+                id={patient.id}
+                firstName={patient.firstName}
+                lastName={patient.lastName}
+                avatarUrl={patient.avatarUrl}
+                unseenCount={patient.unseenCount}
+                latestRecord={patient.latestRecord}
+              />
+            </StaggerItem>
           ))
         )}
-      </div>
+      </StaggerList>
     </>
   );
 }

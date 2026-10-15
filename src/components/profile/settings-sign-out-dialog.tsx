@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
+import { SettingsRowContent, settingsRowClassName } from "./settings-row-content";
+
 type SettingsSignOutDialogProps = {
   variant?: "button" | "icon";
 };
@@ -47,42 +49,39 @@ export function SettingsSignOutDialog({
       </AlertDialogTrigger>
     ) : (
       <AlertDialogTrigger
-        className="w-full"
-        render={<Button variant="secondary" />}
+        data-slot="settings-row"
+        className={settingsRowClassName}
       >
-        <LogOut data-icon="inline-start" aria-hidden="true" />
-        Cerrar sesión
+        <SettingsRowContent icon={LogOut} tone="primary" title="Cerrar sesión" />
       </AlertDialogTrigger>
     );
 
   return (
-    <div className={variant === "icon" ? undefined : "w-full"}>
-      <AlertDialog>
-        {trigger}
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Cerrar sesión?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tendrás que volver a iniciar sesión para acceder a tu cuenta.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction disabled={pending} onClick={handleSignOut}>
-              {pending ? (
-                <LoaderCircle
-                  className="animate-spin"
-                  data-icon="inline-start"
-                  aria-hidden="true"
-                />
-              ) : (
-                <LogOut data-icon="inline-start" aria-hidden="true" />
-              )}
-              {pending ? "Cerrando sesión..." : "Cerrar sesión"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    <AlertDialog>
+      {trigger}
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>¿Cerrar sesión?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Tendrás que volver a iniciar sesión para acceder a tu cuenta.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction disabled={pending} onClick={handleSignOut}>
+            {pending ? (
+              <LoaderCircle
+                className="animate-spin"
+                data-icon="inline-start"
+                aria-hidden="true"
+              />
+            ) : (
+              <LogOut data-icon="inline-start" aria-hidden="true" />
+            )}
+            {pending ? "Cerrando sesión..." : "Cerrar sesión"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

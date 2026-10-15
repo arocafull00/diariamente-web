@@ -10,6 +10,7 @@
   --font-sans: var(--font-quicksand);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-quicksand);
+  --font-display: var(--font-fraunces);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +50,27 @@
   --color-intensity-high-foreground: #991b1b;
   --color-intensity-high-accent: #ef4444;
   --color-brand-secondary-light: #e8dfff;
+  --color-mood-foreground: var(--mood-foreground);
+  --color-mood-hu-1: var(--mood-hu-1);
+  --color-mood-hu-2: var(--mood-hu-2);
+  --color-mood-hu-3: var(--mood-hu-3);
+  --color-mood-hu-soft: var(--mood-hu-soft);
+  --color-mood-hu-strong: var(--mood-hu-strong);
+  --color-mood-hp-1: var(--mood-hp-1);
+  --color-mood-hp-2: var(--mood-hp-2);
+  --color-mood-hp-3: var(--mood-hp-3);
+  --color-mood-hp-soft: var(--mood-hp-soft);
+  --color-mood-hp-strong: var(--mood-hp-strong);
+  --color-mood-lu-1: var(--mood-lu-1);
+  --color-mood-lu-2: var(--mood-lu-2);
+  --color-mood-lu-3: var(--mood-lu-3);
+  --color-mood-lu-soft: var(--mood-lu-soft);
+  --color-mood-lu-strong: var(--mood-lu-strong);
+  --color-mood-lp-1: var(--mood-lp-1);
+  --color-mood-lp-2: var(--mood-lp-2);
+  --color-mood-lp-3: var(--mood-lp-3);
+  --color-mood-lp-soft: var(--mood-lp-soft);
+  --color-mood-lp-strong: var(--mood-lp-strong);
   --color-brand-primary-dark: var(--brand-primary-dark);
   --color-brand-primary-light: var(--brand-primary-light);
   --radius-sm: calc(var(--radius) * 0.6);
@@ -95,6 +117,27 @@
   --sidebar-ring: #7c3aed;
   --brand-primary-dark: #6d28d9;
   --brand-primary-light: #8b5cf6;
+  --mood-foreground: #1c1626;
+  --mood-hu-1: #ffc2b8;
+  --mood-hu-2: #ff8f80;
+  --mood-hu-3: #ff6464;
+  --mood-hu-soft: #fff0ec;
+  --mood-hu-strong: #c42a3a;
+  --mood-hp-1: #ffeaa0;
+  --mood-hp-2: #ffd84a;
+  --mood-hp-3: #ffbe2e;
+  --mood-hp-soft: #fff8dc;
+  --mood-hp-strong: #9a5b00;
+  --mood-lu-1: #c4dbff;
+  --mood-lu-2: #8fb8ff;
+  --mood-lu-3: #6a9cf5;
+  --mood-lu-soft: #ecf3ff;
+  --mood-lu-strong: #2953b8;
+  --mood-lp-1: #c4f2d1;
+  --mood-lp-2: #86e3a6;
+  --mood-lp-3: #4fd284;
+  --mood-lp-soft: #eafbef;
+  --mood-lp-strong: #157a43;
 }
 
 @layer base {
@@ -110,4 +153,15 @@
   button:not(:disabled) {
     @apply cursor-pointer;
   }
+}
+
+@utility bg-mood-spectrum {
+  background-image: conic-gradient(
+    from 210deg,
+    var(--mood-hu-2),
+    var(--mood-hp-2),
+    var(--mood-lp-2),
+    var(--mood-lu-2),
+    var(--mood-hu-2)
+  );
 }

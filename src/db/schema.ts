@@ -21,6 +21,13 @@ export const emotionIntensityEnum = pgEnum("emotion_intensity", [
   "HIGH",
 ]);
 
+export const moodQuadrantEnum = pgEnum("mood_quadrant", [
+  "HIGH_UNPLEASANT",
+  "HIGH_PLEASANT",
+  "LOW_UNPLEASANT",
+  "LOW_PLEASANT",
+]);
+
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
   "accepted",
@@ -30,6 +37,12 @@ export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
 export type RecordEmotion = {
   emotion: string;
   intensity: number;
+};
+
+export type RecordContext = {
+  topics: string[];
+  people: string[];
+  places: string[];
 };
 
 export const profiles = pgTable("profiles", {
@@ -55,10 +68,15 @@ export const patientRecords = pgTable("patient_records", {
     .notNull()
     .references(() => profiles.id, { onDelete: "cascade" }),
   occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
-  situation: text("situation").notNull(),
-  thoughts: text("thoughts").notNull(),
-  behaviours: text("behaviours").notNull(),
+  situation: text("situation").default("").notNull(),
+  thoughts: text("thoughts").default("").notNull(),
+  behaviours: text("behaviours").default("").notNull(),
   emotions: jsonb("emotions").$type<RecordEmotion[]>().notNull(),
+  quadrant: moodQuadrantEnum("quadrant"),
+  context: jsonb("context")
+    .$type<RecordContext>()
+    .default({ topics: [], people: [], places: [] })
+    .notNull(),
   emotionIntensity: emotionIntensityEnum("emotion_intensity").notNull(),
   seenAt: timestamp("seen_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -148,6 +166,7 @@ export const customEmotions = pgTable(
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    quadrant: moodQuadrantEnum("quadrant"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -200,7 +219,9 @@ export const auditEvents = pgTable("audit_events", {
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;
 export type RecordNote = typeof recordNotes.$inferSelect;
+export type CustomEmotion = typeof customEmotions.$inferSelect;
 export type InviteLink = typeof inviteLinks.$inferSelect;
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
+export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];

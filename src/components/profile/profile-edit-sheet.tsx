@@ -128,10 +128,10 @@ export function ProfileEditSheet({
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger
-        className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors hover:text-foreground"
+        className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background transition-transform hover:scale-105 active:scale-95"
         aria-label="Editar perfil"
       >
-        <Pencil className="size-3.5" />
+        <Pencil className="size-4" />
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-md">
         <SheetHeader>
@@ -185,7 +185,7 @@ export function ProfileEditSheet({
             </div>
           </div>
           <SheetFooter className="px-0 pb-4">
-            <Button type="submit" className="w-full" disabled={pending}>
+            <Button type="submit" size="lg" className="w-full" disabled={pending}>
               {pending ? (
                 <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
               ) : (

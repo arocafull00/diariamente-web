@@ -1,97 +1,109 @@
-import { ArrowUpRight, CalendarDays, StickyNote } from "lucide-react";
-import Link from "next/link";
-
+import { StickyNote } from "lucide-react";
+import { PressableLink } from "@/components/motion/pressable-link";
+import { MoodBubble } from "@/components/records/mood-bubble";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import type { PatientRecord } from "@/db/schema";
-import { getEmotionColor } from "@/lib/emotions";
-import { formatIntensity, INTENSITY_STYLES } from "@/lib/intensity";
+import { getContextTags } from "@/lib/context-tags";
+import {
+  getDominantEmotion,
+  getMoodStyles,
+  getRecordQuadrant,
+} from "@/lib/emotions";
 import { cn } from "@/lib/utils";
-import { formatRecordDate } from "@/lib/utils-app";
+import { formatOccurrenceTime, formatRecordDate } from "@/lib/utils-app";
 
 type RecordCardProps = {
   record: PatientRecord;
   href: string;
   showUnseen?: boolean;
   hasNote?: boolean;
+  compactDate?: boolean;
 };
 
-export function RecordCard({ record, href, showUnseen, hasNote }: RecordCardProps) {
-  const dominantEmotion = [...record.emotions].sort(
-    (a, b) => b.intensity - a.intensity,
-  )[0];
-  const emotionColor = dominantEmotion
-    ? getEmotionColor(dominantEmotion.emotion)
-    : null;
-  const intensityStyles = INTENSITY_STYLES[record.emotionIntensity];
+const MAX_TAGS = 3;
+
+export function RecordCard({
+  record,
+  href,
+  showUnseen = false,
+  hasNote = false,
+  compactDate = false,
+}: RecordCardProps) {
+  const dominant = getDominantEmotion(record.emotions);
+  const quadrant = getRecordQuadrant(record);
+  const styles = getMoodStyles(quadrant);
+  const tags = getContextTags(record.context);
+  const preview = record.situation || record.thoughts || record.behaviours;
+  const occurredAt = new Date(record.occurredAt);
+  const extraEmotions = record.emotions.length - 1;
 
   return (
-    <Link
+    <PressableLink
       href={href}
-      className="group block h-full rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="group block h-full rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      <Card className="h-full gap-0 py-0 shadow-sm ring-0 transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md group-active:translate-y-0 motion-reduce:transform-none">
-        <div className={cn("h-1 w-full shrink-0", intensityStyles.accent)} />
-        <CardContent className="flex flex-1 flex-col space-y-4 p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
-                <CalendarDays className="size-4" aria-hidden="true" />
+      <article className="flex h-full items-start gap-4 rounded-3xl bg-card p-4 shadow-sm ring-1 ring-border/60 transition-shadow duration-200 ease-out group-hover:shadow-md sm:p-5">
+        <MoodBubble
+          quadrant={quadrant}
+          tone={3}
+          className="size-14 font-display text-xl font-semibold transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6"
+        >
+          {dominant?.intensity}
+        </MoodBubble>
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex items-start justify-between gap-2">
+            <p className="truncate font-display text-lg leading-tight font-medium">
+              Me sentí{" "}
+              <span className={cn("italic", styles.strong)}>
+                {dominant?.emotion.toLowerCase() ?? "así"}
               </span>
-              <time dateTime={new Date(record.occurredAt).toISOString()}>
-                {formatRecordDate(record.occurredAt)}
-              </time>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
+            </p>
+            <div className="flex shrink-0 items-center gap-1.5">
               {hasNote ? (
-                <span
-                  className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary"
+                <StickyNote
+                  className="size-4 text-primary"
                   aria-label="Registro con nota"
-                >
-                  <StickyNote className="size-4" aria-hidden="true" />
-                </span>
+                />
               ) : null}
-              {showUnseen && !record.seenAt ? (
-                <Badge className="shrink-0">Nuevo</Badge>
-              ) : null}
+              {showUnseen && !record.seenAt ? <Badge>Nuevo</Badge> : null}
             </div>
           </div>
-
-          <p className="line-clamp-3 min-h-18 flex-1 text-[0.95rem] leading-6 font-semibold text-pretty sm:text-base">
-            {record.situation}
+          <p className="text-xs text-muted-foreground">
+            <time dateTime={occurredAt.toISOString()}>
+              {compactDate
+                ? formatOccurrenceTime(occurredAt)
+                : formatRecordDate(occurredAt)}
+            </time>
+            {extraEmotions > 0
+              ? ` · +${extraEmotions} ${extraEmotions === 1 ? "emoción" : "emociones"}`
+              : null}
           </p>
-
-          <div className="mt-auto flex items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              {dominantEmotion && emotionColor ? (
+          {preview ? (
+            <p className="line-clamp-2 text-sm leading-6 text-pretty">{preview}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground italic">
+              Sin profundizar todavía
+            </p>
+          )}
+          {tags.length > 0 ? (
+            <p className="flex flex-wrap gap-1.5 pt-1">
+              {tags.slice(0, MAX_TAGS).map((tag) => (
                 <span
-                  className="inline-block max-w-44 truncate rounded-full px-2.5 py-1 text-xs font-semibold"
-                  style={{
-                    backgroundColor: emotionColor.bg,
-                    color: emotionColor.text,
-                  }}
+                  key={tag}
+                  className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", styles.soft)}
                 >
-                  {dominantEmotion.emotion} {dominantEmotion.intensity}/10
+                  {tag}
+                </span>
+              ))}
+              {tags.length > MAX_TAGS ? (
+                <span className="px-1 text-xs font-medium text-muted-foreground">
+                  +{tags.length - MAX_TAGS}
                 </span>
               ) : null}
-              <span
-                className={cn(
-                  "rounded-full px-2.5 py-1 text-xs font-semibold",
-                  intensityStyles.badge,
-                )}
-              >
-                Intensidad {formatIntensity(record.emotionIntensity)}
-              </span>
-            </div>
-            <span
-              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none"
-              aria-hidden="true"
-            >
-              <ArrowUpRight className="size-4" />
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+            </p>
+          ) : null}
+        </div>
+      </article>
+    </PressableLink>
   );
 }
