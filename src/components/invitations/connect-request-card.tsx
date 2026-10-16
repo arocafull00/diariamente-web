@@ -56,7 +56,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           psicólogo/a deberá aceptarla para vincularos.
         </p>
       </div>
-      <Button className="w-full" disabled={pending} onClick={handleRequest}>
+      <Button size="lg" className="w-full" disabled={pending} onClick={handleRequest}>
         {pending ? (
           <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
         ) : (

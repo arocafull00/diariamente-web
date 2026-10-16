@@ -28,6 +28,8 @@ export const moodQuadrantEnum = pgEnum("mood_quadrant", [
   "LOW_PLEASANT",
 ]);
 
+export const bodyFigureEnum = pgEnum("body_figure", ["masculine", "feminine"]);
+
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
   "accepted",
@@ -37,6 +39,13 @@ export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
 export type RecordEmotion = {
   emotion: string;
   intensity: number;
+};
+
+export type BodySensation = {
+  region: string;
+  pleasantness: number;
+  intensity: number;
+  tags: string[];
 };
 
 export type RecordContext = {
@@ -51,6 +60,7 @@ export const profiles = pgTable("profiles", {
   lastName: text("last_name"),
   role: userRoleEnum("role"),
   avatarUrl: text("avatar_url"),
+  bodyFigure: bodyFigureEnum("body_figure"),
   onboardingCompleted: boolean("onboarding_completed")
     .default(false)
     .notNull(),
@@ -76,6 +86,10 @@ export const patientRecords = pgTable("patient_records", {
   context: jsonb("context")
     .$type<RecordContext>()
     .default({ topics: [], people: [], places: [] })
+    .notNull(),
+  bodySensations: jsonb("body_sensations")
+    .$type<BodySensation[]>()
+    .default([])
     .notNull(),
   emotionIntensity: emotionIntensityEnum("emotion_intensity").notNull(),
   seenAt: timestamp("seen_at", { withTimezone: true }),
@@ -225,3 +239,4 @@ export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
 export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];
+export type BodyFigure = (typeof bodyFigureEnum.enumValues)[number];

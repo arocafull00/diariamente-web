@@ -4,14 +4,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import type { CustomEmotion, MoodQuadrant, RecordContext } from "@/db/schema";
+import type { BodySensation, MoodQuadrant, RecordContext } from "@/db/schema";
 import { EMPTY_RECORD_CONTEXT, getContextTags } from "@/lib/context-tags";
-import {
-  CUSTOM_EMOTION_DEFINITION,
-  EMOTIONS,
-  type EmotionOption,
-} from "@/lib/emotions";
-import { createCustomEmotion, createPatientRecord } from "@/server/actions/records";
+import { EMOTIONS, type EmotionOption } from "@/lib/emotions";
+import { createPatientRecord } from "@/server/actions/records";
 import {
   NEW_RECORD_STEPS,
   useNewRecordStore,
@@ -36,6 +32,7 @@ type RecordDraft = {
   quadrant: MoodQuadrant;
   intensity: number;
   context: RecordContext;
+  bodySensations: BodySensation[];
   situation: string;
   thoughts: string;
   behaviours: string;
@@ -52,14 +49,10 @@ type SavedRecord = {
   needsDeepen: boolean;
 };
 
-export function useNewRecordWizard(
-  customEmotions: Pick<CustomEmotion, "name" | "quadrant">[],
-) {
+export function useNewRecordWizard() {
   const router = useRouter();
   const store = useNewRecordStore();
   const [pending, startTransition] = useTransition();
-  const [creatingEmotion, startCreateEmotion] = useTransition();
-  const [extraEmotions, setExtraEmotions] = useState<EmotionOption[]>([]);
   const [savedRecord, setSavedRecord] = useState<SavedRecord | null>(null);
 
   useEffect(() => {
@@ -70,18 +63,9 @@ export function useNewRecordWizard(
 
   const step = NEW_RECORD_STEPS[store.stepIndex];
   const phase = PHASE_BY_STEP[step];
-  const options = dedupeOptions([
-    ...EMOTIONS,
-    ...customEmotions.map((emotion) => ({
-      name: emotion.name,
-      definition: CUSTOM_EMOTION_DEFINITION,
-      quadrant: emotion.quadrant,
-    })),
-    ...extraEmotions,
-  ]);
+  const options: EmotionOption[] = EMOTIONS;
   const definition =
-    options.find((option) => option.name === store.emotion)?.definition ??
-    CUSTOM_EMOTION_DEFINITION;
+    options.find((option) => option.name === store.emotion)?.definition ?? "";
 
   function save(draft: RecordDraft) {
     startTransition(async () => {
@@ -90,6 +74,7 @@ export function useNewRecordWizard(
         quadrant: draft.quadrant,
         emotions: [{ emotion: draft.emotion, intensity: draft.intensity }],
         context: draft.context,
+        bodySensations: draft.bodySensations,
         situation: draft.situation,
         thoughts: draft.thoughts,
         behaviours: draft.behaviours,
@@ -123,6 +108,7 @@ export function useNewRecordWizard(
       quadrant: store.quadrant,
       intensity: store.intensity,
       context: store.context,
+      bodySensations: store.bodySensations,
       situation: store.situation,
       thoughts: store.thoughts,
       behaviours: store.behaviours,
@@ -141,6 +127,7 @@ export function useNewRecordWizard(
       quadrant,
       intensity: 5,
       context: EMPTY_RECORD_CONTEXT,
+      bodySensations: [],
       situation: "",
       thoughts: "",
       behaviours: "",
@@ -156,36 +143,6 @@ export function useNewRecordWizard(
     }
 
     store.selectEmotion(option.name, quadrant);
-  }
-
-  function handleCreateEmotion(name: string) {
-    const quadrant = store.quadrant;
-
-    if (!quadrant || !name) {
-      return;
-    }
-
-    setExtraEmotions((current) => [
-      ...current,
-      { name, definition: CUSTOM_EMOTION_DEFINITION, quadrant },
-    ]);
-    store.selectEmotion(name, quadrant);
-
-    startCreateEmotion(async () => {
-      const result = await createCustomEmotion(name, quadrant);
-
-      if (!result.error) {
-        return;
-      }
-
-      setExtraEmotions((current) => current.filter((item) => item.name !== name));
-
-      if (useNewRecordStore.getState().emotion === name) {
-        useNewRecordStore.getState().setField("emotion", null);
-      }
-
-      toast.error(result.error);
-    });
   }
 
   function close() {
@@ -209,12 +166,10 @@ export function useNewRecordWizard(
     options,
     definition,
     pending,
-    creatingEmotion,
     savedRecord,
     handleSave,
     handleQuickSave,
     handleSearchSelect,
-    handleCreateEmotion,
     back,
     close,
     openSavedRecord: () => {
@@ -223,19 +178,4 @@ export function useNewRecordWizard(
       }
     },
   };
-}
-
-function dedupeOptions(options: EmotionOption[]) {
-  const seen = new Set<string>();
-
-  return options.filter((option) => {
-    const key = option.name.toLowerCase();
-
-    if (seen.has(key)) {
-      return false;
-    }
-
-    seen.add(key);
-    return true;
-  });
 }

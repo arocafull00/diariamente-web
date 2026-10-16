@@ -49,7 +49,7 @@
   --color-intensity-high: #fec9c8;
   --color-intensity-high-foreground: #991b1b;
   --color-intensity-high-accent: #ef4444;
-  --color-brand-secondary-light: #e8dfff;
+  --color-brand-secondary-light: #ecebef;
   --color-mood-foreground: var(--mood-foreground);
   --color-mood-hu-1: var(--mood-hu-1);
   --color-mood-hu-2: var(--mood-hu-2);
@@ -89,34 +89,34 @@
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  --primary: #7c3aed;
+  --primary: #2e2a35;
   --primary-foreground: #ffffff;
-  --secondary: #f4f3fe;
+  --secondary: #f2f1f4;
   --secondary-foreground: #1a1a1a;
   --muted: #f5f5f5;
   --muted-foreground: #626268;
-  --accent: #e8dfff;
+  --accent: #ecebef;
   --accent-foreground: #1a1a1a;
   --destructive: #c7352b;
   --border: #dedce3;
   --input: #cfccd5;
-  --ring: #7c3aed;
-  --chart-1: #7c3aed;
-  --chart-2: #e8dfff;
-  --chart-3: #f4f3fe;
+  --ring: #8a8494;
+  --chart-1: #2e2a35;
+  --chart-2: #ecebef;
+  --chart-3: #f2f1f4;
   --chart-4: #dbfce7;
   --chart-5: #fec9c8;
   --radius: 0.75rem;
   --sidebar: #fafafa;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #7c3aed;
+  --sidebar-primary: #2e2a35;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f3fe;
+  --sidebar-accent: #f2f1f4;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #e0e0e0;
-  --sidebar-ring: #7c3aed;
-  --brand-primary-dark: #6d28d9;
-  --brand-primary-light: #8b5cf6;
+  --sidebar-ring: #8a8494;
+  --brand-primary-dark: #1c1a22;
+  --brand-primary-light: #4a4555;
   --mood-foreground: #1c1626;
   --mood-hu-1: #ffc2b8;
   --mood-hu-2: #ff8f80;
@@ -164,4 +164,51 @@
     var(--mood-lu-2),
     var(--mood-hu-2)
   );
+}
+
+@theme {
+  --animate-mood-ghost: mood-orbit 7s linear infinite, mood-wobble 6s ease-in-out infinite;
+  --animate-mood-float: mood-float 7s ease-in-out infinite;
+  --animate-mood-wobble: mood-wobble 5s ease-in-out infinite;
+
+  @keyframes mood-orbit {
+    from {
+      transform: rotate(0deg) translateX(var(--orbit-radius, 7%)) rotate(0deg) scale(var(--orbit-scale, 1.04));
+    }
+    to {
+      transform: rotate(360deg) translateX(var(--orbit-radius, 7%)) rotate(-360deg) scale(var(--orbit-scale, 1.04));
+    }
+  }
+
+  @keyframes mood-float {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1, 1);
+    }
+    25% {
+      transform: translate(1.5%, -1.5%) scale(1.02, 0.98);
+    }
+    50% {
+      transform: translate(-0.5%, -2.5%) scale(0.98, 1.02);
+    }
+    75% {
+      transform: translate(-1.5%, -1%) scale(1.01, 0.99);
+    }
+  }
+
+  @keyframes mood-wobble {
+    0%,
+    100% {
+      border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+    }
+    25% {
+      border-radius: 56% 44% 53% 47% / 47% 56% 44% 53%;
+    }
+    50% {
+      border-radius: 45% 55% 46% 54% / 55% 45% 54% 46%;
+    }
+    75% {
+      border-radius: 53% 47% 57% 43% / 44% 53% 47% 56%;
+    }
+  }
 }

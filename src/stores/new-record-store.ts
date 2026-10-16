@@ -1,4 +1,4 @@
-import type { MoodQuadrant, RecordContext } from "@/db/schema";
+import type { BodySensation, MoodQuadrant, RecordContext } from "@/db/schema";
 import { EMPTY_RECORD_CONTEXT, type ContextGroup } from "@/lib/context-tags";
 import { create } from "zustand";
 
@@ -22,6 +22,7 @@ type NewRecordData = {
   emotion: string | null;
   intensity: number;
   context: RecordContext;
+  bodySensations: BodySensation[];
   situation: string;
   thoughts: string;
   behaviours: string;
@@ -33,6 +34,8 @@ type NewRecordState = NewRecordData & {
   selectQuadrant: (quadrant: MoodQuadrant) => void;
   selectEmotion: (emotion: string, quadrant: MoodQuadrant) => void;
   toggleContextTag: (group: ContextGroup, tag: string) => void;
+  saveBodySensation: (sensation: BodySensation) => void;
+  removeBodySensation: (region: string) => void;
   nextStep: () => void;
   previousStep: () => void;
   reset: () => void;
@@ -46,6 +49,7 @@ function getInitialState(): NewRecordData {
     emotion: null,
     intensity: 5,
     context: EMPTY_RECORD_CONTEXT,
+    bodySensations: [],
     situation: "",
     thoughts: "",
     behaviours: "",
@@ -73,6 +77,22 @@ export const useNewRecordStore = create<NewRecordState>((set) => ({
 
       return { context: { ...state.context, [group]: next } };
     }),
+  saveBodySensation: (sensation) =>
+    set((state) => {
+      const exists = state.bodySensations.some((item) => item.region === sensation.region);
+
+      return {
+        bodySensations: exists
+          ? state.bodySensations.map((item) =>
+              item.region === sensation.region ? sensation : item,
+            )
+          : [...state.bodySensations, sensation],
+      };
+    }),
+  removeBodySensation: (region) =>
+    set((state) => ({
+      bodySensations: state.bodySensations.filter((item) => item.region !== region),
+    })),
   nextStep: () =>
     set((state) => ({
       stepIndex: Math.min(state.stepIndex + 1, NEW_RECORD_STEPS.length - 1),

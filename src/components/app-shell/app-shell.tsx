@@ -8,7 +8,7 @@ import { DesktopSidebar } from "./desktop-sidebar";
 import { NewRecordFab } from "./new-record-fab";
 
 type AppShellProps = {
-  profile: Profile;
+  profile: Pick<Profile, "firstName" | "lastName" | "avatarUrl" | "role">;
   title?: string;
   showBack?: boolean;
   children: React.ReactNode;

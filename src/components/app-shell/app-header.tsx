@@ -32,15 +32,11 @@ export function AppHeader({ title, eyebrow, showBack, action }: AppHeaderProps) 
           )}
         </div>
         <div className="min-w-0 text-center lg:flex-1 lg:text-left">
-          <p
-            className={cn(
-              "text-[0.625rem] font-semibold tracking-[0.18em] text-primary uppercase lg:text-xs lg:tracking-wider",
-              !eyebrow && "lg:hidden",
-            )}
-          >
-            <span className="lg:hidden">DiariaMente</span>
-            {eyebrow ? <span className="hidden lg:inline">{eyebrow}</span> : null}
-          </p>
+          {eyebrow ? (
+            <p className="hidden text-xs font-semibold tracking-wider text-primary uppercase lg:block">
+              {eyebrow}
+            </p>
+          ) : null}
           <h1 className="truncate text-base leading-tight font-semibold lg:text-xl">
             {title}
           </h1>

@@ -14,8 +14,6 @@ export type EmotionOption = {
   quadrant: MoodQuadrant | null;
 };
 
-export const CUSTOM_EMOTION_DEFINITION = "emoción añadida por ti";
-
 export const MOOD_QUADRANTS: {
   id: MoodQuadrant;
   energy: string;
@@ -195,8 +193,10 @@ export type MoodStyles = {
   tones: Record<MoodTone, string>;
   soft: string;
   strong: string;
-  stroke: string;
+  color: string;
   ring: string;
+  ghost: string;
+  fade: string;
 };
 
 export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
@@ -204,29 +204,37 @@ export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
     tones: { 1: "bg-mood-hu-1", 2: "bg-mood-hu-2", 3: "bg-mood-hu-3" },
     soft: "bg-mood-hu-soft",
     strong: "text-mood-hu-strong",
-    stroke: "stroke-mood-hu-2",
+    color: "var(--mood-hu-2)",
     ring: "ring-mood-hu-strong",
+    ghost: "bg-mood-hu-3/60",
+    fade: "to-mood-hu-1/70",
   },
   HIGH_PLEASANT: {
     tones: { 1: "bg-mood-hp-1", 2: "bg-mood-hp-2", 3: "bg-mood-hp-3" },
     soft: "bg-mood-hp-soft",
     strong: "text-mood-hp-strong",
-    stroke: "stroke-mood-hp-2",
+    color: "var(--mood-hp-2)",
     ring: "ring-mood-hp-strong",
+    ghost: "bg-mood-hp-3/60",
+    fade: "to-mood-hp-1/70",
   },
   LOW_UNPLEASANT: {
     tones: { 1: "bg-mood-lu-1", 2: "bg-mood-lu-2", 3: "bg-mood-lu-3" },
     soft: "bg-mood-lu-soft",
     strong: "text-mood-lu-strong",
-    stroke: "stroke-mood-lu-2",
+    color: "var(--mood-lu-2)",
     ring: "ring-mood-lu-strong",
+    ghost: "bg-mood-lu-3/60",
+    fade: "to-mood-lu-1/70",
   },
   LOW_PLEASANT: {
     tones: { 1: "bg-mood-lp-1", 2: "bg-mood-lp-2", 3: "bg-mood-lp-3" },
     soft: "bg-mood-lp-soft",
     strong: "text-mood-lp-strong",
-    stroke: "stroke-mood-lp-2",
+    color: "var(--mood-lp-2)",
     ring: "ring-mood-lp-strong",
+    ghost: "bg-mood-lp-3/60",
+    fade: "to-mood-lp-1/70",
   },
 };
 
@@ -234,8 +242,10 @@ const NEUTRAL_MOOD_STYLES: MoodStyles = {
   tones: { 1: "bg-accent", 2: "bg-accent", 3: "bg-accent" },
   soft: "bg-secondary",
   strong: "text-primary",
-  stroke: "stroke-primary",
+  color: "var(--primary)",
   ring: "ring-primary",
+  ghost: "bg-primary/30",
+  fade: "to-accent",
 };
 
 export function getMoodStyles(quadrant: MoodQuadrant | null) {

@@ -1,22 +1,18 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
 import { db } from "@/db";
-import { customEmotions, patientRecords, type MoodQuadrant } from "@/db/schema";
+import { patientRecords } from "@/db/schema";
 import { getRecordIntensity } from "@/lib/intensity";
 import { logAuditEvent } from "@/server/audit";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { sendPushToUser } from "@/server/push/send-push";
 import { getPatientPsychologist } from "@/server/queries";
-import {
-  createRecordSchema,
-  customEmotionSchema,
-  updateRecordSchema,
-} from "@/validation/schemas";
+import { createRecordSchema, updateRecordSchema } from "@/validation/schemas";
 
 import type { ActionResult } from "./onboarding";
 
@@ -44,6 +40,7 @@ export async function createPatientRecord(
       emotions: parsed.data.emotions,
       quadrant: parsed.data.quadrant,
       context: parsed.data.context,
+      bodySensations: parsed.data.bodySensations,
       emotionIntensity,
     })
     .returning({ id: patientRecords.id });
@@ -141,50 +138,6 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
 
   revalidatePath("/pacientes");
   revalidatePath(`/registro/${recordId}`);
-
-  return { success: true };
-}
-
-export async function createCustomEmotion(
-  name: string,
-  quadrant: MoodQuadrant,
-): Promise<ActionResult> {
-  const profile = await requireRole("patient");
-
-  const parsed = customEmotionSchema.safeParse({ name, quadrant });
-
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Nombre inválido" };
-  }
-
-  try {
-    await db.insert(customEmotions).values({
-      userId: profile.id,
-      name: parsed.data.name,
-      quadrant: parsed.data.quadrant,
-    });
-  } catch {
-    return { error: "Esta emoción ya existe" };
-  }
-
-  revalidatePath("/nuevo-registro");
-
-  return { success: true };
-}
-
-export async function deleteCustomEmotion(emotionId: string): Promise<ActionResult> {
-  const profile = await requireRole("patient");
-
-  await db
-    .delete(customEmotions)
-    .where(
-      and(
-        eq(customEmotions.id, emotionId),
-        eq(customEmotions.userId, profile.id),
-      ),
-    );
-
-  revalidatePath("/nuevo-registro");
 
   return { success: true };
 }

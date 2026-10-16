@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 
 import { EmotionSearchResult } from "@/components/records/emotion-search-result";
@@ -15,9 +15,7 @@ import type { EmotionOption } from "@/lib/emotions";
 
 type EmotionSearchSheetProps = {
   options: EmotionOption[];
-  creating: boolean;
   onSelect: (option: EmotionOption) => void;
-  onCreate: (name: string) => void;
 };
 
 const MAX_RESULTS = 30;
@@ -32,9 +30,7 @@ function normalize(value: string) {
 
 export function EmotionSearchSheet({
   options,
-  creating,
   onSelect,
-  onCreate,
 }: EmotionSearchSheetProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -42,9 +38,6 @@ export function EmotionSearchSheet({
   const results = normalizedQuery
     ? options.filter((option) => normalize(option.name).includes(normalizedQuery))
     : options;
-  const hasExactMatch = options.some(
-    (option) => normalize(option.name) === normalizedQuery,
-  );
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
@@ -80,24 +73,6 @@ export function EmotionSearchSheet({
           />
         </div>
         <ul className="-mx-1 flex-1 overflow-y-auto">
-          {normalizedQuery && !hasExactMatch ? (
-            <li>
-              <button
-                type="button"
-                disabled={creating}
-                onClick={() => {
-                  onCreate(query.trim());
-                  handleOpenChange(false);
-                }}
-                className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left font-semibold text-primary outline-none hover:bg-secondary focus-visible:bg-secondary disabled:opacity-50"
-              >
-                <span className="flex size-9 items-center justify-center rounded-full bg-secondary">
-                  <Plus className="size-4" aria-hidden="true" />
-                </span>
-                Añadir «{query.trim()}»
-              </button>
-            </li>
-          ) : null}
           {results.slice(0, MAX_RESULTS).map((option) => (
             <EmotionSearchResult
               key={option.name}

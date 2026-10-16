@@ -46,7 +46,7 @@ export function NewRecordTopBar({
         {Array.from({ length: phaseCount }, (_, index) => (
           <motion.span
             key={index}
-            layout
+            initial={false}
             className={cn(
               "h-1.5 rounded-full",
               index <= phase ? "bg-foreground" : "bg-foreground/15",

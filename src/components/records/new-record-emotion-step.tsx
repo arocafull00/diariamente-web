@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { EmotionFieldQuadrant } from "@/components/records/emotion-field-quadrant";
 import { EmotionSearchSheet } from "@/components/records/emotion-search-sheet";
 import { EmotionSelectionBar } from "@/components/records/emotion-selection-bar";
 import { usePannableField } from "@/components/records/use-pannable-field";
+import { useSelectionPush } from "@/components/records/use-selection-push";
 import type { MoodQuadrant } from "@/db/schema";
 import {
   getMoodStyles,
@@ -21,11 +22,9 @@ type NewRecordEmotionStepProps = {
   emotion: string | null;
   definition: string;
   options: EmotionOption[];
-  creatingEmotion: boolean;
   onSelect: (name: string, quadrant: MoodQuadrant) => void;
   onSearchSelect: (option: EmotionOption) => void;
   onQuickSave: (name: string, quadrant: MoodQuadrant) => void;
-  onCreate: (name: string) => void;
   onContinue: () => void;
 };
 
@@ -35,11 +34,9 @@ export function NewRecordEmotionStep({
   emotion,
   definition,
   options,
-  creatingEmotion,
   onSelect,
   onSearchSelect,
   onQuickSave,
-  onCreate,
   onContinue,
 }: NewRecordEmotionStepProps) {
   const quadrantRefs = useRef<Partial<Record<MoodQuadrant, HTMLDivElement | null>>>({});
@@ -61,6 +58,7 @@ export function NewRecordEmotionStep({
       }
     },
   });
+  const selectionPush = useSelectionPush(contentRef, emotion);
 
   function handleTap(name: string, quadrant: MoodQuadrant) {
     onSelect(name, quadrant);
@@ -73,12 +71,25 @@ export function NewRecordEmotionStep({
     }
   }
 
+  const callbacks = useRef({ handleTap, onQuickSave });
+
+  useLayoutEffect(() => {
+    callbacks.current = { handleTap, onQuickSave };
+  });
+
+  const [bubbleHandlers] = useState(() => ({
+    onSelect: (name: string, quadrant: MoodQuadrant) =>
+      callbacks.current.handleTap(name, quadrant),
+    onQuickSave: (name: string, quadrant: MoodQuadrant) =>
+      callbacks.current.onQuickSave(name, quadrant),
+  }));
+
   return (
     <div className="relative h-full">
       <div
         ref={containerRef}
         onWheel={handleWheel}
-        className="absolute inset-0 cursor-grab touch-none overflow-hidden active:cursor-grabbing"
+        className="absolute inset-0 cursor-grab touch-none overflow-hidden mask-y-from-92% active:cursor-grabbing"
       >
         <motion.div
           ref={contentRef}
@@ -88,7 +99,7 @@ export function NewRecordEmotionStep({
           dragTransition={{ power: 0.25, timeConstant: 260 }}
           style={{ x: fieldMotion.panX, y: fieldMotion.panY }}
           {...dragHandlers}
-          className="absolute top-0 left-0 grid w-max grid-cols-2 gap-x-3 gap-y-4 px-6 pt-16 pb-40"
+          className="absolute top-0 left-0 grid w-max grid-cols-2 gap-0.5"
         >
           {MOOD_QUADRANTS.map((quadrant) => (
             <EmotionFieldQuadrant
@@ -102,20 +113,16 @@ export function NewRecordEmotionStep({
                 .map((option) => option.name)}
               selectedEmotion={selectedQuadrant === quadrant.id ? emotion : null}
               field={fieldMotion}
-              onSelect={handleTap}
-              onQuickSave={onQuickSave}
+              selection={selectionPush}
+              onSelect={bubbleHandlers.onSelect}
+              onQuickSave={bubbleHandlers.onQuickSave}
             />
           ))}
         </motion.div>
       </div>
 
-      <div className="absolute top-3 right-4 z-20">
-        <EmotionSearchSheet
-          options={options}
-          creating={creatingEmotion}
-          onSelect={onSearchSelect}
-          onCreate={onCreate}
-        />
+      <div className="absolute top-19 right-4 z-20">
+        <EmotionSearchSheet options={options} onSelect={onSearchSelect} />
       </div>
 
       <EmotionSelectionBar

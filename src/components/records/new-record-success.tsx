@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
+import { Button } from "@/components/ui/button";
 import type { MoodQuadrant } from "@/db/schema";
 
 type NewRecordSuccessProps = {
@@ -84,22 +85,20 @@ export function NewRecordSuccess({
             ? "Registro guardado. Puedes profundizar cuando quieras."
             : "Registro guardado."}
         </p>
-        <button
-          type="button"
-          onClick={onOpenRecord}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-foreground text-base font-semibold text-background shadow-lg outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
-        >
+        <Button type="button" size="lg" className="w-full" onClick={onOpenRecord}>
           {needsDeepen ? "Profundizar" : "Ver registro"}
-          <ArrowRight className="size-5" aria-hidden="true" />
-        </button>
-        <button
+          <ArrowRight data-icon="inline-end" aria-hidden="true" />
+        </Button>
+        <Button
           type="button"
+          variant="outline"
+          size="lg"
+          className="w-full"
           onClick={onGoHome}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-card text-base font-semibold shadow-sm ring-1 ring-border outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
         >
-          <House className="size-5" aria-hidden="true" />
+          <House data-icon="inline-start" aria-hidden="true" />
           Volver al inicio
-        </button>
+        </Button>
       </motion.div>
     </div>
   );

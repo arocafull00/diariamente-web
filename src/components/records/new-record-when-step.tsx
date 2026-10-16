@@ -1,12 +1,12 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { motion } from "motion/react";
 
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
 import { RecordDatePicker } from "@/components/records/record-date-picker";
 import { RecordTimeInput } from "@/components/records/record-time-input";
+import { Button } from "@/components/ui/button";
 import type { MoodQuadrant } from "@/db/schema";
 
 type NewRecordWhenStepProps = {
@@ -47,18 +47,18 @@ export function NewRecordWhenStep({
           occurredAt={occurredAt}
         />
       </div>
-      <motion.button
+      <Button
         type="button"
+        size="lg"
+        className="w-full"
         onClick={onSave}
         disabled={pending}
-        whileTap={{ scale: 0.97 }}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-foreground text-base font-semibold text-background shadow-lg outline-none focus-visible:ring-4 focus-visible:ring-ring/50 disabled:opacity-60"
       >
         {pending ? (
-          <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
+          <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
         ) : null}
         {pending ? "Guardando..." : "Guardar"}
-      </motion.button>
+      </Button>
     </div>
   );
 }

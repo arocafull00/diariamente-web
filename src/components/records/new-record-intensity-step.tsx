@@ -65,14 +65,10 @@ export function NewRecordIntensityStep({
           animate={{ scale: 0.55 + intensity * 0.045 }}
           transition={{ type: "spring", stiffness: 200, damping: 16 }}
           className={cn(
-            "relative flex size-64 items-center justify-center rounded-full shadow-2xl transition-colors duration-300",
+            "relative flex size-64 items-center justify-center rounded-full transition-colors duration-300",
             styles.tones[getTone(intensity)],
           )}
         >
-          <span
-            className="pointer-events-none absolute inset-0 rounded-full bg-radial-[at_30%_25%] from-white/55 via-transparent to-transparent"
-            aria-hidden="true"
-          />
           <motion.span
             className="absolute inset-0 rounded-full border-2 border-white/40"
             animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}

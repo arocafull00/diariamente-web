@@ -3,12 +3,18 @@
 import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 
+const FULLSCREEN_ROUTES = new Set(["/nuevo-registro"]);
+
 type PageTransitionProps = {
   children: React.ReactNode;
 };
 
 export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
+
+  if (FULLSCREEN_ROUTES.has(pathname)) {
+    return <div className="flex w-full flex-1 flex-col">{children}</div>;
+  }
 
   return (
     <motion.div

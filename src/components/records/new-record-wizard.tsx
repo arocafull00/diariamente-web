@@ -14,15 +14,11 @@ import {
   NEW_RECORD_PHASE_COUNT,
   useNewRecordWizard,
 } from "@/components/records/use-new-record-wizard";
-import type { CustomEmotion } from "@/db/schema";
+import type { BodyFigure } from "@/db/schema";
 import type { NewRecordStep } from "@/stores/new-record-store";
 import { getContextTags } from "@/lib/context-tags";
 import { getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
-
-type NewRecordWizardProps = {
-  customEmotions: Pick<CustomEmotion, "name" | "quadrant">[];
-};
 
 const REFLECTION_STEPS = {
   situation: {
@@ -54,8 +50,12 @@ const stepVariants = {
   exit: (direction: number) => ({ opacity: 0, x: direction * -48 }),
 };
 
-export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
-  const wizard = useNewRecordWizard(customEmotions);
+type NewRecordWizardProps = {
+  bodyFigure: BodyFigure | null;
+};
+
+export function NewRecordWizard({ bodyFigure }: NewRecordWizardProps) {
+  const wizard = useNewRecordWizard();
   const { store, step, savedRecord } = wizard;
   const emotion = store.emotion ?? "";
   const activeQuadrant = savedRecord?.quadrant ?? store.quadrant;
@@ -64,7 +64,7 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
   const contentKey = savedRecord ? "success" : step;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-background">
+    <div className="fixed inset-0 z-50 flex max-w-none! flex-col bg-background px-0! pt-0! lg:max-w-none! lg:px-0! lg:pt-0!">
       <div
         className={cn(
           "pointer-events-none absolute inset-0 transition-[background-color,opacity] duration-700",
@@ -80,7 +80,7 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
         onBack={wizard.back}
         onClose={wizard.close}
       />
-      <div className="relative flex-1 overflow-hidden">
+      <div className={cn("relative flex-1 overflow-hidden", step === "emotion" && !savedRecord && "-mt-16")}>
         <AnimatePresence mode="wait" custom={store.direction} initial={false}>
           <motion.div
             key={contentKey}
@@ -116,11 +116,9 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
                 emotion={store.emotion}
                 definition={wizard.definition}
                 options={wizard.options}
-                creatingEmotion={wizard.creatingEmotion}
                 onSelect={store.selectEmotion}
                 onSearchSelect={wizard.handleSearchSelect}
                 onQuickSave={wizard.handleQuickSave}
-                onCreate={wizard.handleCreateEmotion}
                 onContinue={store.nextStep}
               />
             ) : null}
@@ -140,7 +138,11 @@ export function NewRecordWizard({ customEmotions }: NewRecordWizardProps) {
                 emotion={emotion}
                 quadrant={store.quadrant}
                 context={store.context}
+                bodyFigure={bodyFigure}
+                bodySensations={store.bodySensations}
                 onToggle={store.toggleContextTag}
+                onSaveSensation={store.saveBodySensation}
+                onRemoveSensation={store.removeBodySensation}
                 onContinue={store.nextStep}
               />
             ) : null}

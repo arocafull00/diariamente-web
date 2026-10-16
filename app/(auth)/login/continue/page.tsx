@@ -3,6 +3,7 @@
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -85,12 +86,9 @@ export default function LoginContinuePage() {
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               />
             </div>
-            <button
-              type="submit"
-              className="flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
-            >
+            <Button type="submit" size="lg" className="w-full">
               Continuar
-            </button>
+            </Button>
           </form>
         </CardContent>
       </Card>

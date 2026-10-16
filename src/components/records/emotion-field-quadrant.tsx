@@ -2,6 +2,7 @@
 
 import { EmotionBubble } from "@/components/records/emotion-bubble";
 import type { FieldMotion } from "@/components/records/use-pannable-field";
+import type { SelectionPush } from "@/components/records/use-selection-push";
 import type { MoodQuadrant } from "@/db/schema";
 import { getEmotionTone, MOOD_STYLES } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ type EmotionFieldQuadrantProps = {
   names: string[];
   selectedEmotion: string | null;
   field: FieldMotion;
+  selection: SelectionPush;
   onSelect: (name: string, quadrant: MoodQuadrant) => void;
   onQuickSave: (name: string, quadrant: MoodQuadrant) => void;
 };
@@ -35,6 +37,7 @@ export function EmotionFieldQuadrant({
   names,
   selectedEmotion,
   field,
+  selection,
   onSelect,
   onQuickSave,
 }: EmotionFieldQuadrantProps) {
@@ -45,18 +48,14 @@ export function EmotionFieldQuadrant({
   const orderedRows = isLowEnergy ? [...rows].reverse() : rows;
 
   return (
-    <div ref={ref} className="flex flex-col gap-1">
+    <div ref={ref} className="flex flex-col gap-0.5">
       {orderedRows.map((row, rowIndex) => {
         const cells = isPleasant ? [...row].reverse() : row;
 
         return (
           <div
             key={row[0]?.name ?? rowIndex}
-            className={cn(
-              "flex gap-1",
-              isPleasant && "justify-end",
-              rowIndex % 2 === 1 && (isPleasant ? "mr-11 sm:mr-12" : "ml-11 sm:ml-12"),
-            )}
+            className={cn("flex gap-0.5", isPleasant && "justify-end")}
           >
             {cells.map((cell) => (
               <EmotionBubble
@@ -64,12 +63,13 @@ export function EmotionFieldQuadrant({
                 name={cell.name}
                 quadrant={quadrant}
                 field={field}
+                selection={selection}
                 tone={getEmotionTone(cell.index, names.length)}
                 styles={styles}
                 selected={selectedEmotion === cell.name}
                 delay={Math.min(cell.index * 0.015, 0.35)}
-                onSelect={(name) => onSelect(name, quadrant)}
-                onQuickSave={(name) => onQuickSave(name, quadrant)}
+                onSelect={onSelect}
+                onQuickSave={onQuickSave}
               />
             ))}
           </div>

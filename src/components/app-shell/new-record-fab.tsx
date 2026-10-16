@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Plus } from "lucide-react";
 
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const MotionLink = motion.create(Link);
@@ -28,9 +29,7 @@ export function NewRecordFab() {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.92 }}
           transition={{ type: "spring", stiffness: 420, damping: 24, delay: 0.1 }}
-          className={cn(
-            "pointer-events-auto flex h-14 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90",
-          )}
+          className={cn(buttonVariants({ size: "lg" }), "pointer-events-auto")}
         >
           <motion.span
             initial={{ rotate: -90 }}

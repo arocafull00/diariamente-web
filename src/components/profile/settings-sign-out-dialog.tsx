@@ -16,6 +16,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useScreenCacheStore } from "@/stores/screen-cache-store";
+import { useSessionStore } from "@/stores/session-store";
 
 import { SettingsRowContent, settingsRowClassName } from "./settings-row-content";
 
@@ -27,6 +29,8 @@ export function SettingsSignOutDialog({
   variant = "button",
 }: SettingsSignOutDialogProps) {
   const { signOut } = useClerk();
+  const clearScreenCache = useScreenCacheStore((state) => state.clear);
+  const clearSession = useSessionStore((state) => state.clear);
   const [pending, setPending] = useState(false);
 
   async function handleSignOut() {
@@ -34,6 +38,8 @@ export function SettingsSignOutDialog({
 
     try {
       await signOut({ redirectUrl: "/login" });
+      clearScreenCache();
+      clearSession();
     } finally {
       setPending(false);
     }

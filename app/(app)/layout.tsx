@@ -1,10 +1,8 @@
-import { Suspense } from "react";
-
-import { AppLayoutContent } from "@/components/app-shell/app-layout-content";
-import { AppLoading } from "@/components/app-shell/app-loading";
+import { AppSessionGate } from "@/components/app-shell/app-session-gate";
 import { RealtimeRefresh } from "@/components/pwa/realtime-refresh";
+import { getRenderTime } from "@/server/rendering/get-render-time";
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,9 +10,9 @@ export default function AppLayout({
   return (
     <>
       <RealtimeRefresh />
-      <Suspense fallback={<AppLoading />}>
-        <AppLayoutContent>{children}</AppLayoutContent>
-      </Suspense>
+      <AppSessionGate refreshedAt={await getRenderTime()}>
+        {children}
+      </AppSessionGate>
     </>
   );
 }

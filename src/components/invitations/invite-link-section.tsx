@@ -108,6 +108,7 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
       )}
       <Button
         variant={inviteUrl ? "ghost" : "default"}
+        size="lg"
         className="w-full"
         disabled={pending}
         onClick={handleGenerate}

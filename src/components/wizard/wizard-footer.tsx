@@ -58,7 +58,6 @@ export function WizardFooter({
           type="button"
           variant="outline"
           size="lg"
-          className="h-12 px-4"
           disabled={backDisabled || primaryPending}
           onClick={onBack}
         >
@@ -70,7 +69,7 @@ export function WizardFooter({
       <Button
         type={primaryType}
         size="lg"
-        className="h-12 flex-1 px-5"
+        className="flex-1"
         disabled={primaryDisabled || primaryPending}
         onClick={onPrimaryClick}
       >

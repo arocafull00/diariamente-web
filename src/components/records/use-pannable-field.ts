@@ -7,7 +7,7 @@ import {
   type AnimationPlaybackControls,
   type MotionValue,
 } from "motion/react";
-import { useEffectEvent, useLayoutEffect, useRef, useState } from "react";
+import { useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type Bounds = { left: number; right: number; top: number; bottom: number };
 
@@ -23,7 +23,7 @@ type PanMode = "idle" | "user" | "programmatic";
 const DRAG_CLICK_THRESHOLD = 6;
 const FOCUS_OFFSET_Y = 48;
 
-const EDGE_PADDING = { left: 70, right: 70, top: 110, bottom: 206 };
+const EDGE_PADDING = { left: 72, right: 72, top: 72, bottom: 72 };
 
 function getAxisBounds(focus: number, content: number, start: number, end: number) {
   return [focus - content + end, focus - start] as const;
@@ -55,6 +55,10 @@ export function usePannableField({
   const focusY = useMotionValue(0);
   const [bounds, setBounds] = useState<Bounds>({ left: 0, right: 0, top: 0, bottom: 0 });
   const getInitialTarget = useEffectEvent(getFocusTarget);
+  const fieldMotion = useMemo<FieldMotion>(
+    () => ({ panX, panY, focusX, focusY }),
+    [panX, panY, focusX, focusY],
+  );
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -110,24 +114,21 @@ export function usePannableField({
 
   function findNearest() {
     frame.current = null;
-    const container = containerRef.current;
     const content = contentRef.current;
 
-    if (!container || !content) {
+    if (!content) {
       return;
     }
 
-    const rect = container.getBoundingClientRect();
-    const pointX = rect.left + focusX.get();
-    const pointY = rect.top + focusY.get();
+    const pointX = focusX.get() - panX.get();
+    const pointY = focusY.get() - panY.get();
     let nearest: HTMLElement | null = null;
     let nearestDistance = Infinity;
 
     content.querySelectorAll<HTMLElement>("[data-emotion]").forEach((element) => {
-      const box = element.getBoundingClientRect();
       const distance = Math.hypot(
-        box.left + box.width / 2 - pointX,
-        box.top + box.height / 2 - pointY,
+        element.offsetLeft + element.offsetWidth / 2 - pointX,
+        element.offsetTop + element.offsetHeight / 2 - pointY,
       );
 
       if (distance < nearestDistance) {
@@ -175,15 +176,13 @@ export function usePannableField({
     mode.current = "programmatic";
     focusedElement.current = element;
 
-    const rect = container.getBoundingClientRect();
-    const box = element.getBoundingClientRect();
-    const deltaX = rect.left + focusX.get() - (box.left + box.width / 2);
-    const deltaY = rect.top + focusY.get() - (box.top + box.height / 2);
+    const targetX = focusX.get() - (element.offsetLeft + element.offsetWidth / 2);
+    const targetY = focusY.get() - (element.offsetTop + element.offsetHeight / 2);
     const transition = { type: "spring", stiffness: 160, damping: 24 } as const;
 
     controls.current = [
-      animate(panX, clamp(panX.get() + deltaX, bounds.left, bounds.right), transition),
-      animate(panY, clamp(panY.get() + deltaY, bounds.top, bounds.bottom), {
+      animate(panX, clamp(targetX, bounds.left, bounds.right), transition),
+      animate(panY, clamp(targetY, bounds.top, bounds.bottom), {
         ...transition,
         onComplete: () => {
           mode.current = "idle";
@@ -205,7 +204,7 @@ export function usePannableField({
     containerRef,
     contentRef,
     bounds,
-    fieldMotion: { panX, panY, focusX, focusY } satisfies FieldMotion,
+    fieldMotion,
     centerOn,
     handleWheel,
     dragHandlers: {

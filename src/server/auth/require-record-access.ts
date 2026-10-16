@@ -39,6 +39,7 @@ export async function requireRecordAccess(recordId: string) {
       emotions: patientRecords.emotions,
       quadrant: patientRecords.quadrant,
       context: patientRecords.context,
+      bodySensations: patientRecords.bodySensations,
       emotionIntensity: patientRecords.emotionIntensity,
       seenAt: patientRecords.seenAt,
       createdAt: patientRecords.createdAt,

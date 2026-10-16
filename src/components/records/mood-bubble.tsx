@@ -25,10 +25,6 @@ export function MoodBubble({
         className,
       )}
     >
-      <span
-        className="pointer-events-none absolute inset-0 rounded-full bg-radial-[at_30%_25%] from-white/55 via-transparent to-transparent"
-        aria-hidden="true"
-      />
       <span className="relative">{children}</span>
     </span>
   );

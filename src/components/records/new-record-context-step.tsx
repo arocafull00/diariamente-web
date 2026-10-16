@@ -1,9 +1,15 @@
 "use client";
 
+import { BodySensationsField } from "@/components/records/body-sensations-field";
 import { ContextTagGroup } from "@/components/records/context-tag-group";
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
-import type { MoodQuadrant, RecordContext } from "@/db/schema";
+import type {
+  BodyFigure,
+  BodySensation,
+  MoodQuadrant,
+  RecordContext,
+} from "@/db/schema";
 import { CONTEXT_GROUPS, type ContextGroup } from "@/lib/context-tags";
 import { getMoodStyles } from "@/lib/emotions";
 
@@ -11,7 +17,11 @@ type NewRecordContextStepProps = {
   emotion: string;
   quadrant: MoodQuadrant | null;
   context: RecordContext;
+  bodyFigure: BodyFigure | null;
+  bodySensations: BodySensation[];
   onToggle: (group: ContextGroup, tag: string) => void;
+  onSaveSensation: (sensation: BodySensation) => void;
+  onRemoveSensation: (region: string) => void;
   onContinue: () => void;
 };
 
@@ -19,7 +29,11 @@ export function NewRecordContextStep({
   emotion,
   quadrant,
   context,
+  bodyFigure,
+  bodySensations,
   onToggle,
+  onSaveSensation,
+  onRemoveSensation,
   onContinue,
 }: NewRecordContextStepProps) {
   const styles = getMoodStyles(quadrant);
@@ -44,6 +58,12 @@ export function NewRecordContextStep({
               onToggle={(tag) => onToggle(group.id, tag)}
             />
           ))}
+          <BodySensationsField
+            initialFigure={bodyFigure}
+            sensations={bodySensations}
+            onSave={onSaveSensation}
+            onRemove={onRemoveSensation}
+          />
         </div>
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-end bg-linear-to-t from-background via-background/90 to-transparent px-6 pt-10 pb-[max(1.5rem,env(safe-area-inset-bottom))]">

@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { RecordBodySection } from "@/components/records/record-body-section";
 import { RecordContextSection } from "@/components/records/record-context-section";
 import { RecordDetailField } from "@/components/records/record-detail-field";
 import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
@@ -86,6 +87,8 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
 
       <RecordContextSection context={record.context} quadrant={quadrant} />
 
+      <RecordBodySection sensations={record.bodySensations} />
+
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3 px-1">
           <h2 className="font-display text-xl font-medium">Profundizar</h2>
@@ -142,7 +145,7 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
           >
             <Button
               size="lg"
-              className="h-14 w-full rounded-full shadow-lg"
+              className="w-full"
               disabled={pending}
               onClick={handleSave}
             >

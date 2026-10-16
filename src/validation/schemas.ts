@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { isPredefinedAvatarUrl } from "@/lib/avatars";
+import { BODY_REGION_IDS } from "@/lib/body-sensations";
 
 const clerkImageHost = "img.clerk.com";
 
@@ -62,6 +63,17 @@ const contextTagsSchema = z
 
 const reflectionSchema = z.string().trim().max(5000);
 
+export const bodySensationSchema = z.object({
+  region: z.enum(BODY_REGION_IDS),
+  pleasantness: z.number().int().min(0).max(100),
+  intensity: z.number().int().min(0).max(100),
+  tags: contextTagsSchema,
+});
+
+export const bodyFigureSchema = z.object({
+  figure: z.enum(["masculine", "feminine"]),
+});
+
 export const createRecordSchema = z.object({
   occurredAt: z.coerce.date(),
   quadrant: moodQuadrantSchema,
@@ -73,6 +85,15 @@ export const createRecordSchema = z.object({
     people: contextTagsSchema,
     places: contextTagsSchema,
   }),
+  bodySensations: z
+    .array(bodySensationSchema)
+    .max(BODY_REGION_IDS.length)
+    .refine(
+      (sensations) =>
+        new Set(sensations.map((sensation) => sensation.region)).size ===
+        sensations.length,
+      "Cada zona del cuerpo solo puede registrarse una vez",
+    ),
   situation: reflectionSchema,
   thoughts: reflectionSchema,
   behaviours: reflectionSchema,
@@ -82,11 +103,6 @@ export const updateRecordSchema = z.object({
   situation: reflectionSchema,
   thoughts: reflectionSchema,
   behaviours: reflectionSchema,
-});
-
-export const customEmotionSchema = z.object({
-  name: z.string().trim().min(1, "El nombre es obligatorio").max(50),
-  quadrant: moodQuadrantSchema,
 });
 
 export const reminderSchema = z.object({

@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 import {
   connectionRequests,
-  customEmotions,
   inviteLinks,
   patientRecords,
   profiles,
@@ -36,6 +35,7 @@ export async function getPatientRecordsForPsychologist(
       emotions: patientRecords.emotions,
       quadrant: patientRecords.quadrant,
       context: patientRecords.context,
+      bodySensations: patientRecords.bodySensations,
       emotionIntensity: patientRecords.emotionIntensity,
       seenAt: patientRecords.seenAt,
       createdAt: patientRecords.createdAt,
@@ -134,14 +134,6 @@ export async function getPsychologistPatients(psychologistId: string) {
       latestRecord: latestMap.get(patient.id) ?? null,
     })),
   );
-}
-
-export async function getCustomEmotions(userId: string) {
-  return db
-    .select()
-    .from(customEmotions)
-    .where(eq(customEmotions.userId, userId))
-    .orderBy(customEmotions.name);
 }
 
 export async function getProfileById(profileId: string) {
