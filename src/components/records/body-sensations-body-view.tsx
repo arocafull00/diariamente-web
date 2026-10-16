@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, PersonStanding, Trash2, X } from "lucide-react";
+import { ArrowLeft, Trash2, X } from "lucide-react";
 
 import { BodyFigure } from "@/components/records/body-figure";
 import { BodyRegionList } from "@/components/records/body-region-list";
@@ -9,18 +9,17 @@ import { BodySensationEditor } from "@/components/records/body-sensation-editor"
 import { BodySensationsHeader } from "@/components/records/body-sensations-header";
 import { BodySensationsOverviewFooter } from "@/components/records/body-sensations-overview-footer";
 import type { useBodySensationsSheet } from "@/components/records/use-body-sensations-sheet";
-import type { BodyFigure as BodyFigureId, BodySensation } from "@/db/schema";
+import type { BodySensation } from "@/db/schema";
 import { getBodyRegionPhrase } from "@/lib/body-sensations";
 
 type BodySensationsBodyViewProps = {
-  figure: BodyFigureId;
   sensations: BodySensation[];
   sheet: ReturnType<typeof useBodySensationsSheet>;
 };
 
 const OVERVIEW_TITLE = "¿Dónde notas una sensación física?";
 
-export function BodySensationsBodyView({ figure, sensations, sheet }: BodySensationsBodyViewProps) {
+export function BodySensationsBodyView({ sensations, sheet }: BodySensationsBodyViewProps) {
   const { region } = sheet;
 
   return (
@@ -39,11 +38,9 @@ export function BodySensationsBodyView({ figure, sensations, sheet }: BodySensat
         <BodySensationsHeader
           title={OVERVIEW_TITLE}
           leading={{ icon: X, label: "Cerrar", onClick: sheet.closeSheet }}
-          trailing={{ icon: PersonStanding, label: "Cambiar figura", onClick: sheet.changeFigure }}
         />
       )}
       <BodyFigure
-        figure={figure}
         sensations={sheet.preview}
         focusRegion={region}
         onSelectRegion={region ? undefined : sheet.selectRegion}

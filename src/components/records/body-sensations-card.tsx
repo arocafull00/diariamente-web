@@ -5,12 +5,11 @@ import { motion } from "motion/react";
 
 import { BodyFigure } from "@/components/records/body-figure";
 import { BodySensationSummary } from "@/components/records/body-sensation-summary";
-import type { BodyFigure as BodyFigureId, BodySensation } from "@/db/schema";
+import type { BodySensation } from "@/db/schema";
 import { isBodyRegionId } from "@/lib/body-sensations";
 import { cn } from "@/lib/utils";
 
 type BodySensationsCardProps = {
-  figure: BodyFigureId | null;
   sensations: BodySensation[];
   onOpen: () => void;
 };
@@ -18,10 +17,10 @@ type BodySensationsCardProps = {
 const CARD_CLASS_NAME =
   "relative flex w-full overflow-hidden rounded-3xl bg-card text-left shadow-sm ring-1 ring-border/60 outline-none focus-visible:ring-3 focus-visible:ring-ring/50";
 
-export function BodySensationsCard({ figure, sensations, onOpen }: BodySensationsCardProps) {
+export function BodySensationsCard({ sensations, onOpen }: BodySensationsCardProps) {
   const focus = sensations.map((sensation) => sensation.region).find(isBodyRegionId);
 
-  if (sensations.length === 0 || !figure) {
+  if (sensations.length === 0) {
     return (
       <motion.button
         type="button"
@@ -54,7 +53,6 @@ export function BodySensationsCard({ figure, sensations, onOpen }: BodySensation
         </span>
       </span>
       <BodyFigure
-        figure={figure}
         sensations={sensations}
         focusRegion={focus ?? null}
         zoom={2}

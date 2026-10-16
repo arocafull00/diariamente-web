@@ -5,7 +5,6 @@ import { ContextTagGroup } from "@/components/records/context-tag-group";
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
 import type {
-  BodyFigure,
   BodySensation,
   MoodQuadrant,
   RecordContext,
@@ -17,7 +16,6 @@ type NewRecordContextStepProps = {
   emotion: string;
   quadrant: MoodQuadrant | null;
   context: RecordContext;
-  bodyFigure: BodyFigure | null;
   bodySensations: BodySensation[];
   onToggle: (group: ContextGroup, tag: string) => void;
   onSaveSensation: (sensation: BodySensation) => void;
@@ -29,7 +27,6 @@ export function NewRecordContextStep({
   emotion,
   quadrant,
   context,
-  bodyFigure,
   bodySensations,
   onToggle,
   onSaveSensation,
@@ -59,7 +56,6 @@ export function NewRecordContextStep({
             />
           ))}
           <BodySensationsField
-            initialFigure={bodyFigure}
             sensations={bodySensations}
             onSave={onSaveSensation}
             onRemove={onRemoveSensation}

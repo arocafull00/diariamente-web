@@ -1,6 +1,5 @@
 "use client";
 
-import { BodyFigurePicker } from "@/components/records/body-figure-picker";
 import { BodySensationsBodyView } from "@/components/records/body-sensations-body-view";
 import type { useBodySensationsSheet } from "@/components/records/use-body-sensations-sheet";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -12,8 +11,6 @@ type BodySensationsSheetProps = {
 };
 
 export function BodySensationsSheet({ sheet, sensations }: BodySensationsSheetProps) {
-  const { figure } = sheet;
-
   return (
     <Sheet
       open={sheet.open}
@@ -28,16 +25,7 @@ export function BodySensationsSheet({ sheet, sensations }: BodySensationsSheetPr
         showCloseButton={false}
         className="h-dvh max-h-dvh gap-0 rounded-none border-0 bg-background p-0 data-[side=bottom]:h-dvh data-[side=bottom]:border-t-0"
       >
-        {sheet.view.name === "figure" || !figure ? (
-          <BodyFigurePicker
-            current={figure}
-            pending={sheet.savingFigure}
-            onSave={sheet.saveFigure}
-            onClose={sheet.leaveFigurePicker}
-          />
-        ) : (
-          <BodySensationsBodyView figure={figure} sensations={sensations} sheet={sheet} />
-        )}
+        <BodySensationsBodyView sensations={sensations} sheet={sheet} />
       </SheetContent>
     </Sheet>
   );

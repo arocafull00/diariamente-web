@@ -1,67 +1,37 @@
-import type { BodyFigure } from "@/db/schema";
-
-export type BodyFigurePart =
-  | { kind: "fill"; d: string }
-  | { kind: "stroke"; d: string; width: number }
-  | { kind: "ellipse"; cx: number; cy: number; rx: number; ry: number; rotate: number };
-
 export const BODY_FIGURE_VIEWBOX = { width: 200, height: 420 };
 
-export const BODY_FIGURE_OPTIONS: { id: BodyFigure; label: string }[] = [
-  { id: "masculine", label: "Figura masculina" },
-  { id: "feminine", label: "Figura femenina" },
-];
-
-function mirrorPath(d: string) {
-  return d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, x: string, y: string) =>
-    `${BODY_FIGURE_VIEWBOX.width - Number(x)} ${y}`,
-  );
-}
-
-function symmetric(parts: BodyFigurePart[]): BodyFigurePart[] {
-  return parts.flatMap<BodyFigurePart>((part) => {
-    if (part.kind === "ellipse") {
-      return [
-        part,
-        { ...part, cx: BODY_FIGURE_VIEWBOX.width - part.cx, rotate: -part.rotate },
-      ];
-    }
-
-    return [part, { ...part, d: mirrorPath(part.d) }];
-  });
-}
-
-export const BODY_FIGURES: Record<BodyFigure, BodyFigurePart[]> = {
-  masculine: [
-    { kind: "ellipse", cx: 100, cy: 34, rx: 16, ry: 20, rotate: 0 },
-    { kind: "stroke", d: "M100 50 L100 72", width: 17 },
-    {
-      kind: "fill",
-      d: "M74 74 C86 70 114 70 126 74 C138 78 142 86 140 100 C138 120 134 140 131 160 C129 176 129 192 131 206 C133 216 130 226 120 230 C112 233 104 234 100 234 C96 234 88 233 80 230 C70 226 67 216 69 206 C71 192 71 176 69 160 C66 140 62 120 60 100 C58 86 62 78 74 74 Z",
-    },
-    ...symmetric([
-      { kind: "stroke", d: "M66 86 C58 110 50 136 45 160", width: 19 },
-      { kind: "stroke", d: "M45 160 C40 182 33 204 27 226", width: 15 },
-      { kind: "ellipse", cx: 23, cy: 240, rx: 7.5, ry: 13, rotate: 18 },
-      { kind: "stroke", d: "M88 218 C86 252 84 284 83 312", width: 30 },
-      { kind: "stroke", d: "M83 312 C82 342 82 370 82 394", width: 20 },
-      { kind: "ellipse", cx: 81, cy: 404, rx: 10, ry: 8, rotate: 0 },
-    ]),
-  ],
-  feminine: [
-    { kind: "ellipse", cx: 100, cy: 36, rx: 15, ry: 19, rotate: 0 },
-    { kind: "stroke", d: "M100 52 L100 74", width: 14 },
-    {
-      kind: "fill",
-      d: "M78 76 C88 72 112 72 122 76 C132 80 136 88 134 100 C132 118 126 140 121 160 C118 174 124 192 132 208 C136 216 134 226 124 231 C114 235 106 236 100 236 C94 236 86 235 76 231 C66 226 64 216 68 208 C76 192 82 174 79 160 C74 140 68 118 66 100 C64 88 68 80 78 76 Z",
-    },
-    ...symmetric([
-      { kind: "stroke", d: "M70 88 C62 112 55 136 50 160", width: 15 },
-      { kind: "stroke", d: "M50 160 C45 182 38 204 32 226", width: 12 },
-      { kind: "ellipse", cx: 28, cy: 239, rx: 6.5, ry: 12, rotate: 18 },
-      { kind: "stroke", d: "M86 220 C85 252 85 284 85 314", width: 28 },
-      { kind: "stroke", d: "M85 314 C84 344 85 370 86 396", width: 17 },
-      { kind: "ellipse", cx: 86, cy: 405, rx: 8.5, ry: 7, rotate: 0 },
-    ]),
-  ],
-};
+export const BODY_FIGURE_PATH = [
+  "M100 12",
+  "C111 12 118 22 118 37 C118 48 114 57 109 61",
+  "L109 70 C109 75 118 77 128 79",
+  "C139 81 144 87 147 98 L159 143",
+  "C162 152 163 160 165 170 L173 207",
+  "C174 213 179 223 180 230 C181 238 179 246 175 247",
+  "C171 248 168 243 166 237 L162 225",
+  "C159 228 157 225 157 222 L158 211",
+  "C155 198 149 183 146 170 C143 158 140 146 137 135",
+  "L130 112 C129 135 126 150 127 167",
+  "C128 184 133 197 132 214 C131 239 127 266 126 288",
+  "L125 307 C125 320 128 333 125 351",
+  "C123 366 120 380 121 391 C122 397 128 400 129 404",
+  "C130 409 126 412 121 412 L109 412",
+  "C104 412 102 409 103 403 L105 390",
+  "C105 373 104 357 104 341 L106 309",
+  "C105 290 102 267 102 246 L102 229",
+  "C102 224 98 224 98 229 L98 246",
+  "C98 267 95 290 94 309 L96 341",
+  "C96 357 95 373 95 390 L97 403",
+  "C98 409 96 412 91 412 L79 412",
+  "C74 412 70 409 71 404 C72 400 78 397 79 391",
+  "C80 380 77 366 75 351 C72 333 75 320 75 307",
+  "L74 288 C73 266 69 239 68 214",
+  "C67 197 72 184 73 167 C74 150 71 135 70 112",
+  "L63 135 C60 146 57 158 54 170",
+  "C51 183 45 198 42 211 L43 222",
+  "C43 225 41 228 38 225 L34 237",
+  "C32 243 29 248 25 247 C21 246 19 238 20 230",
+  "C21 223 26 213 27 207 L35 170",
+  "C37 160 38 152 41 143 L53 98",
+  "C56 87 61 81 72 79 C82 77 91 75 91 70",
+  "L91 61 C86 57 82 48 82 37 C82 22 89 12 100 12 Z",
+].join(" ");

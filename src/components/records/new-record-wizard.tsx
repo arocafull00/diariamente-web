@@ -14,7 +14,6 @@ import {
   NEW_RECORD_PHASE_COUNT,
   useNewRecordWizard,
 } from "@/components/records/use-new-record-wizard";
-import type { BodyFigure } from "@/db/schema";
 import type { NewRecordStep } from "@/stores/new-record-store";
 import { getContextTags } from "@/lib/context-tags";
 import { getMoodStyles } from "@/lib/emotions";
@@ -50,11 +49,7 @@ const stepVariants = {
   exit: (direction: number) => ({ opacity: 0, x: direction * -48 }),
 };
 
-type NewRecordWizardProps = {
-  bodyFigure: BodyFigure | null;
-};
-
-export function NewRecordWizard({ bodyFigure }: NewRecordWizardProps) {
+export function NewRecordWizard() {
   const wizard = useNewRecordWizard();
   const { store, step, savedRecord } = wizard;
   const emotion = store.emotion ?? "";
@@ -138,7 +133,6 @@ export function NewRecordWizard({ bodyFigure }: NewRecordWizardProps) {
                 emotion={emotion}
                 quadrant={store.quadrant}
                 context={store.context}
-                bodyFigure={bodyFigure}
                 bodySensations={store.bodySensations}
                 onToggle={store.toggleContextTag}
                 onSaveSensation={store.saveBodySensation}

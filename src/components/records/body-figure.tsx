@@ -3,11 +3,10 @@
 import { motion } from "motion/react";
 import { useId, type ReactNode } from "react";
 
-import { BodyFigurePart } from "@/components/records/body-figure-part";
 import { BodySensationGlow } from "@/components/records/body-sensation-glow";
 import { useElementSize } from "@/components/records/use-element-size";
-import type { BodyFigure as BodyFigureId, BodySensation } from "@/db/schema";
-import { BODY_FIGURES, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
+import type { BodySensation } from "@/db/schema";
+import { BODY_FIGURE_PATH, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 import {
   BODY_REGIONS,
   findNearestBodyRegion,
@@ -20,7 +19,6 @@ type ViewBox = { x: number; y: number; width: number; height: number };
 type BodyFigureProjection = (x: number, y: number) => { left: string; top: string };
 
 type BodyFigureProps = {
-  figure: BodyFigureId;
   sensations: BodySensation[];
   focusRegion?: BodyRegionId | null;
   zoom?: number;
@@ -55,7 +53,6 @@ function getViewBox(
 }
 
 export function BodyFigure({
-  figure,
   sensations,
   focusRegion = null,
   zoom = 2.6,
@@ -65,7 +62,6 @@ export function BodyFigure({
 }: BodyFigureProps) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const { ref, size } = useElementSize<HTMLDivElement>();
-  const parts = BODY_FIGURES[figure];
   const focus = focusRegion ? BODY_REGIONS[focusRegion] : null;
   const viewBox = getViewBox(size, focusRegion, zoom);
   const markerScale = viewBox.width / Math.max(size.width, 1);
@@ -109,9 +105,7 @@ export function BodyFigure({
             <circle cx="1.5" cy="1.5" r="0.7" className="fill-foreground" />
           </pattern>
           <mask id={`${id}-mask`}>
-            {parts.map((part, index) => (
-              <BodyFigurePart key={index} part={part} paint="white" />
-            ))}
+            <path d={BODY_FIGURE_PATH} fill="white" />
           </mask>
           <filter id={`${id}-blur`} x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="8" />
@@ -140,9 +134,7 @@ export function BodyFigure({
         </g>
         {onSelectRegion ? (
           <g onClick={handleClick} className="cursor-pointer">
-            {parts.map((part, index) => (
-              <BodyFigurePart key={index} part={part} paint="transparent" />
-            ))}
+            <path d={BODY_FIGURE_PATH} fill="transparent" />
           </g>
         ) : null}
         {focus ? (

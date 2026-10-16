@@ -70,10 +70,6 @@ export const bodySensationSchema = z.object({
   tags: contextTagsSchema,
 });
 
-export const bodyFigureSchema = z.object({
-  figure: z.enum(["masculine", "feminine"]),
-});
-
 export const createRecordSchema = z.object({
   occurredAt: z.coerce.date(),
   quadrant: moodQuadrantSchema,
