@@ -129,7 +129,6 @@ export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
               </label>
             ) : null}
             <PushSubscribeButton />
-            <PwaInstallButton />
           </SettingsGroup>
 
           <SettingsGroup title="Cuenta">
@@ -176,6 +175,8 @@ export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
               </AlertDialogContent>
             </AlertDialog>
           </SettingsGroup>
+
+          <PwaInstallButton />
         </div>
       </SheetContent>
     </Sheet>

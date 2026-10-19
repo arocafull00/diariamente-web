@@ -1,9 +1,10 @@
 "use client";
 
-import { Smartphone } from "lucide-react";
+import { Check, Smartphone } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
+import { SettingsGroup } from "@/components/profile/settings-group";
 import {
   SettingsRowContent,
   settingsRowClassName,
@@ -112,7 +113,24 @@ export function PwaInstallButton() {
   }
 
   if (standalone || installed) {
-    return null;
+    return (
+      <SettingsGroup title="Aplicación">
+        <button
+          type="button"
+          data-slot="settings-row"
+          className={settingsRowClassName}
+          disabled
+        >
+          <SettingsRowContent
+            icon={Check}
+            tone="green"
+            title="Ya instalada"
+            description="DiariaMente está en tu pantalla de inicio."
+            trailing={<span />}
+          />
+        </button>
+      </SettingsGroup>
+    );
   }
 
   if (!deferredPrompt && !ios) {
@@ -120,20 +138,22 @@ export function PwaInstallButton() {
   }
 
   return (
-    <button
-      type="button"
-      data-slot="settings-row"
-      className={settingsRowClassName}
-      disabled={loading}
-      onClick={handleInstall}
-    >
-      <SettingsRowContent
-        icon={Smartphone}
-        tone="green"
-        title={loading ? "Instalando..." : "Descargar app"}
-        description="Añade DiariaMente a tu pantalla de inicio."
-        loading={loading}
-      />
-    </button>
+    <SettingsGroup title="Aplicación">
+      <button
+        type="button"
+        data-slot="settings-row"
+        className={settingsRowClassName}
+        disabled={loading}
+        onClick={handleInstall}
+      >
+        <SettingsRowContent
+          icon={Smartphone}
+          tone="green"
+          title={loading ? "Instalando..." : "Descargar app"}
+          description="Añade DiariaMente a tu pantalla de inicio."
+          loading={loading}
+        />
+      </button>
+    </SettingsGroup>
   );
 }
