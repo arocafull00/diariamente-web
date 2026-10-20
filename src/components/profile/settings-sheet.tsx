@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import type { UserRole } from "@/db/schema";
+import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { deleteAccount } from "@/server/actions/onboarding";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
@@ -44,6 +45,7 @@ type SettingsSheetProps = {
 
 export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
   const router = useRouter();
+  const { installed, loading, handleInstall } = usePwaInstall();
   const [open, setOpen] = useState(false);
   const [, startSaveTransition] = useTransition();
   const [deletePending, startDeleteTransition] = useTransition();
@@ -176,7 +178,11 @@ export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
             </AlertDialog>
           </SettingsGroup>
 
-          <PwaInstallButton />
+          <PwaInstallButton
+            installed={installed}
+            loading={loading}
+            onInstall={handleInstall}
+          />
         </div>
       </SheetContent>
     </Sheet>
