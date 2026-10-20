@@ -7,6 +7,7 @@ export const NEW_RECORD_STEPS = [
   "emotion",
   "intensity",
   "context",
+  "body",
   "situation",
   "thoughts",
   "behaviours",

@@ -19,6 +19,7 @@ const PHASE_BY_STEP: Record<NewRecordStep, number> = {
   emotion: 0,
   intensity: 0,
   context: 1,
+  body: 1,
   situation: 2,
   thoughts: 2,
   behaviours: 2,

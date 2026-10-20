@@ -26,7 +26,7 @@ export const CONTEXT_GROUPS: {
     id: "people",
     label: "Con quién estabas",
     options: [
-      "Por mi cuenta",
+      "Solo",
       "Pareja",
       "Familia",
       "Amigos",

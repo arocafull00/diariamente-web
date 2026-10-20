@@ -1,97 +1,70 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useId, type ReactNode } from "react";
+import { useId, type ReactNode, type RefObject } from "react";
 
 import { BodySensationGlow } from "@/components/records/body-sensation-glow";
-import { useElementSize } from "@/components/records/use-element-size";
 import type { BodySensation } from "@/db/schema";
 import { BODY_FIGURE_PATH, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
-import {
-  BODY_REGIONS,
-  findNearestBodyRegion,
-  type BodyRegionId,
-} from "@/lib/body-sensations";
+import { BODY_REGIONS, type BodyRegionId } from "@/lib/body-sensations";
 import { cn } from "@/lib/utils";
-
-type ViewBox = { x: number; y: number; width: number; height: number };
 
 type BodyFigureProjection = (x: number, y: number) => { left: string; top: string };
 
+type ViewBox = { x: number; y: number; width: number; height: number };
+
 type BodyFigureProps = {
+  containerRef: RefObject<HTMLDivElement | null>;
+  svgRef: RefObject<SVGSVGElement | null>;
+  hitPathRef: RefObject<SVGPathElement | null>;
+  handlers: React.DOMAttributes<HTMLDivElement>;
+  viewBox: ViewBox;
+  markerScale: number;
+  interacting: boolean;
   sensations: BodySensation[];
-  focusRegion?: BodyRegionId | null;
-  zoom?: number;
-  onSelectRegion?: (region: BodyRegionId) => void;
+  focusRegion: BodyRegionId | null;
   className?: string;
   children?: (project: BodyFigureProjection) => ReactNode;
 };
 
-const FIGURE_PADDING = 8;
-
-function getViewBox(
-  size: { width: number; height: number },
-  focusRegion: BodyRegionId | null,
-  zoom: number,
-): ViewBox {
-  const figureWidth = BODY_FIGURE_VIEWBOX.width + FIGURE_PADDING * 2;
-  const figureHeight = BODY_FIGURE_VIEWBOX.height + FIGURE_PADDING * 2;
-
-  if (size.width === 0 || size.height === 0) {
-    return { x: -FIGURE_PADDING, y: -FIGURE_PADDING, width: figureWidth, height: figureHeight };
-  }
-
-  const fitScale = Math.min(size.width / figureWidth, size.height / figureHeight);
-  const scale = focusRegion ? fitScale * zoom : fitScale;
-  const width = size.width / scale;
-  const height = size.height / scale;
-  const center = focusRegion
-    ? BODY_REGIONS[focusRegion]
-    : { x: BODY_FIGURE_VIEWBOX.width / 2, y: BODY_FIGURE_VIEWBOX.height / 2 };
-
-  return { x: center.x - width / 2, y: center.y - height / 2, width, height };
-}
-
 export function BodyFigure({
+  containerRef,
+  svgRef,
+  hitPathRef,
+  handlers,
+  viewBox,
+  markerScale,
+  interacting,
   sensations,
-  focusRegion = null,
-  zoom = 2.6,
-  onSelectRegion,
+  focusRegion,
   className,
   children,
 }: BodyFigureProps) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const { ref, size } = useElementSize<HTMLDivElement>();
   const focus = focusRegion ? BODY_REGIONS[focusRegion] : null;
-  const viewBox = getViewBox(size, focusRegion, zoom);
-  const markerScale = viewBox.width / Math.max(size.width, 1);
 
   const project: BodyFigureProjection = (x, y) => ({
     left: `${((x - viewBox.x) / viewBox.width) * 100}%`,
     top: `${((y - viewBox.y) / viewBox.height) * 100}%`,
   });
 
-  function handleClick(event: React.MouseEvent<SVGGElement>) {
-    const matrix = event.currentTarget.ownerSVGElement?.getScreenCTM();
-
-    if (!matrix || !onSelectRegion) {
-      return;
-    }
-
-    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
-      matrix.inverse(),
-    );
-    onSelectRegion(findNearestBodyRegion(point.x, point.y));
-  }
-
   return (
-    <div ref={ref} className={cn("relative", className)}>
+    <div
+      ref={containerRef}
+      {...handlers}
+      className={cn("relative cursor-pointer touch-none overflow-hidden select-none", className)}
+    >
       <motion.svg
+        ref={svgRef}
         initial={false}
         animate={{
           viewBox: `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`,
         }}
-        transition={{ type: "spring", stiffness: 120, damping: 22 }}
+        transition={
+          interacting
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 120, damping: 22 }
+        }
         className="absolute inset-0 size-full"
         aria-hidden="true"
       >
@@ -132,11 +105,7 @@ export function BodyFigure({
             opacity={0.55}
           />
         </g>
-        {onSelectRegion ? (
-          <g onClick={handleClick} className="cursor-pointer">
-            <path d={BODY_FIGURE_PATH} fill="transparent" />
-          </g>
-        ) : null}
+        <path ref={hitPathRef} d={BODY_FIGURE_PATH} fill="transparent" />
         {focus ? (
           <circle
             cx={focus.x}

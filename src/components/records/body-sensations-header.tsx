@@ -2,7 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 
-import { SheetTitle } from "@/components/ui/sheet";
+import { BodySensationsHeaderAction } from "@/components/records/body-sensations-header-action";
 
 type HeaderAction = {
   icon: LucideIcon;
@@ -12,42 +12,23 @@ type HeaderAction = {
 
 type BodySensationsHeaderProps = {
   title: string;
-  leading: HeaderAction;
-  trailing?: HeaderAction;
+  actions: HeaderAction[];
 };
 
-const ACTION_CLASS_NAME =
-  "flex size-11 shrink-0 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50";
-
-export function BodySensationsHeader({ title, leading, trailing }: BodySensationsHeaderProps) {
-  const LeadingIcon = leading.icon;
-  const TrailingIcon = trailing?.icon;
-
+export function BodySensationsHeader({ title, actions }: BodySensationsHeaderProps) {
   return (
-    <div className="relative z-10 flex shrink-0 items-center justify-between gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2">
-      <button
-        type="button"
-        onClick={leading.onClick}
-        aria-label={leading.label}
-        className={ACTION_CLASS_NAME}
-      >
-        <LeadingIcon className="size-5" aria-hidden="true" />
-      </button>
-      <SheetTitle className="max-w-56 text-center text-base font-semibold text-balance">
-        {title}
-      </SheetTitle>
-      {trailing && TrailingIcon ? (
-        <button
-          type="button"
-          onClick={trailing.onClick}
-          aria-label={trailing.label}
-          className={ACTION_CLASS_NAME}
-        >
-          <TrailingIcon className="size-5" aria-hidden="true" />
-        </button>
-      ) : (
-        <span className="size-11 shrink-0" aria-hidden="true" />
-      )}
+    <div className="relative z-10 flex shrink-0 items-center justify-between gap-3 px-6 pt-4 pb-2">
+      <h2 className="font-display text-2xl leading-tight font-medium text-balance">{title}</h2>
+      <div className="flex shrink-0 gap-2">
+        {actions.map((action) => (
+          <BodySensationsHeaderAction
+            key={action.label}
+            icon={action.icon}
+            label={action.label}
+            onClick={action.onClick}
+          />
+        ))}
+      </div>
     </div>
   );
 }

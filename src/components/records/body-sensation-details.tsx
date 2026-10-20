@@ -55,7 +55,7 @@ export function BodySensationDetails({
         onToggle={onToggleTag}
       />
       <Button size="lg" className="w-full" onClick={onContinue}>
-        Siguiente
+        Listo
       </Button>
     </div>
   );

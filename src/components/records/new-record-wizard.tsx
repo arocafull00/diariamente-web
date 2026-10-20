@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 
+import { NewRecordBodyStep } from "@/components/records/new-record-body-step";
 import { NewRecordContextStep } from "@/components/records/new-record-context-step";
 import { NewRecordEmotionStep } from "@/components/records/new-record-emotion-step";
 import { NewRecordIntensityStep } from "@/components/records/new-record-intensity-step";
@@ -133,10 +134,16 @@ export function NewRecordWizard() {
                 emotion={emotion}
                 quadrant={store.quadrant}
                 context={store.context}
-                bodySensations={store.bodySensations}
                 onToggle={store.toggleContextTag}
-                onSaveSensation={store.saveBodySensation}
-                onRemoveSensation={store.removeBodySensation}
+                onContinue={store.nextStep}
+              />
+            ) : null}
+
+            {!savedRecord && step === "body" ? (
+              <NewRecordBodyStep
+                sensations={store.bodySensations}
+                onSave={store.saveBodySensation}
+                onRemove={store.removeBodySensation}
                 onContinue={store.nextStep}
               />
             ) : null}
