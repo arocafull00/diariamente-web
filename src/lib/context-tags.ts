@@ -1,4 +1,4 @@
-import type { RecordContext } from "@/db/schema";
+import type { GrammaticalGender, RecordContext } from "@/db/schema";
 
 export type ContextGroup = keyof RecordContext;
 
@@ -57,4 +57,16 @@ export const EMPTY_RECORD_CONTEXT: RecordContext = {
 
 export function getContextTags(context: RecordContext) {
   return [...context.topics, ...context.people, ...context.places];
+}
+
+const FEMININE_CONTEXT_TAGS: Record<string, string> = {
+  Solo: "Sola",
+};
+
+export function getContextTagLabel(tag: string, gender: GrammaticalGender) {
+  if (gender !== "feminine") {
+    return tag;
+  }
+
+  return FEMININE_CONTEXT_TAGS[tag] ?? tag;
 }

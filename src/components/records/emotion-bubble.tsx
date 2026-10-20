@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 type EmotionBubbleProps = {
   name: string;
+  label: string;
   quadrant: MoodQuadrant;
   tone: MoodTone;
   styles: MoodStyles;
@@ -43,6 +44,7 @@ function getPushOffset(along: number, across: number, cell: number) {
 
 export const EmotionBubble = memo(function EmotionBubble({
   name,
+  label,
   quadrant,
   tone,
   styles,
@@ -164,7 +166,7 @@ export const EmotionBubble = memo(function EmotionBubble({
               damping: shape.damping,
             }}
           >
-            {name}
+            {label}
           </motion.span>
         </motion.button>
       </motion.div>

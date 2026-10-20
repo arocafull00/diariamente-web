@@ -44,7 +44,12 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
       />
 
       <div className="space-y-6">
-        {latestRecord ? <HomeLatestMood record={latestRecord} /> : null}
+        {latestRecord ? (
+          <HomeLatestMood
+            record={latestRecord}
+            gender={data.grammaticalGender}
+          />
+        ) : null}
 
         {olderRecords.length > 0 ? (
           <section className="space-y-3">
@@ -61,7 +66,11 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
             <StaggerList className="space-y-3">
               {olderRecords.map((record) => (
                 <StaggerItem key={record.id}>
-                  <RecordCard record={record} href={`/registro/${record.id}`} />
+                  <RecordCard
+                    record={record}
+                    href={`/registro/${record.id}`}
+                    gender={data.grammaticalGender}
+                  />
                 </StaggerItem>
               ))}
             </StaggerList>

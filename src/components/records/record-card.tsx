@@ -2,11 +2,12 @@ import { StickyNote } from "lucide-react";
 import { PressableLink } from "@/components/motion/pressable-link";
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { Badge } from "@/components/ui/badge";
-import type { PatientRecord } from "@/db/schema";
-import { getContextTags } from "@/lib/context-tags";
+import type { GrammaticalGender, PatientRecord } from "@/db/schema";
+import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
 import { CIRCLE_CLIP_PATH, getEmotionShape } from "@/lib/emotion-shapes";
 import {
   getDominantEmotion,
+  getEmotionLabel,
   getMoodStyles,
   getRecordQuadrant,
 } from "@/lib/emotions";
@@ -16,6 +17,7 @@ import { formatOccurrenceTime, formatRecordDate } from "@/lib/utils-app";
 type RecordCardProps = {
   record: PatientRecord;
   href: string;
+  gender: GrammaticalGender;
   showUnseen?: boolean;
   hasNote?: boolean;
   compactDate?: boolean;
@@ -26,6 +28,7 @@ const MAX_TAGS = 3;
 export function RecordCard({
   record,
   href,
+  gender,
   showUnseen = false,
   hasNote = false,
   compactDate = false,
@@ -55,7 +58,7 @@ export function RecordCard({
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-1.5">
             <p className={cn("truncate text-sm font-semibold", styles.strong)}>
-              {dominant?.emotion ?? "Registro"}
+              {dominant ? getEmotionLabel(dominant.emotion, gender) : "Registro"}
               {extraEmotions > 0 ? (
                 <span className="font-medium text-muted-foreground">
                   {` +${extraEmotions}`}
@@ -93,7 +96,7 @@ export function RecordCard({
                   key={tag}
                   className="rounded-full bg-card/80 px-2.5 py-0.5 text-xs font-medium text-foreground ring-1 ring-border/60"
                 >
-                  {tag}
+                  {getContextTagLabel(tag, gender)}
                 </span>
               ))}
               {tags.length > MAX_TAGS ? (

@@ -19,7 +19,12 @@ import { RecordEmotionsSection } from "@/components/records/record-emotions-sect
 import { RecordMoodHero } from "@/components/records/record-mood-hero";
 import { RecordNotePanel } from "@/components/records/record-note-panel";
 import { Button } from "@/components/ui/button";
-import type { PatientRecord, Profile, RecordNote } from "@/db/schema";
+import type {
+  GrammaticalGender,
+  PatientRecord,
+  Profile,
+  RecordNote,
+} from "@/db/schema";
 import { getDominantEmotion, getRecordQuadrant } from "@/lib/emotions";
 import {
   markRecordAsSeen,
@@ -30,9 +35,15 @@ type RecordDetailProps = {
   profile: Profile;
   record: PatientRecord;
   note: RecordNote | null;
+  gender: GrammaticalGender;
 };
 
-export function RecordDetail({ profile, record, note }: RecordDetailProps) {
+export function RecordDetail({
+  profile,
+  record,
+  note,
+  gender,
+}: RecordDetailProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [situation, setSituation] = useState(record.situation);
@@ -83,9 +94,14 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
         emotion={getDominantEmotion(record.emotions)}
         quadrant={quadrant}
         occurredAt={record.occurredAt}
+        gender={gender}
       />
 
-      <RecordContextSection context={record.context} quadrant={quadrant} />
+      <RecordContextSection
+        context={record.context}
+        quadrant={quadrant}
+        gender={gender}
+      />
 
       <RecordBodySection sensations={record.bodySensations} />
 
@@ -130,7 +146,7 @@ export function RecordDetail({ profile, record, note }: RecordDetailProps) {
       </section>
 
       {record.emotions.length > 1 ? (
-        <RecordEmotionsSection emotions={record.emotions} />
+        <RecordEmotionsSection emotions={record.emotions} gender={gender} />
       ) : null}
 
       <AnimatePresence>

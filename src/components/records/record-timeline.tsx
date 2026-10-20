@@ -1,13 +1,18 @@
 import { RecordDayGroup } from "@/components/records/record-day-group";
-import type { PatientRecord } from "@/db/schema";
+import type { GrammaticalGender, PatientRecord } from "@/db/schema";
 import { formatDayHeading, groupByDay } from "@/lib/dates";
 
 type RecordTimelineProps = {
   records: (PatientRecord & { hasNote?: boolean })[];
+  gender: GrammaticalGender;
   showUnseen: boolean;
 };
 
-export function RecordTimeline({ records, showUnseen }: RecordTimelineProps) {
+export function RecordTimeline({
+  records,
+  gender,
+  showUnseen,
+}: RecordTimelineProps) {
   const now = new Date();
 
   return (
@@ -17,6 +22,7 @@ export function RecordTimeline({ records, showUnseen }: RecordTimelineProps) {
           key={group.key}
           heading={formatDayHeading(group.key, now)}
           records={group.items}
+          gender={gender}
           showUnseen={showUnseen}
         />
       ))}

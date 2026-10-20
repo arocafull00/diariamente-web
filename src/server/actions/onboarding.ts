@@ -30,6 +30,7 @@ export async function completeOnboarding(
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     role: formData.get("role"),
+    grammaticalGender: formData.get("grammaticalGender"),
     avatarUrl:
       typeof rawAvatarUrl === "string" && rawAvatarUrl.length > 0
         ? rawAvatarUrl
@@ -40,7 +41,8 @@ export async function completeOnboarding(
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { firstName, lastName, role, avatarUrl } = parsed.data;
+  const { firstName, lastName, role, grammaticalGender, avatarUrl } =
+    parsed.data;
 
   const client = await clerkClient();
   const clerkUser = await client.users.getUser(userId);
@@ -53,6 +55,7 @@ export async function completeOnboarding(
       firstName,
       lastName,
       role,
+      grammaticalGender,
       avatarUrl: resolvedAvatarUrl,
       onboardingCompleted: true,
     })
@@ -62,6 +65,7 @@ export async function completeOnboarding(
         firstName,
         lastName,
         role,
+        grammaticalGender,
         avatarUrl: resolvedAvatarUrl,
         onboardingCompleted: true,
         updatedAt: new Date(),

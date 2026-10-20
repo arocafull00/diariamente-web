@@ -11,10 +11,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { EmotionOption } from "@/lib/emotions";
+import type { GrammaticalGender } from "@/db/schema";
+import {
+  getEmotionDefinition,
+  getEmotionLabel,
+  type EmotionOption,
+} from "@/lib/emotions";
 
 type EmotionSearchSheetProps = {
   options: EmotionOption[];
+  gender: GrammaticalGender;
   onSelect: (option: EmotionOption) => void;
 };
 
@@ -30,13 +36,18 @@ function normalize(value: string) {
 
 export function EmotionSearchSheet({
   options,
+  gender,
   onSelect,
 }: EmotionSearchSheetProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const normalizedQuery = normalize(query);
   const results = normalizedQuery
-    ? options.filter((option) => normalize(option.name).includes(normalizedQuery))
+    ? options.filter((option) =>
+        [option.name, option.feminineName].some((name) =>
+          normalize(name).includes(normalizedQuery),
+        ),
+      )
     : options;
 
   function handleOpenChange(next: boolean) {
@@ -76,8 +87,8 @@ export function EmotionSearchSheet({
           {results.slice(0, MAX_RESULTS).map((option) => (
             <EmotionSearchResult
               key={option.name}
-              name={option.name}
-              definition={option.definition}
+              name={getEmotionLabel(option.name, gender)}
+              definition={getEmotionDefinition(option, gender)}
               quadrant={option.quadrant}
               onSelect={() => {
                 onSelect(option);

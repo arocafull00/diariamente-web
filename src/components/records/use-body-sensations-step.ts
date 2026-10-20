@@ -4,49 +4,74 @@ import { useState } from "react";
 
 import { useBodyFigureCamera } from "@/components/records/use-body-figure-camera";
 import type { BodySensation } from "@/db/schema";
-import type { BodyRegionId, SensationValue } from "@/lib/body-sensations";
+import {
+  MAX_BODY_SENSATIONS,
+  toFigurePoint,
+  toNormalizedPoint,
+  type SensationValue,
+} from "@/lib/body-sensations";
 
 type UseBodySensationsStepOptions = {
   sensations: BodySensation[];
   onSave: (sensation: BodySensation) => void;
-  onRemove: (region: string) => void;
+  onRemove: (id: string) => void;
 };
+
+type ActivePoint = Pick<BodySensation, "id" | "x" | "y">;
 
 export function useBodySensationsStep({
   sensations,
   onSave,
   onRemove,
 }: UseBodySensationsStepOptions) {
-  const camera = useBodyFigureCamera({ onSelectRegion: (next) => selectRegion(next) });
-  const [region, setRegion] = useState<BodyRegionId | null>(null);
+  const camera = useBodyFigureCamera({ onTap: (point) => addPoint(point) });
+  const [active, setActive] = useState<ActivePoint | null>(null);
   const [draft, setDraft] = useState<SensationValue | null>(null);
   const [editingValue, setEditingValue] = useState(true);
-  const saved = sensations.find((sensation) => sensation.region === region);
+  const saved = sensations.find((sensation) => sensation.id === active?.id);
   const tags = saved?.tags ?? [];
   const value =
     draft ?? (saved ? { pleasantness: saved.pleasantness, intensity: saved.intensity } : null);
-  const others = sensations.filter((sensation) => sensation.region !== region);
-  const preview = region && draft ? [...others, { region, ...draft, tags }] : sensations;
+  const others = sensations.filter((sensation) => sensation.id !== active?.id);
+  const preview = active && draft ? [...others, { ...active, ...draft, tags }] : sensations;
+  const focusPoint = active ? toFigurePoint(active) : null;
 
-  function selectRegion(next: BodyRegionId) {
-    setRegion(next);
+  function addPoint(point: { x: number; y: number }) {
+    if (sensations.length >= MAX_BODY_SENSATIONS) {
+      return;
+    }
+
+    setActive({ id: crypto.randomUUID(), ...toNormalizedPoint(point) });
     setDraft(null);
-    setEditingValue(!sensations.some((sensation) => sensation.region === next));
-    camera.focusOn(next);
+    setEditingValue(true);
+    camera.focusOn(point);
+  }
+
+  function selectSensation(id: string) {
+    const sensation = sensations.find((item) => item.id === id);
+
+    if (!sensation) {
+      return;
+    }
+
+    setActive({ id: sensation.id, x: sensation.x, y: sensation.y });
+    setDraft(null);
+    setEditingValue(false);
+    camera.focusOn(toFigurePoint(sensation));
   }
 
   function showOverview() {
-    setRegion(null);
+    setActive(null);
     setDraft(null);
     camera.reset();
   }
 
   function commitValue(next: SensationValue) {
-    if (!region) {
+    if (!active) {
       return;
     }
 
-    onSave({ region, ...next, tags });
+    onSave({ ...active, ...next, tags });
     setDraft(null);
     setEditingValue(false);
   }
@@ -63,24 +88,25 @@ export function useBodySensationsStep({
   }
 
   function removeSensation() {
-    if (!region) {
+    if (!active) {
       return;
     }
 
-    onRemove(region);
+    onRemove(active.id);
     showOverview();
   }
 
   return {
     camera,
-    region,
+    active,
+    focusPoint,
     saved,
     value,
     tags,
     editingValue,
     preview,
     others,
-    selectRegion,
+    selectSensation,
     showOverview,
     setValue: setDraft,
     commitValue,

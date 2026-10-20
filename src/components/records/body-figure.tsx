@@ -3,10 +3,9 @@
 import { motion } from "motion/react";
 import { useId, type ReactNode, type RefObject } from "react";
 
-import { BodySensationGlow } from "@/components/records/body-sensation-glow";
+import { BodyFigureArt } from "@/components/records/body-figure-art";
 import type { BodySensation } from "@/db/schema";
-import { BODY_FIGURE_PATH, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
-import { BODY_REGIONS, type BodyRegionId } from "@/lib/body-sensations";
+import { BODY_FIGURE_PATH } from "@/lib/body-figures";
 import { cn } from "@/lib/utils";
 
 type BodyFigureProjection = (x: number, y: number) => { left: string; top: string };
@@ -22,7 +21,7 @@ type BodyFigureProps = {
   markerScale: number;
   interacting: boolean;
   sensations: BodySensation[];
-  focusRegion: BodyRegionId | null;
+  focusPoint: { x: number; y: number } | null;
   className?: string;
   children?: (project: BodyFigureProjection) => ReactNode;
 };
@@ -36,12 +35,11 @@ export function BodyFigure({
   markerScale,
   interacting,
   sensations,
-  focusRegion,
+  focusPoint,
   className,
   children,
 }: BodyFigureProps) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const focus = focusRegion ? BODY_REGIONS[focusRegion] : null;
 
   const project: BodyFigureProjection = (x, y) => ({
     left: `${((x - viewBox.x) / viewBox.width) * 100}%`,
@@ -68,48 +66,18 @@ export function BodyFigure({
         className="absolute inset-0 size-full"
         aria-hidden="true"
       >
-        <defs>
-          <pattern
-            id={`${id}-dots`}
-            width="3"
-            height="3"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="1.5" cy="1.5" r="0.7" className="fill-foreground" />
-          </pattern>
-          <mask id={`${id}-mask`}>
-            <path d={BODY_FIGURE_PATH} fill="white" />
-          </mask>
-          <filter id={`${id}-blur`} x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="8" />
-          </filter>
-        </defs>
-        <g mask={`url(#${id}-mask)`}>
-          <rect
-            width={BODY_FIGURE_VIEWBOX.width}
-            height={BODY_FIGURE_VIEWBOX.height}
-            className="fill-foreground"
-            opacity={0.06}
-          />
-          {sensations.map((sensation) => (
-            <BodySensationGlow
-              key={sensation.region}
-              sensation={sensation}
-              filterId={`${id}-blur`}
-            />
-          ))}
-          <rect
-            width={BODY_FIGURE_VIEWBOX.width}
-            height={BODY_FIGURE_VIEWBOX.height}
-            fill={`url(#${id}-dots)`}
-            opacity={0.55}
-          />
-        </g>
-        <path ref={hitPathRef} d={BODY_FIGURE_PATH} fill="transparent" />
-        {focus ? (
+        <BodyFigureArt id={id} sensations={sensations} />
+        <path
+          ref={hitPathRef}
+          d={BODY_FIGURE_PATH}
+          fill="transparent"
+          stroke="transparent"
+          strokeWidth={6}
+        />
+        {focusPoint ? (
           <circle
-            cx={focus.x}
-            cy={focus.y}
+            cx={focusPoint.x}
+            cy={focusPoint.y}
             r={7 * markerScale}
             strokeWidth={3 * markerScale}
             className="fill-card stroke-foreground"

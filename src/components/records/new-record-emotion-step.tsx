@@ -8,8 +8,9 @@ import { EmotionSearchSheet } from "@/components/records/emotion-search-sheet";
 import { EmotionSelectionBar } from "@/components/records/emotion-selection-bar";
 import { usePannableField } from "@/components/records/use-pannable-field";
 import { useSelectionPush } from "@/components/records/use-selection-push";
-import type { MoodQuadrant } from "@/db/schema";
+import type { GrammaticalGender, MoodQuadrant } from "@/db/schema";
 import {
+  getEmotionLabel,
   getMoodStyles,
   isMoodQuadrant,
   MOOD_QUADRANTS,
@@ -22,6 +23,7 @@ type NewRecordEmotionStepProps = {
   emotion: string | null;
   definition: string;
   options: EmotionOption[];
+  gender: GrammaticalGender;
   onSelect: (name: string, quadrant: MoodQuadrant) => void;
   onSearchSelect: (option: EmotionOption) => void;
   onQuickSave: (name: string, quadrant: MoodQuadrant) => void;
@@ -34,6 +36,7 @@ export function NewRecordEmotionStep({
   emotion,
   definition,
   options,
+  gender,
   onSelect,
   onSearchSelect,
   onQuickSave,
@@ -61,6 +64,11 @@ export function NewRecordEmotionStep({
   const selectionPush = useSelectionPush(contentRef, emotion);
 
   function handleTap(name: string, quadrant: MoodQuadrant) {
+    if (emotion === name && selectedQuadrant === quadrant) {
+      onContinue();
+      return;
+    }
+
     onSelect(name, quadrant);
     const element = contentRef.current?.querySelector<HTMLElement>(
       `[data-emotion="${CSS.escape(name)}"]`,
@@ -111,6 +119,7 @@ export function NewRecordEmotionStep({
               names={options
                 .filter((option) => option.quadrant === quadrant.id)
                 .map((option) => option.name)}
+              gender={gender}
               selectedEmotion={selectedQuadrant === quadrant.id ? emotion : null}
               field={fieldMotion}
               selection={selectionPush}
@@ -122,11 +131,15 @@ export function NewRecordEmotionStep({
       </div>
 
       <div className="absolute top-19 right-4 z-20">
-        <EmotionSearchSheet options={options} onSelect={onSearchSelect} />
+        <EmotionSearchSheet
+          options={options}
+          gender={gender}
+          onSelect={onSearchSelect}
+        />
       </div>
 
       <EmotionSelectionBar
-        emotion={emotion}
+        emotion={emotion ? getEmotionLabel(emotion, gender) : null}
         definition={definition}
         styles={getMoodStyles(selectedQuadrant)}
         onContinue={onContinue}

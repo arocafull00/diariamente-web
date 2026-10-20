@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { isPredefinedAvatarUrl } from "@/lib/avatars";
-import { BODY_REGION_IDS } from "@/lib/body-sensations";
+import { MAX_BODY_SENSATIONS } from "@/lib/body-sensations";
 
 const clerkImageHost = "img.clerk.com";
 
@@ -18,10 +18,15 @@ function isAllowedAvatarUrl(url: string): boolean {
   }
 }
 
+const grammaticalGenderSchema = z.enum(["feminine", "masculine", "unspecified"], {
+  error: "Elige cómo prefieres que te llame",
+});
+
 export const onboardingSchema = z.object({
   firstName: z.string().trim().min(1, "El nombre es obligatorio"),
   lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
   role: z.enum(["patient", "psychologist"]),
+  grammaticalGender: grammaticalGenderSchema,
   avatarUrl: z
     .string()
     .trim()
@@ -45,6 +50,10 @@ export const updateProfileSchema = z.object({
     ),
 });
 
+export const updateGrammaticalGenderSchema = z.object({
+  grammaticalGender: grammaticalGenderSchema,
+});
+
 export const recordEmotionSchema = z.object({
   emotion: z.string().trim().min(1),
   intensity: z.number().int().min(1).max(10),
@@ -64,7 +73,9 @@ const contextTagsSchema = z
 const reflectionSchema = z.string().trim().max(5000);
 
 export const bodySensationSchema = z.object({
-  region: z.enum(BODY_REGION_IDS),
+  id: z.string().trim().min(1).max(64),
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
   pleasantness: z.number().int().min(0).max(100),
   intensity: z.number().int().min(0).max(100),
   tags: contextTagsSchema,
@@ -83,12 +94,12 @@ export const createRecordSchema = z.object({
   }),
   bodySensations: z
     .array(bodySensationSchema)
-    .max(BODY_REGION_IDS.length)
+    .max(MAX_BODY_SENSATIONS)
     .refine(
       (sensations) =>
-        new Set(sensations.map((sensation) => sensation.region)).size ===
+        new Set(sensations.map((sensation) => sensation.id)).size ===
         sensations.length,
-      "Cada zona del cuerpo solo puede registrarse una vez",
+      "Cada punto del cuerpo solo puede registrarse una vez",
     ),
   situation: reflectionSchema,
   thoughts: reflectionSchema,

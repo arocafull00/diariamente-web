@@ -76,6 +76,7 @@ export async function getPsychologistPatients(psychologistId: string) {
       firstName: profiles.firstName,
       lastName: profiles.lastName,
       avatarUrl: profiles.avatarUrl,
+      grammaticalGender: profiles.grammaticalGender,
       linkedAt: psychologistPatient.linkedAt,
     })
     .from(psychologistPatient)
@@ -149,6 +150,16 @@ export async function getProfileById(profileId: string) {
     .limit(1);
 
   return profile ?? null;
+}
+
+export async function getProfileGrammaticalGender(profileId: string) {
+  const [profile] = await db
+    .select({ grammaticalGender: profiles.grammaticalGender })
+    .from(profiles)
+    .where(eq(profiles.id, profileId))
+    .limit(1);
+
+  return profile?.grammaticalGender ?? "feminine";
 }
 
 export async function getPatientPsychologist(patientId: string) {

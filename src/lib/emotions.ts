@@ -1,8 +1,14 @@
-import type { MoodQuadrant, RecordEmotion } from "@/db/schema";
+import type {
+  GrammaticalGender,
+  MoodQuadrant,
+  RecordEmotion,
+} from "@/db/schema";
 
 export type EmotionDefinition = {
   name: string;
+  feminineName: string;
   definition: string;
+  feminineDefinition: string;
   quadrant: MoodQuadrant;
 };
 
@@ -10,7 +16,9 @@ export type MoodTone = 1 | 2 | 3;
 
 export type EmotionOption = {
   name: string;
+  feminineName: string;
   definition: string;
+  feminineDefinition: string;
   quadrant: MoodQuadrant | null;
 };
 
@@ -29,99 +37,271 @@ export function isMoodQuadrant(value: string | undefined): value is MoodQuadrant
   return MOOD_QUADRANTS.some((quadrant) => quadrant.id === value);
 }
 
+type EmotionEntry = [
+  name: string,
+  definition: string,
+  feminineName?: string,
+  feminineDefinition?: string,
+];
+
 function defineQuadrant(
   quadrant: MoodQuadrant,
-  entries: [string, string][],
+  entries: EmotionEntry[],
 ): EmotionDefinition[] {
-  return entries.map(([name, definition]) => ({ name, definition, quadrant }));
+  return entries.map(([name, definition, feminineName, feminineDefinition]) => ({
+    name,
+    feminineName: feminineName ?? name,
+    definition,
+    feminineDefinition: feminineDefinition ?? definition,
+    quadrant,
+  }));
 }
 
 export const EMOTIONS: EmotionDefinition[] = [
   ...defineQuadrant("HIGH_UNPLEASANT", [
-    ["Furioso", "lleno de una ira intensa y difícil de contener"],
-    ["Aterrorizado", "con un miedo extremo ante un peligro"],
-    ["Enfurecido", "enojarte por algo; lleno de ira extrema"],
-    ["En pánico", "invadido por un miedo repentino que te bloquea"],
-    ["Desbordado", "sentir que lo que ocurre supera tus recursos"],
-    ["Iracundo", "sentir que la ira está a punto de salirse de control"],
-    ["Estresado", "bajo presión por exigencias que sientes excesivas"],
-    ["Ansioso", "preocupado de forma persistente por lo que pueda pasar"],
-    ["Asustado", "percibir una amenaza o peligro, ya sea físico o emocional"],
-    ["Enfadado", "molesto por algo que consideras injusto o dañino"],
-    ["Frustrado", "bloqueado al no conseguir algo que quieres"],
-    ["Celoso", "temer perder algo o a alguien que valoras"],
-    ["Nervioso", "inquieto y en tensión ante algo que va a pasar"],
-    ["Irritado", "molesto con facilidad por cosas pequeñas"],
-    ["Preocupado", "dar vueltas a un problema real o posible"],
-    ["Tenso", "con el cuerpo o la mente en estado de alerta"],
-    ["Asqueado", "sentir un rechazo intenso hacia algo o alguien"],
-    ["Avergonzado", "incómodo por cómo te ven los demás"],
-    ["Inquieto", "sin poder estar tranquilo ni concentrarte"],
-    ["Incómodo", "sensación vaga de que algo va mal"],
+    [
+      "Furioso",
+      "lleno de una ira intensa y difícil de contener",
+      "Furiosa",
+      "llena de una ira intensa y difícil de contener",
+    ],
+    ["Aterrorizado", "con un miedo extremo ante un peligro", "Aterrorizada"],
+    [
+      "Enfurecido",
+      "enojarte por algo; lleno de ira extrema",
+      "Enfurecida",
+      "enojarte por algo; llena de ira extrema",
+    ],
+    [
+      "En pánico",
+      "invadido por un miedo repentino que te bloquea",
+      "En pánico",
+      "invadida por un miedo repentino que te bloquea",
+    ],
+    [
+      "Desbordado",
+      "sentir que lo que ocurre supera tus recursos",
+      "Desbordada",
+    ],
+    [
+      "Iracundo",
+      "sentir que la ira está a punto de salirse de control",
+      "Iracunda",
+    ],
+    [
+      "Estresado",
+      "bajo presión por exigencias que sientes excesivas",
+      "Estresada",
+    ],
+    [
+      "Ansioso",
+      "preocupado de forma persistente por lo que pueda pasar",
+      "Ansiosa",
+      "preocupada de forma persistente por lo que pueda pasar",
+    ],
+    [
+      "Asustado",
+      "percibir una amenaza o peligro, ya sea físico o emocional",
+      "Asustada",
+    ],
+    [
+      "Enfadado",
+      "molesto por algo que consideras injusto o dañino",
+      "Enfadada",
+      "molesta por algo que consideras injusto o dañino",
+    ],
+    [
+      "Frustrado",
+      "bloqueado al no conseguir algo que quieres",
+      "Frustrada",
+      "bloqueada al no conseguir algo que quieres",
+    ],
+    ["Celoso", "temer perder algo o a alguien que valoras", "Celosa"],
+    [
+      "Nervioso",
+      "inquieto y en tensión ante algo que va a pasar",
+      "Nerviosa",
+      "inquieta y en tensión ante algo que va a pasar",
+    ],
+    [
+      "Irritado",
+      "molesto con facilidad por cosas pequeñas",
+      "Irritada",
+      "molesta con facilidad por cosas pequeñas",
+    ],
+    ["Preocupado", "dar vueltas a un problema real o posible", "Preocupada"],
+    ["Tenso", "con el cuerpo o la mente en estado de alerta", "Tensa"],
+    ["Asqueado", "sentir un rechazo intenso hacia algo o alguien", "Asqueada"],
+    [
+      "Avergonzado",
+      "incómodo por cómo te ven los demás",
+      "Avergonzada",
+      "incómoda por cómo te ven los demás",
+    ],
+    [
+      "Inquieto",
+      "sin poder estar tranquilo ni concentrarte",
+      "Inquieta",
+      "sin poder estar tranquila ni concentrarte",
+    ],
+    ["Incómodo", "sensación vaga de que algo va mal", "Incómoda"],
   ]),
   ...defineQuadrant("HIGH_PLEASANT", [
-    ["Eufórico", "con una alegría desbordante e intensa"],
-    ["Extasiado", "lleno de un placer o entusiasmo enorme"],
-    ["Emocionado", "con mucha ilusión por algo que ocurre o va a ocurrir"],
+    ["Eufórico", "con una alegría desbordante e intensa", "Eufórica"],
+    [
+      "Extasiado",
+      "lleno de un placer o entusiasmo enorme",
+      "Extasiada",
+      "llena de un placer o entusiasmo enorme",
+    ],
+    [
+      "Emocionado",
+      "con mucha ilusión por algo que ocurre o va a ocurrir",
+      "Emocionada",
+    ],
     ["Exultante", "celebrar algo con una alegría muy viva"],
-    ["Inspirado", "con ganas de crear o hacer algo nuevo"],
-    ["Empoderado", "sentirte más fuerte o seguro gracias a algo que ha sucedido"],
-    ["Entusiasmado", "con energía e interés por lo que haces"],
-    ["Orgulloso", "satisfecho por algo que has logrado"],
-    ["Motivado", "con impulso para avanzar hacia un objetivo"],
-    ["Optimista", "esperanzado y confiado en el futuro"],
-    ["Alegre", "contento y de buen humor"],
-    ["Divertido", "pasarlo bien y tener ganas de reír"],
-    ["Productivo", "sentir que avanzas y aprovechas el tiempo"],
-    ["Esperanzado", "confiar en que algo bueno puede pasar"],
-    ["Juguetón", "con ganas de bromear y disfrutar"],
-    ["Sorprendido", "impactado para bien por algo inesperado"],
-    ["Animado", "con buena energía y ánimo"],
-    ["Curioso", "con interés por descubrir o aprender algo"],
+    ["Inspirado", "con ganas de crear o hacer algo nuevo", "Inspirada"],
+    [
+      "Empoderado",
+      "sentirte más fuerte o seguro gracias a algo que ha sucedido",
+      "Empoderada",
+      "sentirte más fuerte o segura gracias a algo que ha sucedido",
+    ],
+    ["Entusiasmado", "con energía e interés por lo que haces", "Entusiasmada"],
+    [
+      "Orgulloso",
+      "satisfecho por algo que has logrado",
+      "Orgullosa",
+      "satisfecha por algo que has logrado",
+    ],
+    ["Motivado", "con impulso para avanzar hacia un objetivo", "Motivada"],
+    [
+      "Optimista",
+      "esperanzado y confiado en el futuro",
+      "Optimista",
+      "esperanzada y confiada en el futuro",
+    ],
+    [
+      "Alegre",
+      "contento y de buen humor",
+      "Alegre",
+      "contenta y de buen humor",
+    ],
+    ["Divertido", "pasarlo bien y tener ganas de reír", "Divertida"],
+    ["Productivo", "sentir que avanzas y aprovechas el tiempo", "Productiva"],
+    ["Esperanzado", "confiar en que algo bueno puede pasar", "Esperanzada"],
+    ["Juguetón", "con ganas de bromear y disfrutar", "Juguetona"],
+    [
+      "Sorprendido",
+      "impactado para bien por algo inesperado",
+      "Sorprendida",
+      "impactada para bien por algo inesperado",
+    ],
+    ["Animado", "con buena energía y ánimo", "Animada"],
+    ["Curioso", "con interés por descubrir o aprender algo", "Curiosa"],
     ["Agradable", "a gusto con lo que está pasando"],
-    ["Complacido", "satisfecho con cómo han salido las cosas"],
+    [
+      "Complacido",
+      "satisfecho con cómo han salido las cosas",
+      "Complacida",
+      "satisfecha con cómo han salido las cosas",
+    ],
   ]),
   ...defineQuadrant("LOW_UNPLEASANT", [
-    ["Desesperado", "no ver salida a lo que te está pasando"],
-    ["Deprimido", "hundido, sin energía ni ilusión durante un tiempo"],
+    ["Desesperado", "no ver salida a lo que te está pasando", "Desesperada"],
+    [
+      "Deprimido",
+      "hundido, sin energía ni ilusión durante un tiempo",
+      "Deprimida",
+      "hundida, sin energía ni ilusión durante un tiempo",
+    ],
     ["Miserable", "sentirte absolutamente horrible"],
-    ["Desolado", "con una tristeza profunda tras una pérdida"],
-    ["Vacío", "no sentir nada, como desconectado de todo"],
-    ["Solo", "echar en falta compañía o conexión con otros"],
+    ["Desolado", "con una tristeza profunda tras una pérdida", "Desolada"],
+    [
+      "Vacío",
+      "no sentir nada, como desconectado de todo",
+      "Vacía",
+      "no sentir nada, como desconectada de todo",
+    ],
+    ["Solo", "echar en falta compañía o conexión con otros", "Sola"],
     ["Culpable", "creer que has hecho algo mal y cargar con ello"],
-    ["Humillado", "herido en tu dignidad delante de otros"],
-    ["Agotado", "sin fuerzas físicas ni mentales"],
+    [
+      "Humillado",
+      "herido en tu dignidad delante de otros",
+      "Humillada",
+      "herida en tu dignidad delante de otros",
+    ],
+    ["Agotado", "sin fuerzas físicas ni mentales", "Agotada"],
     ["Triste", "con el ánimo bajo por algo que duele"],
-    ["Desanimado", "con menos ganas tras un revés"],
-    ["Decepcionado", "algo no ha salido como esperabas"],
-    ["Excluido", "sentir que los demás te dejan de lado"],
-    ["Vulnerable", "expuesto y fácil de herir"],
-    ["Abatido", "bajo de ánimo y sin energía"],
-    ["Desmotivado", "sin ganas de hacer lo que tenías pensado"],
-    ["Cansado", "sentir que necesitas descansar"],
-    ["Aburrido", "sin interés por lo que ocurre a tu alrededor"],
-    ["Apático", "indiferente, sin ganas de nada"],
-    ["Meh", "sentirte sin inspiración o aburrido"],
+    ["Desanimado", "con menos ganas tras un revés", "Desanimada"],
+    ["Decepcionado", "algo no ha salido como esperabas", "Decepcionada"],
+    ["Excluido", "sentir que los demás te dejan de lado", "Excluida"],
+    [
+      "Vulnerable",
+      "expuesto y fácil de herir",
+      "Vulnerable",
+      "expuesta y fácil de herir",
+    ],
+    ["Abatido", "bajo de ánimo y sin energía", "Abatida"],
+    ["Desmotivado", "sin ganas de hacer lo que tenías pensado", "Desmotivada"],
+    ["Cansado", "sentir que necesitas descansar", "Cansada"],
+    ["Aburrido", "sin interés por lo que ocurre a tu alrededor", "Aburrida"],
+    ["Apático", "indiferente, sin ganas de nada", "Apática"],
+    [
+      "Meh",
+      "sentirte sin inspiración o aburrido",
+      "Meh",
+      "sentirte sin inspiración o aburrida",
+    ],
   ]),
   ...defineQuadrant("LOW_PLEASANT", [
-    ["Sereno", "tranquilo y pacífico; sin problemas"],
-    ["Pleno", "sentir que lo que vives ahora tiene sentido"],
-    ["Agradecido", "valorar algo bueno que tienes o has recibido"],
+    [
+      "Sereno",
+      "tranquilo y pacífico; sin problemas",
+      "Serena",
+      "tranquila y pacífica; sin problemas",
+    ],
+    ["Pleno", "sentir que lo que vives ahora tiene sentido", "Plena"],
+    [
+      "Agradecido",
+      "valorar algo bueno que tienes o has recibido",
+      "Agradecida",
+    ],
     ["En paz", "sin conflicto interno"],
-    ["Satisfecho", "contento con lo que tienes o has hecho"],
-    ["Querido", "sentir el cariño de otras personas"],
-    ["Seguro", "a salvo y protegido"],
-    ["Equilibrado", "estable y centrado"],
-    ["Relajado", "sentirte relajado y despreocupado"],
-    ["Tranquilo", "sin prisas ni preocupaciones"],
-    ["Comprendido", "sentir que otros entienden cómo estás"],
-    ["Conectado", "unido a otras personas o a lo que haces"],
-    ["Cómodo", "a gusto en el lugar o la situación"],
-    ["Reflexivo", "pensar con calma sobre las cosas"],
-    ["Descansado", "con la energía recuperada tras descansar"],
+    [
+      "Satisfecho",
+      "contento con lo que tienes o has hecho",
+      "Satisfecha",
+      "contenta con lo que tienes o has hecho",
+    ],
+    ["Querido", "sentir el cariño de otras personas", "Querida"],
+    ["Seguro", "a salvo y protegido", "Segura", "a salvo y protegida"],
+    ["Equilibrado", "estable y centrado", "Equilibrada", "estable y centrada"],
+    [
+      "Relajado",
+      "sentirte relajado y despreocupado",
+      "Relajada",
+      "sentirte relajada y despreocupada",
+    ],
+    ["Tranquilo", "sin prisas ni preocupaciones", "Tranquila"],
+    ["Comprendido", "sentir que otros entienden cómo estás", "Comprendida"],
+    [
+      "Conectado",
+      "unido a otras personas o a lo que haces",
+      "Conectada",
+      "unida a otras personas o a lo que haces",
+    ],
+    ["Cómodo", "a gusto en el lugar o la situación", "Cómoda"],
+    ["Reflexivo", "pensar con calma sobre las cosas", "Reflexiva"],
+    ["Descansado", "con la energía recuperada tras descansar", "Descansada"],
     ["Apacible", "con una calma suave y estable"],
-    ["Acompañado", "sentir que no estás solo"],
-    ["Compasivo", "sentir ternura y comprensión por alguien"],
+    [
+      "Acompañado",
+      "sentir que no estás solo",
+      "Acompañada",
+      "sentir que no estás sola",
+    ],
+    ["Compasivo", "sentir ternura y comprensión por alguien", "Compasiva"],
     ["A gusto", "bien con lo que está pasando"],
     ["Bien", "estar bien, sin más"],
   ]),
@@ -140,8 +320,27 @@ const EMOTIONS_BY_NAME = new Map(
   EMOTIONS.map((emotion) => [emotion.name.toLowerCase(), emotion]),
 );
 
+const EMOTIONS_BY_CANONICAL_NAME = new Map(
+  EMOTIONS.map((emotion) => [emotion.name, emotion]),
+);
+
 export function findEmotion(name: string) {
   return EMOTIONS_BY_NAME.get(name.toLowerCase());
+}
+
+export function getEmotionLabel(name: string, gender: GrammaticalGender) {
+  if (gender !== "feminine") {
+    return name;
+  }
+
+  return EMOTIONS_BY_CANONICAL_NAME.get(name)?.feminineName ?? name;
+}
+
+export function getEmotionDefinition(
+  emotion: Pick<EmotionOption, "definition" | "feminineDefinition">,
+  gender: GrammaticalGender,
+) {
+  return gender === "feminine" ? emotion.feminineDefinition : emotion.definition;
 }
 
 export function getEmotionsByQuadrant(quadrant: MoodQuadrant) {

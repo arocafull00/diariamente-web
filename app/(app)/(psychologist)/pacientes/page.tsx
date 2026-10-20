@@ -60,6 +60,7 @@ export default async function PatientsPage() {
                 firstName={patient.firstName}
                 lastName={patient.lastName}
                 avatarUrl={patient.avatarUrl}
+                grammaticalGender={patient.grammaticalGender}
                 unseenCount={patient.unseenCount}
                 latestRecord={patient.latestRecord}
               />

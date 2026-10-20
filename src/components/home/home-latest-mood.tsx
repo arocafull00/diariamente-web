@@ -2,15 +2,20 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
-import type { PatientRecord } from "@/db/schema";
-import { getContextTags } from "@/lib/context-tags";
-import { getDominantEmotion, getRecordQuadrant } from "@/lib/emotions";
+import type { GrammaticalGender, PatientRecord } from "@/db/schema";
+import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
+import {
+  getDominantEmotion,
+  getEmotionLabel,
+  getRecordQuadrant,
+} from "@/lib/emotions";
 
 type HomeLatestMoodProps = {
   record: PatientRecord;
+  gender: GrammaticalGender;
 };
 
-export function HomeLatestMood({ record }: HomeLatestMoodProps) {
+export function HomeLatestMood({ record, gender }: HomeLatestMoodProps) {
   const dominant = getDominantEmotion(record.emotions);
 
   return (
@@ -22,9 +27,11 @@ export function HomeLatestMood({ record }: HomeLatestMoodProps) {
       >
         <MoodSummaryCard
           prefix="Me sentí"
-          emotion={dominant?.emotion ?? "así"}
+          emotion={dominant ? getEmotionLabel(dominant.emotion, gender) : "así"}
           quadrant={getRecordQuadrant(record)}
-          tags={getContextTags(record.context)}
+          tags={getContextTags(record.context).map((tag) =>
+            getContextTagLabel(tag, gender),
+          )}
           note={record.situation}
           occurredAt={new Date(record.occurredAt)}
           className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md"

@@ -2,7 +2,7 @@ import { NewRecordWizard } from "@/components/records/new-record-wizard";
 import { requireRole } from "@/server/auth/get-current-profile";
 
 export default async function NewRecordPage() {
-  await requireRole("patient");
+  const profile = await requireRole("patient");
 
-  return <NewRecordWizard />;
+  return <NewRecordWizard gender={profile.grammaticalGender} />;
 }

@@ -4,11 +4,6 @@ import { useRef, useState } from "react";
 
 import { useElementSize } from "@/components/records/use-element-size";
 import { BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
-import {
-  BODY_REGIONS,
-  findNearestBodyRegion,
-  type BodyRegionId,
-} from "@/lib/body-sensations";
 
 type Point = { x: number; y: number };
 
@@ -26,7 +21,7 @@ type Gesture = {
 };
 
 type UseBodyFigureCameraOptions = {
-  onSelectRegion: (region: BodyRegionId) => void;
+  onTap: (point: Point) => void;
 };
 
 const FIGURE_PADDING = 8;
@@ -35,7 +30,6 @@ const MAX_SCALE = 4;
 const ZOOM_STEP = 1.5;
 const FOCUS_SCALE = 1.6;
 const TAP_THRESHOLD = 8;
-const TAP_TOLERANCE = 14;
 
 const FIGURE_BOUNDS = {
   minX: -FIGURE_PADDING,
@@ -104,7 +98,7 @@ function getDistance(points: Point[]) {
   return Math.max(Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y), 1);
 }
 
-export function useBodyFigureCamera({ onSelectRegion }: UseBodyFigureCameraOptions) {
+export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
   const { ref, size } = useElementSize<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>(null);
   const hitPathRef = useRef<SVGPathElement>(null);
@@ -152,12 +146,9 @@ export function useBodyFigureCamera({ onSelectRegion }: UseBodyFigureCameraOptio
     }
 
     const point = new DOMPoint(client.x, client.y).matrixTransform(matrix.inverse());
-    const region = findNearestBodyRegion(point.x, point.y);
-    const target = BODY_REGIONS[region];
-    const near = Math.hypot(target.x - point.x, target.y - point.y) <= TAP_TOLERANCE;
 
-    if (path.isPointInFill(point) || near) {
-      onSelectRegion(region);
+    if (path.isPointInFill(point) || path.isPointInStroke(point)) {
+      onTap({ x: point.x, y: point.y });
     }
   }
 
@@ -197,10 +188,10 @@ export function useBodyFigureCamera({ onSelectRegion }: UseBodyFigureCameraOptio
     zoomIn: () => zoomTo(camera.scale * ZOOM_STEP),
     zoomOut: () => zoomTo(camera.scale / ZOOM_STEP),
     reset: () => setCamera(INITIAL_CAMERA),
-    focusOn: (region: BodyRegionId) =>
+    focusOn: (point: Point) =>
       setCamera((value) => ({
         scale: Math.max(value.scale, FOCUS_SCALE),
-        center: BODY_REGIONS[region],
+        center: point,
       })),
     handlers: {
       onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => {

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 import { PushSubscribeButton } from "@/components/pwa/push-subscribe-button";
+import { SettingsGrammaticalGenderRow } from "@/components/profile/settings-grammatical-gender-row";
 import { SettingsGroup } from "@/components/profile/settings-group";
 import {
   SettingsRowContent,
@@ -33,7 +34,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import type { UserRole } from "@/db/schema";
+import type { GrammaticalGender, UserRole } from "@/db/schema";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { deleteAccount } from "@/server/actions/onboarding";
 import { saveReminderSettings } from "@/server/actions/reminders";
@@ -41,9 +42,14 @@ import { saveReminderSettings } from "@/server/actions/reminders";
 type SettingsSheetProps = {
   role: UserRole;
   remindersEnabled: boolean;
+  grammaticalGender: GrammaticalGender;
 };
 
-export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
+export function SettingsSheet({
+  role,
+  remindersEnabled,
+  grammaticalGender,
+}: SettingsSheetProps) {
   const router = useRouter();
   const { installed, loading, handleInstall } = usePwaInstall();
   const [open, setOpen] = useState(false);
@@ -109,6 +115,10 @@ export function SettingsSheet({ role, remindersEnabled }: SettingsSheetProps) {
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 pb-6">
           <SettingsGroup title="Preferencias">
+            <SettingsGrammaticalGenderRow
+              key={grammaticalGender}
+              grammaticalGender={grammaticalGender}
+            />
             {role === "patient" ? (
               <label
                 htmlFor="reminders"

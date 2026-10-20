@@ -4,7 +4,6 @@ import { Trash2, X } from "lucide-react";
 
 import { BodyFigure } from "@/components/records/body-figure";
 import { BodyFigureZoomControls } from "@/components/records/body-figure-zoom-controls";
-import { BodyRegionList } from "@/components/records/body-region-list";
 import { BodySensationChip } from "@/components/records/body-sensation-chip";
 import { BodySensationEditor } from "@/components/records/body-sensation-editor";
 import { BodySensationsHeader } from "@/components/records/body-sensations-header";
@@ -12,12 +11,12 @@ import { NewRecordBodyStepFooter } from "@/components/records/new-record-body-st
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
 import { useBodySensationsStep } from "@/components/records/use-body-sensations-step";
 import type { BodySensation } from "@/db/schema";
-import { getBodyRegionPhrase } from "@/lib/body-sensations";
+import { BODY_POINT_PHRASE } from "@/lib/body-sensations";
 
 type NewRecordBodyStepProps = {
   sensations: BodySensation[];
   onSave: (sensation: BodySensation) => void;
-  onRemove: (region: string) => void;
+  onRemove: (id: string) => void;
   onContinue: () => void;
 };
 
@@ -28,7 +27,7 @@ export function NewRecordBodyStep({
   onContinue,
 }: NewRecordBodyStepProps) {
   const body = useBodySensationsStep({ sensations, onSave, onRemove });
-  const { region } = body;
+  const { active } = body;
   const {
     ref,
     svgRef,
@@ -47,9 +46,9 @@ export function NewRecordBodyStep({
 
   return (
     <div className="relative mx-auto flex h-full w-full max-w-lg flex-col">
-      {region ? (
+      {active ? (
         <BodySensationsHeader
-          title={getBodyRegionPhrase(region)}
+          title={BODY_POINT_PHRASE}
           actions={body.saved ? [removeAction, closeAction] : [closeAction]}
         />
       ) : (
@@ -65,16 +64,16 @@ export function NewRecordBodyStep({
           markerScale={markerScale}
           interacting={interacting}
           sensations={body.preview}
-          focusRegion={region}
+          focusPoint={body.focusPoint}
           className="absolute inset-0"
         >
           {(project) =>
             body.others.map((sensation) => (
               <BodySensationChip
-                key={sensation.region}
+                key={sensation.id}
                 sensation={sensation}
                 project={project}
-                onSelect={body.selectRegion}
+                onSelect={body.selectSensation}
               />
             ))
           }
@@ -87,11 +86,9 @@ export function NewRecordBodyStep({
           className="absolute right-4 bottom-4 z-20"
         />
       </div>
-      <BodyRegionList onSelect={body.selectRegion} />
       <div className="relative shrink-0 px-6 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-        {region ? (
+        {active ? (
           <BodySensationEditor
-            region={region}
             value={body.value}
             tags={body.tags}
             editingValue={body.editingValue}

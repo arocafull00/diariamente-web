@@ -4,9 +4,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import type { BodySensation, MoodQuadrant, RecordContext } from "@/db/schema";
+import type {
+  BodySensation,
+  GrammaticalGender,
+  MoodQuadrant,
+  RecordContext,
+} from "@/db/schema";
 import { EMPTY_RECORD_CONTEXT, getContextTags } from "@/lib/context-tags";
-import { EMOTIONS, type EmotionOption } from "@/lib/emotions";
+import {
+  EMOTIONS,
+  getEmotionDefinition,
+  type EmotionOption,
+} from "@/lib/emotions";
 import { createPatientRecord } from "@/server/actions/records";
 import {
   NEW_RECORD_STEPS,
@@ -50,7 +59,7 @@ type SavedRecord = {
   needsDeepen: boolean;
 };
 
-export function useNewRecordWizard() {
+export function useNewRecordWizard(gender: GrammaticalGender) {
   const router = useRouter();
   const store = useNewRecordStore();
   const [pending, startTransition] = useTransition();
@@ -65,8 +74,10 @@ export function useNewRecordWizard() {
   const step = NEW_RECORD_STEPS[store.stepIndex];
   const phase = PHASE_BY_STEP[step];
   const options: EmotionOption[] = EMOTIONS;
-  const definition =
-    options.find((option) => option.name === store.emotion)?.definition ?? "";
+  const selectedOption = options.find((option) => option.name === store.emotion);
+  const definition = selectedOption
+    ? getEmotionDefinition(selectedOption, gender)
+    : "";
 
   function save(draft: RecordDraft) {
     startTransition(async () => {

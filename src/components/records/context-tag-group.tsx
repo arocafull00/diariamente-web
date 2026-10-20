@@ -4,12 +4,15 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import { ContextTagChip } from "@/components/records/context-tag-chip";
+import type { GrammaticalGender } from "@/db/schema";
+import { getContextTagLabel } from "@/lib/context-tags";
 import type { MoodStyles } from "@/lib/emotions";
 
 type ContextTagGroupProps = {
   label: string;
   options: string[];
   selected: string[];
+  gender: GrammaticalGender;
   styles: MoodStyles;
   onToggle: (tag: string) => void;
 };
@@ -18,6 +21,7 @@ export function ContextTagGroup({
   label,
   options,
   selected,
+  gender,
   styles,
   onToggle,
 }: ContextTagGroupProps) {
@@ -44,7 +48,7 @@ export function ContextTagGroup({
         {allOptions.map((option) => (
           <ContextTagChip
             key={option}
-            label={option}
+            label={getContextTagLabel(option, gender)}
             selected={selected.includes(option)}
             styles={styles}
             onToggle={() => onToggle(option)}

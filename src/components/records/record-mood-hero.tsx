@@ -2,8 +2,18 @@ import { CalendarDays } from "lucide-react";
 
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { RecordIntensityDots } from "@/components/records/record-intensity-dots";
-import type { MoodQuadrant, RecordEmotion } from "@/db/schema";
-import { findEmotion, getMoodStyles, getQuadrantLabel } from "@/lib/emotions";
+import type {
+  GrammaticalGender,
+  MoodQuadrant,
+  RecordEmotion,
+} from "@/db/schema";
+import {
+  findEmotion,
+  getEmotionDefinition,
+  getEmotionLabel,
+  getMoodStyles,
+  getQuadrantLabel,
+} from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 import { formatRecordDate } from "@/lib/utils-app";
 
@@ -11,11 +21,20 @@ type RecordMoodHeroProps = {
   emotion: RecordEmotion | null;
   quadrant: MoodQuadrant | null;
   occurredAt: Date;
+  gender: GrammaticalGender;
 };
 
-export function RecordMoodHero({ emotion, quadrant, occurredAt }: RecordMoodHeroProps) {
+export function RecordMoodHero({
+  emotion,
+  quadrant,
+  occurredAt,
+  gender,
+}: RecordMoodHeroProps) {
   const styles = getMoodStyles(quadrant);
-  const definition = emotion ? findEmotion(emotion.emotion)?.definition : null;
+  const definedEmotion = emotion ? findEmotion(emotion.emotion) : null;
+  const definition = definedEmotion
+    ? getEmotionDefinition(definedEmotion, gender)
+    : null;
 
   return (
     <section
@@ -46,7 +65,9 @@ export function RecordMoodHero({ emotion, quadrant, occurredAt }: RecordMoodHero
         <h2 className="font-display text-4xl leading-tight font-medium text-balance sm:text-5xl">
           Me sentí{" "}
           <span className={cn("italic", styles.strong)}>
-            {emotion?.emotion.toLowerCase() ?? "así"}
+            {emotion
+              ? getEmotionLabel(emotion.emotion, gender).toLowerCase()
+              : "así"}
           </span>
         </h2>
         {definition ? (

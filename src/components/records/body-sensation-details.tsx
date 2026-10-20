@@ -7,14 +7,12 @@ import {
   getSensationLabel,
   getSensationQuadrant,
   getSensationTagOptions,
-  type BodyRegionId,
   type SensationValue,
 } from "@/lib/body-sensations";
 import { getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 
 type BodySensationDetailsProps = {
-  region: BodyRegionId;
   value: SensationValue;
   tags: string[];
   onToggleTag: (tag: string) => void;
@@ -23,7 +21,6 @@ type BodySensationDetailsProps = {
 };
 
 export function BodySensationDetails({
-  region,
   value,
   tags,
   onToggleTag,
@@ -49,7 +46,7 @@ export function BodySensationDetails({
         </button>
       </div>
       <SensationTagPicker
-        options={getSensationTagOptions(region, quadrant)}
+        options={getSensationTagOptions(quadrant)}
         selected={tags}
         styles={styles}
         onToggle={onToggleTag}

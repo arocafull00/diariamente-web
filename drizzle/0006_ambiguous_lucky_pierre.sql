@@ -1,0 +1,2 @@
+CREATE TYPE "public"."grammatical_gender" AS ENUM('feminine', 'masculine', 'unspecified');--> statement-breakpoint
+ALTER TABLE "profiles" ADD COLUMN "grammatical_gender" "grammatical_gender" DEFAULT 'feminine' NOT NULL;

@@ -2,7 +2,10 @@ import { AppHeader } from "@/components/app-shell/app-header";
 import { RecordDetail } from "@/components/records/record-detail";
 import { RecordNoteSheet } from "@/components/records/record-note-sheet";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
-import { getRecordNote } from "@/server/queries";
+import {
+  getProfileGrammaticalGender,
+  getRecordNote,
+} from "@/server/queries";
 
 type RecordPageProps = {
   params: Promise<{ recordId: string }>;
@@ -13,6 +16,10 @@ export default async function RecordPage({ params }: RecordPageProps) {
   const { profile, record } = await requireRecordAccess(recordId);
   const note =
     profile.role === "psychologist" ? (await getRecordNote(recordId)) ?? null : null;
+  const gender =
+    profile.role === "patient"
+      ? profile.grammaticalGender
+      : await getProfileGrammaticalGender(record.patientId);
 
   return (
     <>
@@ -25,7 +32,12 @@ export default async function RecordPage({ params }: RecordPageProps) {
           ) : undefined
         }
       />
-      <RecordDetail profile={profile} record={record} note={note} />
+      <RecordDetail
+        profile={profile}
+        record={record}
+        note={note}
+        gender={gender}
+      />
     </>
   );
 }

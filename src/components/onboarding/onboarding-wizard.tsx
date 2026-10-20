@@ -121,6 +121,11 @@ export function OnboardingWizard() {
             <input type="hidden" name="role" value={values.role} />
             <input
               type="hidden"
+              name="grammaticalGender"
+              value={values.grammaticalGender}
+            />
+            <input
+              type="hidden"
               name="avatarUrl"
               value={values.avatarUrl ?? ""}
             />

@@ -1,95 +1,75 @@
-import type { BodySensation, MoodQuadrant } from "@/db/schema";
+import type { BodySensation, MoodQuadrant, StoredBodySensation } from "@/db/schema";
 
-export const BODY_REGION_IDS = [
-  "head",
-  "neck",
-  "shoulder_right",
-  "shoulder_left",
-  "chest",
-  "stomach",
-  "upper_arm_right",
-  "upper_arm_left",
-  "forearm_right",
-  "forearm_left",
-  "hand_right",
-  "hand_left",
-  "hips",
-  "thigh_right",
-  "thigh_left",
-  "knee_right",
-  "knee_left",
-  "shin_right",
-  "shin_left",
-  "foot_right",
-  "foot_left",
-] as const;
+import { BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 
-export type BodyRegionId = (typeof BODY_REGION_IDS)[number];
+type FigurePoint = { x: number; y: number };
 
-type Gender = "m" | "f";
+type LegacyBodyRegion = FigurePoint & { label: string };
 
-type BodyRegion = {
-  label: string;
-  gender: Gender;
-  x: number;
-  y: number;
+const LEGACY_BODY_REGIONS: Record<string, LegacyBodyRegion> = {
+  head: { label: "cabeza", x: 100, y: 37 },
+  neck: { label: "cuello", x: 100, y: 71 },
+  shoulder_right: { label: "hombro derecho", x: 70, y: 86 },
+  shoulder_left: { label: "hombro izquierdo", x: 130, y: 86 },
+  chest: { label: "pecho", x: 100, y: 110 },
+  stomach: { label: "estómago", x: 100, y: 162 },
+  upper_arm_right: { label: "brazo derecho", x: 55, y: 126 },
+  upper_arm_left: { label: "brazo izquierdo", x: 145, y: 126 },
+  forearm_right: { label: "antebrazo derecho", x: 44, y: 184 },
+  forearm_left: { label: "antebrazo izquierdo", x: 156, y: 184 },
+  hand_right: { label: "mano derecha", x: 29, y: 232 },
+  hand_left: { label: "mano izquierda", x: 171, y: 232 },
+  hips: { label: "cadera", x: 100, y: 204 },
+  thigh_right: { label: "muslo derecho", x: 84, y: 264 },
+  thigh_left: { label: "muslo izquierdo", x: 116, y: 264 },
+  knee_right: { label: "rodilla derecha", x: 84, y: 307 },
+  knee_left: { label: "rodilla izquierda", x: 116, y: 307 },
+  shin_right: { label: "pierna derecha", x: 85, y: 354 },
+  shin_left: { label: "pierna izquierda", x: 115, y: 354 },
+  foot_right: { label: "pie derecho", x: 84, y: 404 },
+  foot_left: { label: "pie izquierdo", x: 116, y: 404 },
 };
 
-export const BODY_REGIONS: Record<BodyRegionId, BodyRegion> = {
-  head: { label: "cabeza", gender: "f", x: 100, y: 37 },
-  neck: { label: "cuello", gender: "m", x: 100, y: 71 },
-  shoulder_right: { label: "hombro derecho", gender: "m", x: 70, y: 86 },
-  shoulder_left: { label: "hombro izquierdo", gender: "m", x: 130, y: 86 },
-  chest: { label: "pecho", gender: "m", x: 100, y: 110 },
-  stomach: { label: "estómago", gender: "m", x: 100, y: 162 },
-  upper_arm_right: { label: "brazo derecho", gender: "m", x: 55, y: 126 },
-  upper_arm_left: { label: "brazo izquierdo", gender: "m", x: 145, y: 126 },
-  forearm_right: { label: "antebrazo derecho", gender: "m", x: 44, y: 184 },
-  forearm_left: { label: "antebrazo izquierdo", gender: "m", x: 156, y: 184 },
-  hand_right: { label: "mano derecha", gender: "f", x: 29, y: 232 },
-  hand_left: { label: "mano izquierda", gender: "f", x: 171, y: 232 },
-  hips: { label: "cadera", gender: "f", x: 100, y: 204 },
-  thigh_right: { label: "muslo derecho", gender: "m", x: 84, y: 264 },
-  thigh_left: { label: "muslo izquierdo", gender: "m", x: 116, y: 264 },
-  knee_right: { label: "rodilla derecha", gender: "f", x: 84, y: 307 },
-  knee_left: { label: "rodilla izquierda", gender: "f", x: 116, y: 307 },
-  shin_right: { label: "pierna derecha", gender: "f", x: 85, y: 354 },
-  shin_left: { label: "pierna izquierda", gender: "f", x: 115, y: 354 },
-  foot_right: { label: "pie derecho", gender: "m", x: 84, y: 404 },
-  foot_left: { label: "pie izquierdo", gender: "m", x: 116, y: 404 },
-};
+export const MAX_BODY_SENSATIONS = 30;
 
-export function isBodyRegionId(value: string): value is BodyRegionId {
-  return value in BODY_REGIONS;
+export const BODY_POINT_PHRASE = "Esta zona se siente";
+
+function clampUnit(value: number) {
+  return Math.min(Math.max(value, 0), 1);
 }
 
-export function findNearestBodyRegion(x: number, y: number): BodyRegionId {
-  let nearest: BodyRegionId = BODY_REGION_IDS[0];
-  let nearestDistance = Infinity;
+export function toNormalizedPoint(point: FigurePoint): FigurePoint {
+  return {
+    x: clampUnit(point.x / BODY_FIGURE_VIEWBOX.width),
+    y: clampUnit(point.y / BODY_FIGURE_VIEWBOX.height),
+  };
+}
 
-  for (const id of BODY_REGION_IDS) {
-    const region = BODY_REGIONS[id];
-    const distance = Math.hypot(region.x - x, region.y - y);
+export function toFigurePoint(point: FigurePoint): FigurePoint {
+  return {
+    x: point.x * BODY_FIGURE_VIEWBOX.width,
+    y: point.y * BODY_FIGURE_VIEWBOX.height,
+  };
+}
 
-    if (distance < nearestDistance) {
-      nearest = id;
-      nearestDistance = distance;
-    }
+export function getSensationFigurePoint(sensation: StoredBodySensation): FigurePoint | null {
+  if ("region" in sensation) {
+    return LEGACY_BODY_REGIONS[sensation.region] ?? null;
   }
 
-  return nearest;
+  return toFigurePoint(sensation);
 }
 
-export function getBodyRegionPhrase(region: string) {
-  const label = isBodyRegionId(region) ? BODY_REGIONS[region].label : region;
+export function getSensationTitle(sensation: StoredBodySensation, index: number) {
+  const fallback = `Zona ${index + 1}`;
 
-  return `Mi ${label} se siente`;
-}
+  if (!("region" in sensation)) {
+    return fallback;
+  }
 
-export function getBodyRegionTitle(region: string) {
-  const label = isBodyRegionId(region) ? BODY_REGIONS[region].label : region;
+  const label = LEGACY_BODY_REGIONS[sensation.region]?.label;
 
-  return label.charAt(0).toUpperCase() + label.slice(1);
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : fallback;
 }
 
 export type SensationValue = Pick<BodySensation, "pleasantness" | "intensity">;
@@ -177,10 +157,8 @@ const SENSATION_TAGS: Record<MoodQuadrant, [string, string][]> = {
   ],
 };
 
-export function getSensationTagOptions(region: BodyRegionId, quadrant: MoodQuadrant) {
-  const index = BODY_REGIONS[region].gender === "m" ? 0 : 1;
-
-  return SENSATION_TAGS[quadrant].map((pair) => pair[index]);
+export function getSensationTagOptions(quadrant: MoodQuadrant) {
+  return SENSATION_TAGS[quadrant].map((pair) => pair[1]);
 }
 
 export const SENSATION_FILLS: Record<MoodQuadrant, string> = {
@@ -189,3 +167,7 @@ export const SENSATION_FILLS: Record<MoodQuadrant, string> = {
   LOW_UNPLEASANT: "fill-mood-lu-3",
   LOW_PLEASANT: "fill-mood-lp-3",
 };
+
+export function getSensationKey(sensation: StoredBodySensation, index: number) {
+  return "id" in sensation ? sensation.id : `${sensation.region}-${index}`;
+}

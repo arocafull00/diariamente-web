@@ -4,8 +4,10 @@ import { Controller } from "react-hook-form";
 
 import { AvatarPicker } from "@/components/avatars/avatar-picker";
 import type { OnboardingFormValues } from "@/components/onboarding/onboarding-types";
+import { GrammaticalGenderField } from "@/components/profile/grammatical-gender-field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GRAMMATICAL_GENDER_QUESTION } from "@/lib/grammatical-gender";
 
 type OnboardingPersonalStepProps = {
   control: Control<OnboardingFormValues>;
@@ -76,6 +78,31 @@ export function OnboardingPersonalStep({
           <p id="lastName-error" className="flex items-center gap-1.5 text-sm font-medium text-destructive">
             <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
             {errors.lastName.message}
+          </p>
+        ) : null}
+      </div>
+      <div className="space-y-2.5">
+        <Controller
+          control={control}
+          name="grammaticalGender"
+          render={({ field }) => (
+            <GrammaticalGenderField
+              name={field.name}
+              legend={GRAMMATICAL_GENDER_QUESTION}
+              legendClassName="text-sm font-semibold"
+              value={field.value}
+              onChange={field.onChange}
+              inputRef={field.ref}
+              errorId={
+                errors.grammaticalGender ? "grammaticalGender-error" : undefined
+              }
+            />
+          )}
+        />
+        {errors.grammaticalGender ? (
+          <p id="grammaticalGender-error" className="flex items-center gap-1.5 text-sm font-medium text-destructive">
+            <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
+            {errors.grammaticalGender.message}
           </p>
         ) : null}
       </div>

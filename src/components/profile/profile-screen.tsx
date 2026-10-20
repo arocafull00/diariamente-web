@@ -41,6 +41,7 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
             <SettingsSheet
               role={data.role}
               remindersEnabled={data.remindersEnabled}
+              grammaticalGender={data.grammaticalGender}
             />
           }
         />
@@ -62,7 +63,13 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
     <>
       <AppHeader
         title="Perfil"
-        action={<SettingsSheet role={data.role} remindersEnabled={false} />}
+        action={
+          <SettingsSheet
+            role={data.role}
+            remindersEnabled={false}
+            grammaticalGender={data.grammaticalGender}
+          />
+        }
       />
       <PsychologistProfile
         firstName={data.firstName}

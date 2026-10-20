@@ -15,9 +15,10 @@ import {
   NEW_RECORD_PHASE_COUNT,
   useNewRecordWizard,
 } from "@/components/records/use-new-record-wizard";
+import type { GrammaticalGender } from "@/db/schema";
 import type { NewRecordStep } from "@/stores/new-record-store";
-import { getContextTags } from "@/lib/context-tags";
-import { getMoodStyles } from "@/lib/emotions";
+import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
+import { getEmotionLabel, getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 
 const REFLECTION_STEPS = {
@@ -50,10 +51,16 @@ const stepVariants = {
   exit: (direction: number) => ({ opacity: 0, x: direction * -48 }),
 };
 
-export function NewRecordWizard() {
-  const wizard = useNewRecordWizard();
+type NewRecordWizardProps = {
+  gender: GrammaticalGender;
+};
+
+export function NewRecordWizard({ gender }: NewRecordWizardProps) {
+  const wizard = useNewRecordWizard(gender);
   const { store, step, savedRecord } = wizard;
-  const emotion = store.emotion ?? "";
+  const emotion = getEmotionLabel(store.emotion ?? "", gender);
+  const labelTags = (tags: string[]) =>
+    tags.map((tag) => getContextTagLabel(tag, gender));
   const activeQuadrant = savedRecord?.quadrant ?? store.quadrant;
   const showWash = Boolean(savedRecord) || step !== "quadrant";
   const reflectionStep = isReflectionStep(step) ? step : null;
@@ -90,9 +97,9 @@ export function NewRecordWizard() {
           >
             {savedRecord ? (
               <NewRecordSuccess
-                emotion={savedRecord.emotion}
+                emotion={getEmotionLabel(savedRecord.emotion, gender)}
                 quadrant={savedRecord.quadrant}
-                tags={savedRecord.tags}
+                tags={labelTags(savedRecord.tags)}
                 note={savedRecord.note}
                 occurredAt={savedRecord.occurredAt}
                 needsDeepen={savedRecord.needsDeepen}
@@ -112,6 +119,7 @@ export function NewRecordWizard() {
                 emotion={store.emotion}
                 definition={wizard.definition}
                 options={wizard.options}
+                gender={gender}
                 onSelect={store.selectEmotion}
                 onSearchSelect={wizard.handleSearchSelect}
                 onQuickSave={wizard.handleQuickSave}
@@ -134,6 +142,7 @@ export function NewRecordWizard() {
                 emotion={emotion}
                 quadrant={store.quadrant}
                 context={store.context}
+                gender={gender}
                 onToggle={store.toggleContextTag}
                 onContinue={store.nextStep}
               />
@@ -165,7 +174,7 @@ export function NewRecordWizard() {
               <NewRecordWhenStep
                 emotion={emotion}
                 quadrant={store.quadrant}
-                tags={getContextTags(store.context)}
+                tags={labelTags(getContextTags(store.context))}
                 note={store.situation}
                 occurredAt={store.occurredAt}
                 pending={wizard.pending}

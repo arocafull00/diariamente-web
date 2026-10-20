@@ -1,14 +1,23 @@
 import { RecordContextGroup } from "@/components/records/record-context-group";
-import type { MoodQuadrant, RecordContext } from "@/db/schema";
+import type {
+  GrammaticalGender,
+  MoodQuadrant,
+  RecordContext,
+} from "@/db/schema";
 import { CONTEXT_GROUPS } from "@/lib/context-tags";
 import { getMoodStyles } from "@/lib/emotions";
 
 type RecordContextSectionProps = {
   context: RecordContext;
   quadrant: MoodQuadrant | null;
+  gender: GrammaticalGender;
 };
 
-export function RecordContextSection({ context, quadrant }: RecordContextSectionProps) {
+export function RecordContextSection({
+  context,
+  quadrant,
+  gender,
+}: RecordContextSectionProps) {
   const groups = CONTEXT_GROUPS.filter((group) => context[group.id].length > 0);
 
   if (groups.length === 0) {
@@ -26,6 +35,7 @@ export function RecordContextSection({ context, quadrant }: RecordContextSection
           label={group.label}
           tags={context[group.id]}
           styles={styles}
+          gender={gender}
         />
       ))}
     </section>

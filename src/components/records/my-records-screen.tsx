@@ -14,7 +14,7 @@ type MyRecordsScreenProps = {
 };
 
 export function MyRecordsScreen({ refreshedAt }: MyRecordsScreenProps) {
-  const { data: records, hasHydrated } = useCachedScreen(
+  const { data, hasHydrated } = useCachedScreen(
     "records",
     getMyRecordsScreenData,
     refreshedAt,
@@ -27,16 +27,23 @@ export function MyRecordsScreen({ refreshedAt }: MyRecordsScreenProps) {
   return (
     <>
       <AppHeader title="Mis registros" action={<NewRecordHeaderButton />} />
-      {!records ? (
+      {!data ? (
         <AppLoading />
       ) : (
         <div className="space-y-6">
-          {records.length === 0 ? (
+          {data.records.length === 0 ? (
             <MyRecordsEmptyState />
           ) : (
             <>
-              <RecordMoodOverview title="Tu balance emocional" records={records} />
-              <RecordTimeline records={records} showUnseen={false} />
+              <RecordMoodOverview
+                title="Tu balance emocional"
+                records={data.records}
+              />
+              <RecordTimeline
+                records={data.records}
+                gender={data.grammaticalGender}
+                showUnseen={false}
+              />
             </>
           )}
         </div>

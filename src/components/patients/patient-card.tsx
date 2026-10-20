@@ -1,9 +1,10 @@
 import { PressableLink } from "@/components/motion/pressable-link";
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { PatientRecord } from "@/db/schema";
+import type { GrammaticalGender, PatientRecord } from "@/db/schema";
 import {
   getDominantEmotion,
+  getEmotionLabel,
   getMoodStyles,
   getRecordQuadrant,
 } from "@/lib/emotions";
@@ -19,6 +20,7 @@ type PatientCardProps = {
   firstName: string | null;
   lastName: string | null;
   avatarUrl: string | null;
+  grammaticalGender: GrammaticalGender;
   unseenCount: number;
   latestRecord: Pick<PatientRecord, "occurredAt" | "quadrant" | "emotions"> | null;
 };
@@ -28,6 +30,7 @@ export function PatientCard({
   firstName,
   lastName,
   avatarUrl,
+  grammaticalGender,
   unseenCount,
   latestRecord,
 }: PatientCardProps) {
@@ -76,7 +79,7 @@ export function PatientCard({
                   <MoodBubble quadrant={latestQuadrant} tone={3} className="size-2.5" />
                   <span className="truncate">
                     <span className={cn("font-semibold", getMoodStyles(latestQuadrant).strong)}>
-                      {latestEmotion.emotion}
+                      {getEmotionLabel(latestEmotion.emotion, grammaticalGender)}
                     </span>{" "}
                     · {formatLastActivityLabel(latestRecord.occurredAt)}
                   </span>

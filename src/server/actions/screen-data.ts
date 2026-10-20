@@ -57,6 +57,7 @@ export async function getHomeScreenData() {
 
   return {
     firstName: profile.firstName,
+    grammaticalGender: profile.grammaticalGender,
     period: getDayPeriod(now),
     streak: getStreak(windowRecords.map((record) => record.occurredAt), now),
     week,
@@ -68,7 +69,10 @@ export async function getHomeScreenData() {
 export async function getMyRecordsScreenData() {
   const profile = await requireRole("patient");
 
-  return getPatientRecords(profile.id);
+  return {
+    grammaticalGender: profile.grammaticalGender,
+    records: await getPatientRecords(profile.id),
+  };
 }
 
 export async function getProfileScreenData() {
@@ -80,6 +84,7 @@ export async function getProfileScreenData() {
     avatarUrl: profile.avatarUrl,
     imageUrl: user?.imageUrl ?? null,
     memberSince: profile.createdAt,
+    grammaticalGender: profile.grammaticalGender,
   };
 
   if (profile.role === "patient") {

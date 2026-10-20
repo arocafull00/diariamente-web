@@ -26,6 +26,7 @@ export function useOnboardingWizard() {
       firstName: "",
       lastName: "",
       role: undefined,
+      grammaticalGender: undefined,
       avatarUrl: null,
     },
     mode: "onTouched",
@@ -39,7 +40,9 @@ export function useOnboardingWizard() {
 
   async function goForward() {
     const fields: (keyof OnboardingFormValues)[] =
-      step === 0 ? ["firstName", "lastName"] : ["role"];
+      step === 0
+        ? ["firstName", "lastName", "grammaticalGender"]
+        : ["role"];
     const valid = await form.trigger(fields, { shouldFocus: true });
 
     if (!valid) {

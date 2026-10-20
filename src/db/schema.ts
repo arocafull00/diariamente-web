@@ -30,6 +30,12 @@ export const moodQuadrantEnum = pgEnum("mood_quadrant", [
 
 export const bodyFigureEnum = pgEnum("body_figure", ["masculine", "feminine"]);
 
+export const grammaticalGenderEnum = pgEnum("grammatical_gender", [
+  "feminine",
+  "masculine",
+  "unspecified",
+]);
+
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
   "accepted",
@@ -42,11 +48,19 @@ export type RecordEmotion = {
 };
 
 export type BodySensation = {
-  region: string;
+  id: string;
+  x: number;
+  y: number;
   pleasantness: number;
   intensity: number;
   tags: string[];
 };
+
+export type LegacyBodySensation = Omit<BodySensation, "id" | "x" | "y"> & {
+  region: string;
+};
+
+export type StoredBodySensation = BodySensation | LegacyBodySensation;
 
 export type RecordContext = {
   topics: string[];
@@ -61,6 +75,9 @@ export const profiles = pgTable("profiles", {
   role: userRoleEnum("role"),
   avatarUrl: text("avatar_url"),
   bodyFigure: bodyFigureEnum("body_figure"),
+  grammaticalGender: grammaticalGenderEnum("grammatical_gender")
+    .default("feminine")
+    .notNull(),
   onboardingCompleted: boolean("onboarding_completed")
     .default(false)
     .notNull(),
@@ -88,7 +105,7 @@ export const patientRecords = pgTable("patient_records", {
     .default({ topics: [], people: [], places: [] })
     .notNull(),
   bodySensations: jsonb("body_sensations")
-    .$type<BodySensation[]>()
+    .$type<StoredBodySensation[]>()
     .default([])
     .notNull(),
   emotionIntensity: emotionIntensityEnum("emotion_intensity").notNull(),
@@ -240,3 +257,5 @@ export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
 export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];
 export type BodyFigure = (typeof bodyFigureEnum.enumValues)[number];
+export type GrammaticalGender =
+  (typeof grammaticalGenderEnum.enumValues)[number];

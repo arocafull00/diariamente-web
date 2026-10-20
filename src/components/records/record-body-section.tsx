@@ -1,8 +1,10 @@
+import { RecordBodyFigure } from "@/components/records/record-body-figure";
 import { RecordBodySensationRow } from "@/components/records/record-body-sensation-row";
-import type { BodySensation } from "@/db/schema";
+import type { StoredBodySensation } from "@/db/schema";
+import { getSensationKey } from "@/lib/body-sensations";
 
 type RecordBodySectionProps = {
-  sensations: BodySensation[];
+  sensations: StoredBodySensation[];
 };
 
 export function RecordBodySection({ sensations }: RecordBodySectionProps) {
@@ -13,11 +15,18 @@ export function RecordBodySection({ sensations }: RecordBodySectionProps) {
   return (
     <section className="space-y-4 rounded-3xl bg-card p-5 shadow-sm ring-1 ring-border/60 sm:p-6">
       <h2 className="font-display text-xl font-medium">Cuerpo</h2>
-      <ul className="divide-y divide-border">
-        {sensations.map((sensation) => (
-          <RecordBodySensationRow key={sensation.region} sensation={sensation} />
-        ))}
-      </ul>
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+        <RecordBodyFigure sensations={sensations} />
+        <ul className="min-w-0 flex-1 divide-y divide-border">
+          {sensations.map((sensation, index) => (
+            <RecordBodySensationRow
+              key={getSensationKey(sensation, index)}
+              sensation={sensation}
+              index={index}
+            />
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }

@@ -24,6 +24,7 @@ export async function requirePatientRelationship(patientId: string) {
       firstName: profiles.firstName,
       lastName: profiles.lastName,
       avatarUrl: profiles.avatarUrl,
+      grammaticalGender: profiles.grammaticalGender,
     })
     .from(psychologistPatient)
     .innerJoin(profiles, eq(profiles.id, psychologistPatient.patientId))

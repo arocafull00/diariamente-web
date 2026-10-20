@@ -36,7 +36,7 @@ type NewRecordState = NewRecordData & {
   selectEmotion: (emotion: string, quadrant: MoodQuadrant) => void;
   toggleContextTag: (group: ContextGroup, tag: string) => void;
   saveBodySensation: (sensation: BodySensation) => void;
-  removeBodySensation: (region: string) => void;
+  removeBodySensation: (id: string) => void;
   nextStep: () => void;
   previousStep: () => void;
   reset: () => void;
@@ -80,19 +80,19 @@ export const useNewRecordStore = create<NewRecordState>((set) => ({
     }),
   saveBodySensation: (sensation) =>
     set((state) => {
-      const exists = state.bodySensations.some((item) => item.region === sensation.region);
+      const exists = state.bodySensations.some((item) => item.id === sensation.id);
 
       return {
         bodySensations: exists
           ? state.bodySensations.map((item) =>
-              item.region === sensation.region ? sensation : item,
+              item.id === sensation.id ? sensation : item,
             )
           : [...state.bodySensations, sensation],
       };
     }),
-  removeBodySensation: (region) =>
+  removeBodySensation: (id) =>
     set((state) => ({
-      bodySensations: state.bodySensations.filter((item) => item.region !== region),
+      bodySensations: state.bodySensations.filter((item) => item.id !== id),
     })),
   nextStep: () =>
     set((state) => ({

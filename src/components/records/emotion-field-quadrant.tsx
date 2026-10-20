@@ -3,8 +3,8 @@
 import { EmotionBubble } from "@/components/records/emotion-bubble";
 import type { FieldMotion } from "@/components/records/use-pannable-field";
 import type { SelectionPush } from "@/components/records/use-selection-push";
-import type { MoodQuadrant } from "@/db/schema";
-import { getEmotionTone, MOOD_STYLES } from "@/lib/emotions";
+import type { GrammaticalGender, MoodQuadrant } from "@/db/schema";
+import { getEmotionLabel, getEmotionTone, MOOD_STYLES } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 
 const COLUMNS = 5;
@@ -13,6 +13,7 @@ type EmotionFieldQuadrantProps = {
   ref: React.Ref<HTMLDivElement>;
   quadrant: MoodQuadrant;
   names: string[];
+  gender: GrammaticalGender;
   selectedEmotion: string | null;
   field: FieldMotion;
   selection: SelectionPush;
@@ -35,6 +36,7 @@ export function EmotionFieldQuadrant({
   ref,
   quadrant,
   names,
+  gender,
   selectedEmotion,
   field,
   selection,
@@ -61,6 +63,7 @@ export function EmotionFieldQuadrant({
               <EmotionBubble
                 key={cell.name}
                 name={cell.name}
+                label={getEmotionLabel(cell.name, gender)}
                 quadrant={quadrant}
                 field={field}
                 selection={selection}

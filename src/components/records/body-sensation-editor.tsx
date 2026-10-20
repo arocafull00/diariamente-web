@@ -4,10 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { BodySensationDetails } from "@/components/records/body-sensation-details";
 import { SensationPad } from "@/components/records/sensation-pad";
-import type { BodyRegionId, SensationValue } from "@/lib/body-sensations";
+import type { SensationValue } from "@/lib/body-sensations";
 
 type BodySensationEditorProps = {
-  region: BodyRegionId;
   value: SensationValue | null;
   tags: string[];
   editingValue: boolean;
@@ -26,7 +25,6 @@ const panelMotion = {
 } as const;
 
 export function BodySensationEditor({
-  region,
   value,
   tags,
   editingValue,
@@ -45,7 +43,6 @@ export function BodySensationEditor({
       ) : (
         <motion.div key="details" {...panelMotion} className="mx-auto max-w-lg">
           <BodySensationDetails
-            region={region}
             value={value}
             tags={tags}
             onToggleTag={onToggleTag}

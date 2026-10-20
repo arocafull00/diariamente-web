@@ -1,29 +1,28 @@
-import type { BodySensation } from "@/db/schema";
+import { RecordBodySensationNumber } from "@/components/records/record-body-sensation-number";
+import type { StoredBodySensation } from "@/db/schema";
 import {
   formatSensationTags,
-  getBodyRegionTitle,
   getSensationLabel,
   getSensationQuadrant,
+  getSensationTitle,
 } from "@/lib/body-sensations";
 import { getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 
 type RecordBodySensationRowProps = {
-  sensation: BodySensation;
+  sensation: StoredBodySensation;
+  index: number;
 };
 
-export function RecordBodySensationRow({ sensation }: RecordBodySensationRowProps) {
+export function RecordBodySensationRow({ sensation, index }: RecordBodySensationRowProps) {
   const quadrant = getSensationQuadrant(sensation);
   const styles = getMoodStyles(quadrant);
 
   return (
     <li className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
-      <span
-        className={cn("mt-1.5 size-2.5 shrink-0 rounded-full", styles.tones[3])}
-        aria-hidden="true"
-      />
+      <RecordBodySensationNumber sensation={sensation} index={index} />
       <div className="min-w-0 space-y-0.5">
-        <p className="font-semibold">{getBodyRegionTitle(sensation.region)}</p>
+        <p className="font-semibold">{getSensationTitle(sensation, index)}</p>
         {sensation.tags.length > 0 ? (
           <p className={cn("text-sm font-medium", styles.strong)}>
             {formatSensationTags(sensation.tags)}

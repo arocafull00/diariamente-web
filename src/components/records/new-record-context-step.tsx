@@ -3,7 +3,11 @@
 import { ContextTagGroup } from "@/components/records/context-tag-group";
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
-import type { MoodQuadrant, RecordContext } from "@/db/schema";
+import type {
+  GrammaticalGender,
+  MoodQuadrant,
+  RecordContext,
+} from "@/db/schema";
 import { CONTEXT_GROUPS, type ContextGroup } from "@/lib/context-tags";
 import { getMoodStyles } from "@/lib/emotions";
 
@@ -11,6 +15,7 @@ type NewRecordContextStepProps = {
   emotion: string;
   quadrant: MoodQuadrant | null;
   context: RecordContext;
+  gender: GrammaticalGender;
   onToggle: (group: ContextGroup, tag: string) => void;
   onContinue: () => void;
 };
@@ -19,6 +24,7 @@ export function NewRecordContextStep({
   emotion,
   quadrant,
   context,
+  gender,
   onToggle,
   onContinue,
 }: NewRecordContextStepProps) {
@@ -40,6 +46,7 @@ export function NewRecordContextStep({
               label={group.label}
               options={group.options}
               selected={context[group.id]}
+              gender={gender}
               styles={styles}
               onToggle={(tag) => onToggle(group.id, tag)}
             />

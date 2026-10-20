@@ -60,7 +60,7 @@ export const useScreenCacheStore = create<ScreenCacheState>()(
     }),
     {
       name: "diariamente-screen-cache",
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage, {
         replacer: replaceDates,
         reviver: reviveDates,

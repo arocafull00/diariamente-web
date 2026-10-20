@@ -46,7 +46,11 @@ export default async function PatientDetailPage({
         ) : (
           <>
             <RecordMoodOverview title="Balance emocional" records={records} />
-            <RecordTimeline records={records} showUnseen />
+            <RecordTimeline
+              records={records}
+              gender={patient.grammaticalGender}
+              showUnseen
+            />
           </>
         )}
 

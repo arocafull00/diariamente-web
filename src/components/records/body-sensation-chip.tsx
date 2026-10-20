@@ -4,13 +4,11 @@ import { motion } from "motion/react";
 
 import type { BodySensation } from "@/db/schema";
 import {
-  BODY_REGIONS,
-  getBodyRegionPhrase,
+  BODY_POINT_PHRASE,
   getSensationPleasantnessLabel,
   getSensationQuadrant,
   getSensationSummary,
-  isBodyRegionId,
-  type BodyRegionId,
+  toFigurePoint,
 } from "@/lib/body-sensations";
 import { getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
@@ -18,7 +16,7 @@ import { cn } from "@/lib/utils";
 type BodySensationChipProps = {
   sensation: BodySensation;
   project: (x: number, y: number) => { left: string; top: string };
-  onSelect: (region: BodyRegionId) => void;
+  onSelect: (id: string) => void;
 };
 
 function getChipLabel(sensation: BodySensation) {
@@ -32,30 +30,33 @@ function getChipLabel(sensation: BodySensation) {
 }
 
 export function BodySensationChip({ sensation, project, onSelect }: BodySensationChipProps) {
-  if (!isBodyRegionId(sensation.region)) {
-    return null;
-  }
-
-  const region = sensation.region;
-  const point = BODY_REGIONS[region];
+  const point = toFigurePoint(sensation);
   const styles = getMoodStyles(getSensationQuadrant(sensation));
 
   return (
     <motion.button
       type="button"
-      onClick={() => onSelect(region)}
+      onClick={() => onSelect(sensation.id)}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      aria-label={`${getBodyRegionPhrase(sensation.region)} ${getSensationSummary(sensation)}`}
+      aria-label={`${BODY_POINT_PHRASE} ${getSensationSummary(sensation)}`}
       style={project(point.x, point.y)}
-      className={cn(
-        "absolute z-10 ml-3 -translate-y-1/2 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap shadow-sm ring-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-        styles.soft,
-        styles.strong,
-        styles.ring,
-      )}
+      className="absolute z-10 -ml-2 flex origin-left -translate-y-1/2 items-center gap-1.5 rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      {getChipLabel(sensation)}
+      <span
+        className={cn("size-4 shrink-0 rounded-full bg-card shadow-sm ring-4", styles.ring)}
+        aria-hidden="true"
+      />
+      <span
+        className={cn(
+          "rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap shadow-sm ring-1",
+          styles.soft,
+          styles.strong,
+          styles.ring,
+        )}
+      >
+        {getChipLabel(sensation)}
+      </span>
     </motion.button>
   );
 }
