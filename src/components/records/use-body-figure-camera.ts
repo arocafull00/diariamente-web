@@ -18,10 +18,13 @@ type Gesture = {
   anchor: Point;
   moved: boolean;
   multiTouch: boolean;
+  dragging: boolean;
 };
 
 type UseBodyFigureCameraOptions = {
   onTap: (point: Point) => void;
+  dragPoint: Point | null;
+  onDrag: (point: Point) => void;
 };
 
 const FIGURE_PADDING = 8;
@@ -30,6 +33,7 @@ const MAX_SCALE = 4;
 const ZOOM_STEP = 1.5;
 const FOCUS_SCALE = 1.6;
 const TAP_THRESHOLD = 8;
+const DRAG_RADIUS = 28;
 
 const FIGURE_BOUNDS = {
   minX: -FIGURE_PADDING,
@@ -98,7 +102,7 @@ function getDistance(points: Point[]) {
   return Math.max(Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y), 1);
 }
 
-export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
+export function useBodyFigureCamera({ onTap, dragPoint, onDrag }: UseBodyFigureCameraOptions) {
   const { ref, size } = useElementSize<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>(null);
   const hitPathRef = useRef<SVGPathElement>(null);
@@ -123,7 +127,7 @@ export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
     };
   }
 
-  function beginGesture(multiTouch: boolean) {
+  function beginGesture(multiTouch: boolean, dragging = false) {
     const points = [...pointers.current.values()];
     const pinch = points.length >= 2;
 
@@ -134,21 +138,44 @@ export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
       anchor: toFigurePoint(pinch ? getMidpoint(points) : points[0]),
       moved: gesture.current?.moved ?? false,
       multiTouch,
+      dragging: dragging && !pinch,
     };
   }
 
-  function selectAt(client: Point) {
+  function getFigurePointOnBody(client: Point) {
     const matrix = svgRef.current?.getScreenCTM();
     const path = hitPathRef.current;
 
     if (!matrix || !path) {
-      return;
+      return null;
     }
 
     const point = new DOMPoint(client.x, client.y).matrixTransform(matrix.inverse());
 
-    if (path.isPointInFill(point) || path.isPointInStroke(point)) {
-      onTap({ x: point.x, y: point.y });
+    if (!path.isPointInFill(point) && !path.isPointInStroke(point)) {
+      return null;
+    }
+
+    return { x: point.x, y: point.y };
+  }
+
+  function isNearDragPoint(client: Point) {
+    const matrix = svgRef.current?.getScreenCTM();
+
+    if (!dragPoint || !matrix) {
+      return false;
+    }
+
+    const screen = new DOMPoint(dragPoint.x, dragPoint.y).matrixTransform(matrix);
+
+    return Math.hypot(screen.x - client.x, screen.y - client.y) <= DRAG_RADIUS;
+  }
+
+  function selectAt(client: Point) {
+    const point = getFigurePointOnBody(client);
+
+    if (point) {
+      onTap(point);
     }
   }
 
@@ -199,9 +226,14 @@ export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
           return;
         }
 
+        const client = { x: event.clientX, y: event.clientY };
+
         event.currentTarget.setPointerCapture(event.pointerId);
-        pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-        beginGesture(pointers.current.size > 1);
+        pointers.current.set(event.pointerId, client);
+        beginGesture(
+          pointers.current.size > 1,
+          pointers.current.size === 1 && isNearDragPoint(client),
+        );
       },
       onPointerMove: (event: React.PointerEvent<HTMLDivElement>) => {
         const active = gesture.current;
@@ -230,6 +262,17 @@ export function useBodyFigureCamera({ onTap }: UseBodyFigureCameraOptions) {
               y: active.anchor.y - (midpoint.y - rect.top - rect.height / 2) * unitsPerPixel,
             },
           });
+          return;
+        }
+
+        if (active.dragging) {
+          const point = getFigurePointOnBody({ x: event.clientX, y: event.clientY });
+
+          active.moved = true;
+
+          if (point) {
+            onDrag(point);
+          }
           return;
         }
 
