@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import type { GrammaticalGender, UserRole } from "@/db/schema";
-import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { deleteAccount } from "@/server/actions/onboarding";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
@@ -51,7 +50,6 @@ export function SettingsSheet({
   grammaticalGender,
 }: SettingsSheetProps) {
   const router = useRouter();
-  const { installed, loading, handleInstall } = usePwaInstall();
   const [open, setOpen] = useState(false);
   const [, startSaveTransition] = useTransition();
   const [deletePending, startDeleteTransition] = useTransition();
@@ -188,11 +186,7 @@ export function SettingsSheet({
             </AlertDialog>
           </SettingsGroup>
 
-          <PwaInstallButton
-            installed={installed}
-            loading={loading}
-            onInstall={handleInstall}
-          />
+          <PwaInstallButton />
         </div>
       </SheetContent>
     </Sheet>

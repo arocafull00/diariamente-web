@@ -6,6 +6,7 @@ const NETWORK_ONLY_PREFIXES = [
   "/registro",
   "/recuperar-password",
   "/onboarding",
+  "/bienvenida",
   "/inicio",
   "/pacientes",
   "/perfil",

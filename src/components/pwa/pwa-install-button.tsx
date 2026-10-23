@@ -7,18 +7,13 @@ import {
   SettingsRowContent,
   settingsRowClassName,
 } from "@/components/profile/settings-row-content";
+import { PwaInstallGuide } from "@/components/pwa/pwa-install-guide";
+import { usePwaInstall } from "@/hooks/use-pwa-install";
 
-type PwaInstallButtonProps = {
-  installed: boolean;
-  loading: boolean;
-  onInstall: () => Promise<void>;
-};
+export function PwaInstallButton() {
+  const { installed, loading, handleInstall, guideOpen, setGuideOpen, platform } =
+    usePwaInstall();
 
-export function PwaInstallButton({
-  installed,
-  loading,
-  onInstall,
-}: PwaInstallButtonProps) {
   return (
     <SettingsGroup title="Aplicación">
       <button
@@ -27,7 +22,7 @@ export function PwaInstallButton({
         className={settingsRowClassName}
         aria-disabled={installed || loading}
         disabled={loading}
-        onClick={installed ? undefined : onInstall}
+        onClick={installed ? undefined : handleInstall}
       >
         <SettingsRowContent
           icon={Smartphone}
@@ -39,6 +34,11 @@ export function PwaInstallButton({
           loading={loading}
         />
       </button>
+      <PwaInstallGuide
+        open={guideOpen}
+        onOpenChange={setGuideOpen}
+        platform={platform}
+      />
     </SettingsGroup>
   );
 }

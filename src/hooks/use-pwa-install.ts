@@ -3,6 +3,8 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
+import { getInstallPlatform, type InstallPlatform } from "@/lib/install-platform";
+
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
@@ -36,6 +38,8 @@ export function usePwaInstall() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [installed, setInstalled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [platform, setPlatform] = useState<InstallPlatform>("unknown");
 
   useEffect(() => {
     let active = true;
@@ -114,19 +118,16 @@ export function usePwaInstall() {
       return;
     }
 
-    if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-      toast.info(
-        "En Safari, pulsa Compartir y elige «Añadir a pantalla de inicio».",
-        { duration: 6000 },
-      );
-      return;
-    }
-
-    toast.info(
-      "Abre el menú de tu navegador y elige «Instalar aplicación» o «Añadir a pantalla de inicio». Si no aparece, abre DiariaMente en Chrome.",
-      { duration: 8000 },
-    );
+    setPlatform(getInstallPlatform(navigator.userAgent, navigator.maxTouchPoints));
+    setGuideOpen(true);
   }
 
-  return { installed: standalone || installed, loading, handleInstall };
+  return {
+    installed: standalone || installed,
+    loading,
+    handleInstall,
+    guideOpen,
+    setGuideOpen,
+    platform,
+  };
 }
