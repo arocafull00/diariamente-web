@@ -45,6 +45,20 @@ function joinText(base: string, addition: string) {
   return `${base} ${addition}`;
 }
 
+function mergeTranscripts(transcripts: string[]) {
+  return transcripts.reduce<string[]>((segments, transcript) => {
+    if (!transcript) return segments;
+    const last = segments.at(-1);
+    if (!last) return [transcript];
+
+    const current = transcript.toLowerCase();
+    const previous = last.toLowerCase();
+    if (previous.startsWith(current)) return segments;
+    if (current.startsWith(previous)) return [...segments.slice(0, -1), transcript];
+    return [...segments, transcript];
+  }, []);
+}
+
 export function useSpeechDictation(
   value: string,
   onChange: (value: string) => void,
@@ -65,18 +79,16 @@ export function useSpeechDictation(
     if (!SpeechRecognition) return;
 
     const baseText = value;
+    let transcript = "";
     const recognition = new SpeechRecognition();
     recognition.lang = "es-ES";
     recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0].transcript.trim())
-        .filter(Boolean)
-        .join(" ");
-
-      onChange(joinText(baseText, transcript).slice(0, maxLength));
+      transcript = mergeTranscripts(
+        Array.from(event.results).map((result) => result[0].transcript.trim()),
+      ).join(" ");
     };
 
     recognition.onerror = (event) => {
@@ -91,6 +103,7 @@ export function useSpeechDictation(
     recognition.onend = () => {
       recognitionRef.current = null;
       setIsListening(false);
+      if (transcript) onChange(joinText(baseText, transcript).slice(0, maxLength));
     };
 
     recognitionRef.current = recognition;

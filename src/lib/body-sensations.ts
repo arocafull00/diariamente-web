@@ -7,7 +7,7 @@ import type {
 
 import { BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 
-type FigurePoint = { x: number; y: number };
+export type FigurePoint = { x: number; y: number };
 
 type LegacyBodyRegion = FigurePoint & { label: string };
 
@@ -183,6 +183,10 @@ export const SENSATION_FILLS: Record<MoodQuadrant, string> = {
   LOW_UNPLEASANT: "fill-mood-lu-3",
   LOW_PLEASANT: "fill-mood-lp-3",
 };
+
+export function getSensationGlowRadius(sensation: SensationValue) {
+  return 14 + (sensation.intensity / 100) * 14;
+}
 
 export function getSensationKey(sensation: StoredBodySensation, index: number) {
   return "id" in sensation ? sensation.id : `${sensation.region}-${index}`;

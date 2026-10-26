@@ -32,7 +32,6 @@ export function BodyFigureSideCues({ side }: BodyFigureSideCuesProps) {
       <circle cx={94} cy={37} r={1.8} className="fill-foreground" opacity={0.35} />
       <circle cx={106} cy={37} r={1.8} className="fill-foreground" opacity={0.35} />
       <path d="M85 85 Q92 89 98 87 M102 87 Q108 89 115 85" {...STROKE_PROPS} />
-      <circle cx={100} cy={172} r={1.6} className="fill-foreground" opacity={0.35} />
     </>
   );
 }

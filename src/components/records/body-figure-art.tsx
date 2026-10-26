@@ -1,5 +1,6 @@
 import { BodyFigureSideCues } from "@/components/records/body-figure-side-cues";
 import { BodySensationGlow } from "@/components/records/body-sensation-glow";
+import { BodySensationParticles } from "@/components/records/body-sensation-particles";
 import type { BodySide, StoredBodySensation } from "@/db/schema";
 import { BODY_FIGURE_PATH, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 import { getSensationKey } from "@/lib/body-sensations";
@@ -52,6 +53,9 @@ export function BodyFigureArt({ id, side, sensations }: BodyFigureArtProps) {
           fill={`url(#${id}-dots)`}
           opacity={0.55}
         />
+        {sensations.map((sensation, index) => (
+          <BodySensationParticles key={getSensationKey(sensation, index)} sensation={sensation} />
+        ))}
       </g>
     </>
   );

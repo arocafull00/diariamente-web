@@ -1,6 +1,7 @@
 "use client";
 
 import { DictationButton } from "@/components/records/dictation-button";
+import { DictationOverlay } from "@/components/records/dictation-overlay";
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
 import { MoodBubble } from "@/components/records/mood-bubble";
@@ -52,12 +53,13 @@ export function NewRecordReflectionStep({
         maxLength={MAX_LENGTH}
         className="relative mt-6 w-full flex-1 resize-none bg-transparent font-display text-2xl leading-snug outline-none placeholder:text-muted-foreground/60"
       />
+      {dictation.isListening ? <DictationOverlay quadrant={quadrant} /> : null}
       <div className="relative flex items-center justify-between gap-4 pt-4">
         <p className="text-xs text-muted-foreground" aria-live="polite">
           {dictation.isListening
             ? "Escuchando..."
             : isEmpty
-              ? "Puedes completarlo más tarde"
+              ? ""
               : `${value.length} caracteres`}
         </p>
         <div className="flex items-center gap-3">
