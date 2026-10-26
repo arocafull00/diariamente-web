@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import logo from "../../../public/logo.png";
 
 import { GoogleSignInForm } from "@/components/auth/google-sign-in-form";
-import { LoginFaces } from "@/components/auth/login-faces";
+import { FaceCluster } from "@/components/faces/face-cluster";
 
 export default async function LoginPage() {
   const { isAuthenticated } = await auth();
@@ -44,7 +44,7 @@ export default async function LoginPage() {
               evolución con tu profesional.
             </p>
           </div>
-          <LoginFaces />
+          <FaceCluster />
         </div>
         <GoogleSignInForm />
       </div>
