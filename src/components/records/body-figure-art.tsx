@@ -16,6 +16,8 @@ export function BodyFigureArt({ id, side, sensations }: BodyFigureArtProps) {
       <defs>
         <pattern
           id={`${id}-dots`}
+          x="-0.5"
+          y="-0.5"
           width="3"
           height="3"
           patternUnits="userSpaceOnUse"

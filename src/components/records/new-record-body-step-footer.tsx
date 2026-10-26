@@ -14,11 +14,11 @@ export function NewRecordBodyStepFooter({
 }: NewRecordBodyStepFooterProps) {
   return (
     <div className="space-y-4">
-      <p className="mx-auto max-w-xs text-center text-sm text-balance text-muted-foreground">
-        {hasSensations
-          ? "Puedes tocar otra zona para añadir más sensaciones."
-          : "Toca la zona donde lo notas. Puede ser tensión, calor, opresión, hormigueo o algo completamente distinto."}
-      </p>
+      {hasSensations && (
+        <p className="mx-auto max-w-xs text-center text-sm text-balance text-muted-foreground">
+          Puedes tocar otra zona para añadir más sensaciones.
+        </p>
+      )}
       <div className="flex items-center justify-between gap-4">
         {hasSensations ? (
           <span aria-hidden="true" />
