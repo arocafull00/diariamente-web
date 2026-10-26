@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "DiariaMente",
   },
   icons: {
-    icon: "/icon-192x192.png",
+    icon: "/icon.png?v=2",
     apple: "/apple-touch-icon.png",
   },
 };
