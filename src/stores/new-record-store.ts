@@ -20,6 +20,7 @@ type NewRecordData = {
   stepIndex: number;
   direction: 1 | -1;
   quadrant: MoodQuadrant | null;
+  group: string | null;
   emotion: string | null;
   intensity: number;
   context: RecordContext;
@@ -32,8 +33,8 @@ type NewRecordData = {
 
 type NewRecordState = NewRecordData & {
   setField: <K extends keyof NewRecordData>(key: K, value: NewRecordData[K]) => void;
-  selectQuadrant: (quadrant: MoodQuadrant) => void;
-  selectEmotion: (emotion: string, quadrant: MoodQuadrant) => void;
+  selectGroup: (group: string, quadrant: MoodQuadrant) => void;
+  selectEmotion: (emotion: string, quadrant: MoodQuadrant, group: string) => void;
   toggleContextTag: (group: ContextGroup, tag: string) => void;
   saveBodySensation: (sensation: BodySensation) => void;
   removeBodySensation: (id: string) => void;
@@ -47,6 +48,7 @@ function getInitialState(): NewRecordData {
     stepIndex: 0,
     direction: 1,
     quadrant: null,
+    group: null,
     emotion: null,
     intensity: 5,
     context: EMPTY_RECORD_CONTEXT,
@@ -61,14 +63,13 @@ function getInitialState(): NewRecordData {
 export const useNewRecordStore = create<NewRecordState>((set) => ({
   ...getInitialState(),
   setField: (key, value) => set({ [key]: value }),
-  selectQuadrant: (quadrant) =>
-    set((state) => ({
-      quadrant,
-      emotion: state.quadrant === quadrant ? state.emotion : null,
-      stepIndex: 1,
-      direction: 1,
-    })),
-  selectEmotion: (emotion, quadrant) => set({ emotion, quadrant }),
+  selectGroup: (group, quadrant) =>
+    set((state) =>
+      state.group === group
+        ? { stepIndex: 1, direction: 1 }
+        : { quadrant, group, emotion: null, stepIndex: 1, direction: 1 },
+    ),
+  selectEmotion: (emotion, quadrant, group) => set({ emotion, quadrant, group }),
   toggleContextTag: (group, tag) =>
     set((state) => {
       const current = state.context[group];

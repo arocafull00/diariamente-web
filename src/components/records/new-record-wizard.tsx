@@ -113,19 +113,20 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             ) : null}
 
             {!savedRecord && step === "quadrant" ? (
-              <NewRecordQuadrantStep onSelect={store.selectQuadrant} />
+              <NewRecordQuadrantStep
+                onSelect={(group) => store.selectGroup(group.id, group.quadrant)}
+              />
             ) : null}
 
             {!savedRecord && step === "emotion" && store.quadrant ? (
               <NewRecordEmotionStep
-                focusQuadrant={store.quadrant}
                 selectedQuadrant={store.quadrant}
+                selectedGroup={store.group}
                 emotion={store.emotion}
                 definition={wizard.definition}
                 options={wizard.options}
                 gender={gender}
                 onSelect={store.selectEmotion}
-                onSearchSelect={wizard.handleSearchSelect}
                 onQuickSave={wizard.handleQuickSave}
                 onContinue={store.nextStep}
               />

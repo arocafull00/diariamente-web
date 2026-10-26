@@ -8,16 +8,14 @@ import { cn } from "@/lib/utils";
 
 type QuadrantBlobProps = {
   quadrant: MoodQuadrant;
-  energy: string;
-  pleasantness: string;
+  label: string;
   index: number;
-  onSelect: (quadrant: MoodQuadrant) => void;
+  onSelect: () => void;
 };
 
 export function QuadrantBlob({
   quadrant,
-  energy,
-  pleasantness,
+  label,
   index,
   onSelect,
 }: QuadrantBlobProps) {
@@ -59,7 +57,7 @@ export function QuadrantBlob({
         />
         <motion.button
           type="button"
-          onClick={() => onSelect(quadrant)}
+          onClick={onSelect}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.92 }}
           style={{ animationDuration: `${4 + index * 0.5}s`, animationDelay: `${-index * 1.1}s` }}
@@ -68,10 +66,8 @@ export function QuadrantBlob({
             styles.tones[3],
           )}
         >
-          <span className="relative font-display text-base leading-tight font-medium sm:text-lg">
-            {energy}
-            <br />
-            {pleasantness}
+          <span className="relative font-display text-base leading-tight font-medium whitespace-pre-line sm:text-lg">
+            {label}
           </span>
         </motion.button>
       </div>

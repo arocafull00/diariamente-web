@@ -13,6 +13,7 @@ import type {
 import { EMPTY_RECORD_CONTEXT, getContextTags } from "@/lib/context-tags";
 import {
   EMOTIONS,
+  findEmotion,
   getEmotionDefinition,
   type EmotionOption,
 } from "@/lib/emotions";
@@ -74,7 +75,7 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
   const step = NEW_RECORD_STEPS[store.stepIndex];
   const phase = PHASE_BY_STEP[step];
   const options: EmotionOption[] = EMOTIONS;
-  const selectedOption = options.find((option) => option.name === store.emotion);
+  const selectedOption = store.emotion ? findEmotion(store.emotion) : undefined;
   const definition = selectedOption
     ? getEmotionDefinition(selectedOption, gender)
     : "";
@@ -128,12 +129,12 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
     });
   }
 
-  function handleQuickSave(emotion: string, quadrant: MoodQuadrant) {
+  function handleQuickSave(emotion: string, quadrant: MoodQuadrant, group: string) {
     if (pending) {
       return;
     }
 
-    store.selectEmotion(emotion, quadrant);
+    store.selectEmotion(emotion, quadrant, group);
     save({
       emotion,
       quadrant,
@@ -145,16 +146,6 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
       behaviours: "",
       occurredAt: new Date(),
     });
-  }
-
-  function handleSearchSelect(option: EmotionOption) {
-    const quadrant = option.quadrant ?? store.quadrant;
-
-    if (!quadrant) {
-      return;
-    }
-
-    store.selectEmotion(option.name, quadrant);
   }
 
   function close() {
@@ -181,7 +172,6 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
     savedRecord,
     handleSave,
     handleQuickSave,
-    handleSearchSelect,
     back,
     close,
     openSavedRecord: () => {

@@ -15,14 +15,15 @@ type EmotionBubbleProps = {
   name: string;
   label: string;
   quadrant: MoodQuadrant;
+  group: string;
   tone: MoodTone;
   styles: MoodStyles;
   selected: boolean;
   delay: number;
   field: FieldMotion;
   selection: SelectionPush;
-  onSelect: (name: string, quadrant: MoodQuadrant) => void;
-  onQuickSave: (name: string, quadrant: MoodQuadrant) => void;
+  onSelect: (name: string, quadrant: MoodQuadrant, group: string) => void;
+  onQuickSave: (name: string, quadrant: MoodQuadrant, group: string) => void;
 };
 
 const FISHEYE_RADIUS = 560;
@@ -46,6 +47,7 @@ export const EmotionBubble = memo(function EmotionBubble({
   name,
   label,
   quadrant,
+  group,
   tone,
   styles,
   selected,
@@ -58,7 +60,7 @@ export const EmotionBubble = memo(function EmotionBubble({
   const ref = useRef<HTMLDivElement>(null);
   const home = useRef({ x: 0, y: 0, cell: 1 });
   const shape = getEmotionShape(name);
-  const { handlers, consumeTrigger } = useLongPress(() => onQuickSave(name, quadrant));
+  const { handlers, consumeTrigger } = useLongPress(() => onQuickSave(name, quadrant, group));
 
   useLayoutEffect(() => {
     const element = ref.current;
@@ -104,6 +106,7 @@ export const EmotionBubble = memo(function EmotionBubble({
       ref={ref}
       data-emotion={name}
       data-quadrant={quadrant}
+      data-group={group}
       style={{ x, y, scale }}
       className={cn("relative", selected && "z-10")}
     >
@@ -132,7 +135,7 @@ export const EmotionBubble = memo(function EmotionBubble({
               return;
             }
 
-            onSelect(name, quadrant);
+            onSelect(name, quadrant, group);
           }}
           aria-pressed={selected}
           initial={false}

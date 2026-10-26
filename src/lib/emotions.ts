@@ -307,6 +307,42 @@ export const EMOTIONS: EmotionDefinition[] = [
   ]),
 ];
 
+const TREE_ONLY_EMOTIONS: EmotionDefinition[] = [
+  ...defineQuadrant("HIGH_UNPLEASANT", [
+    ["Molesto", "incomodado por algo que te desagrada", "Molesta", "incomodada por algo que te desagrada"],
+    ["Impotente", "sentir que no puedes hacer nada para cambiar lo que pasa"],
+    ["Bloqueado", "atascado, sin saber cómo avanzar", "Bloqueada", "atascada, sin saber cómo avanzar"],
+    ["Traicionado", "herido por alguien en quien confiabas", "Traicionada", "herida por alguien en quien confiabas"],
+    ["Despreciado", "sentir que te tratan como si no valieras", "Despreciada"],
+    ["Indignado", "enfadado ante algo que te parece injusto", "Indignada", "enfadada ante algo que te parece injusto"],
+    ["Harto", "sin paciencia tras aguantar algo demasiado tiempo", "Harta"],
+    ["Saturado", "sentir que no te cabe nada más", "Saturada"],
+    ["Agobiado", "sentir que todo se te echa encima", "Agobiada"],
+    ["Inseguro", "dudar de ti o de lo que puede pasar", "Insegura"],
+    ["Insuficiente", "sentir que no estás a la altura"],
+    ["Indeciso", "no saber qué elegir ni qué hacer", "Indecisa"],
+    ["Presionado", "sentir que te exigen más de lo que puedes dar", "Presionada"],
+    ["Intimidado", "cohibido ante alguien o algo que te impone", "Intimidada", "cohibida ante alguien o algo que te impone"],
+    ["Cohibido", "frenado por miedo a lo que piensen los demás", "Cohibida", "frenada por miedo a lo que piensen los demás"],
+    ["Alerta", "pendiente de cualquier posible amenaza"],
+    ["Desconfiado", "sospechar de las intenciones de los demás", "Desconfiada"],
+  ]),
+  ...defineQuadrant("LOW_UNPLEASANT", [
+    ["Abandonado", "sentir que te han dejado de lado quienes importan", "Abandonada"],
+    ["Incomprendido", "sentir que nadie entiende cómo estás", "Incomprendida"],
+    ["Herido", "dolido por algo que te han hecho o dicho", "Herida", "dolida por algo que te han hecho o dicho"],
+    ["Rechazado", "sentir que no te quieren o no te aceptan", "Rechazada"],
+    ["Arrepentido", "desear no haber hecho o dicho algo", "Arrepentida"],
+    ["Frágil", "sentir que cualquier cosa puede romperte"],
+    ["Indefenso", "sin recursos para protegerte", "Indefensa"],
+  ]),
+  ...defineQuadrant("HIGH_PLEASANT", [
+    ["Capaz", "confiar en que puedes con lo que te propones"],
+    ["Entretenido", "con la atención puesta en algo que disfrutas", "Entretenida"],
+    ["Valiente", "afrontar algo a pesar del miedo"],
+  ]),
+];
+
 const LEGACY_EMOTION_QUADRANTS: Record<string, MoodQuadrant> = {
   Alegría: "HIGH_PLEASANT",
   Tristeza: "LOW_UNPLEASANT",
@@ -316,12 +352,37 @@ const LEGACY_EMOTION_QUADRANTS: Record<string, MoodQuadrant> = {
   Ansiedad: "HIGH_UNPLEASANT",
 };
 
+const KNOWN_EMOTIONS = [...EMOTIONS, ...TREE_ONLY_EMOTIONS];
+
+export type EmotionGroupItem = {
+  name: string;
+  quadrant: MoodQuadrant;
+};
+
+export type EmotionGroup = {
+  id: string;
+  label: string;
+  quadrant: MoodQuadrant;
+  items: EmotionGroupItem[];
+};
+
+export const EMOTION_QUADRANT_GROUPS: EmotionGroup[] = MOOD_QUADRANTS.map((quadrant) => ({
+  id: quadrant.id,
+  label: `${quadrant.energy}
+${quadrant.pleasantness}`,
+  quadrant: quadrant.id,
+  items: EMOTIONS.filter((emotion) => emotion.quadrant === quadrant.id).map((emotion) => ({
+    name: emotion.name,
+    quadrant: quadrant.id,
+  })),
+}));
+
 const EMOTIONS_BY_NAME = new Map(
-  EMOTIONS.map((emotion) => [emotion.name.toLowerCase(), emotion]),
+  KNOWN_EMOTIONS.map((emotion) => [emotion.name.toLowerCase(), emotion]),
 );
 
 const EMOTIONS_BY_CANONICAL_NAME = new Map(
-  EMOTIONS.map((emotion) => [emotion.name, emotion]),
+  KNOWN_EMOTIONS.map((emotion) => [emotion.name, emotion]),
 );
 
 export function findEmotion(name: string) {

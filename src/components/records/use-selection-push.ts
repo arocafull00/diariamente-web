@@ -13,15 +13,15 @@ const SPRING = { stiffness: 220, damping: 26 };
 
 export function useSelectionPush(
   contentRef: React.RefObject<HTMLDivElement | null>,
-  emotion: string | null,
+  selector: string | null,
 ): SelectionPush {
   const x = useSpring(0, SPRING);
   const y = useSpring(0, SPRING);
   const strength = useSpring(0, SPRING);
 
   useLayoutEffect(() => {
-    const element = emotion
-      ? contentRef.current?.querySelector<HTMLElement>(`[data-emotion="${CSS.escape(emotion)}"]`)
+    const element = selector
+      ? contentRef.current?.querySelector<HTMLElement>(selector)
       : null;
 
     if (!element) {
@@ -41,7 +41,7 @@ export function useSelectionPush(
     }
 
     strength.set(1);
-  }, [contentRef, emotion, x, y, strength]);
+  }, [contentRef, selector, x, y, strength]);
 
   return useMemo(() => ({ x, y, strength }), [x, y, strength]);
 }
