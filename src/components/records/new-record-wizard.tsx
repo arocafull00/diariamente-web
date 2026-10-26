@@ -15,6 +15,7 @@ import {
   NEW_RECORD_PHASE_COUNT,
   useNewRecordWizard,
 } from "@/components/records/use-new-record-wizard";
+import { useVisualViewportFrame } from "@/components/records/use-visual-viewport-frame";
 import type { GrammaticalGender } from "@/db/schema";
 import type { NewRecordStep } from "@/stores/new-record-store";
 import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
@@ -57,6 +58,7 @@ type NewRecordWizardProps = {
 
 export function NewRecordWizard({ gender }: NewRecordWizardProps) {
   const wizard = useNewRecordWizard(gender);
+  const viewportFrame = useVisualViewportFrame();
   const { store, step, savedRecord } = wizard;
   const emotion = getEmotionLabel(store.emotion ?? "", gender);
   const labelTags = (tags: string[]) =>
@@ -67,7 +69,9 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
   const contentKey = savedRecord ? "success" : step;
 
   return (
-    <div className="fixed inset-0 z-50 flex max-w-none! flex-col bg-background px-0! pt-0! lg:max-w-none! lg:px-0! lg:pt-0!">
+    <div
+      style={viewportFrame}
+      className="fixed inset-0 z-50 flex max-w-none! flex-col bg-background px-0! pt-0! lg:max-w-none! lg:px-0! lg:pt-0!">
       <div
         className={cn(
           "pointer-events-none absolute inset-0 transition-[background-color,opacity] duration-700",
