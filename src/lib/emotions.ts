@@ -155,9 +155,9 @@ export const EMOTIONS: EmotionDefinition[] = [
       "llena de un placer o entusiasmo enorme",
     ],
     [
-      "Emocionado",
+      "Ilusionado",
       "con mucha ilusión por algo que ocurre o va a ocurrir",
-      "Emocionada",
+      "Ilusionada",
     ],
     ["Exultante", "celebrar algo con una alegría muy viva"],
     ["Inspirado", "con ganas de crear o hacer algo nuevo", "Inspirada"],
@@ -248,9 +248,9 @@ export const EMOTIONS: EmotionDefinition[] = [
     ["Aburrido", "sin interés por lo que ocurre a tu alrededor", "Aburrida"],
     ["Apático", "indiferente, sin ganas de nada", "Apática"],
     [
-      "Meh",
+      "Indiferente",
       "sentirte sin inspiración o aburrido",
-      "Meh",
+      "Indiferente",
       "sentirte sin inspiración o aburrida",
     ],
   ]),
