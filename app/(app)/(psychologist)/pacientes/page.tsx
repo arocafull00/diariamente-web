@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 
 import { AppHeader } from "@/components/app-shell/app-header";
+import { FaceRow } from "@/components/faces/face-row";
 import { InvitationsSheet } from "@/components/invitations/invitations-sheet";
 import { StaggerItem } from "@/components/motion/stagger-item";
 import { StaggerList } from "@/components/motion/stagger-list";
@@ -40,6 +41,9 @@ export default async function PatientsPage() {
       <StaggerList className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 xl:grid-cols-3">
         {patients.length === 0 ? (
           <div className="rounded-3xl bg-card p-8 text-center shadow-sm ring-1 ring-border/60">
+            <div className="mb-5">
+              <FaceRow faceIds={["02_azul_rosa", "alegria", "05_rosa_verde"]} />
+            </div>
             <p className="text-sm text-muted-foreground">
               Aún no tienes pacientes vinculados.
             </p>
