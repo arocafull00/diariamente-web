@@ -143,50 +143,55 @@ export function SettingsSheet({
 
           <SettingsGroup title="Cuenta">
             <SettingsSignOutDialog />
-            <AlertDialog>
-              <AlertDialogTrigger
-                data-slot="settings-row"
-                className={settingsRowClassName}
-              >
-                <SettingsRowContent
-                  icon={Trash2}
-                  tone="destructive"
-                  title="Eliminar cuenta"
-                  description="Borra tus datos de forma permanente."
-                />
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>¿Eliminar tu cuenta?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Esta acción no se puede deshacer. Se eliminarán todos tus
-                    datos.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    variant="destructive"
-                    disabled={deletePending}
-                    onClick={handleDeleteAccount}
-                  >
-                    {deletePending ? (
-                      <LoaderCircle
-                        className="animate-spin"
-                        data-icon="inline-start"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <Trash2 data-icon="inline-start" aria-hidden="true" />
-                    )}
-                    {deletePending ? "Eliminando..." : "Eliminar"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </SettingsGroup>
 
           <PwaInstallButton />
+
+          <div className="mt-auto">
+            <SettingsGroup title="Zona de peligro">
+              <AlertDialog>
+                <AlertDialogTrigger
+                  data-slot="settings-row"
+                  className={settingsRowClassName}
+                >
+                  <SettingsRowContent
+                    icon={Trash2}
+                    tone="destructive"
+                    title="Eliminar cuenta"
+                    description="Borra tus datos de forma permanente."
+                  />
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>¿Eliminar tu cuenta?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Esta acción no se puede deshacer. Se eliminarán todos tus
+                      datos.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      disabled={deletePending}
+                      onClick={handleDeleteAccount}
+                    >
+                      {deletePending ? (
+                        <LoaderCircle
+                          className="animate-spin"
+                          data-icon="inline-start"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Trash2 data-icon="inline-start" aria-hidden="true" />
+                      )}
+                      {deletePending ? "Eliminando..." : "Eliminar"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </SettingsGroup>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
