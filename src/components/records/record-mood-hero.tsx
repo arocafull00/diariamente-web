@@ -1,5 +1,6 @@
 import { CalendarDays } from "lucide-react";
 
+import { Face } from "@/components/faces/face";
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { RecordIntensityDots } from "@/components/records/record-intensity-dots";
 import type {
@@ -14,6 +15,7 @@ import {
   getMoodStyles,
   getQuadrantLabel,
 } from "@/lib/emotions";
+import { getQuadrantFace } from "@/lib/faces";
 import { cn } from "@/lib/utils";
 import { formatRecordDate } from "@/lib/utils-app";
 
@@ -48,13 +50,19 @@ export function RecordMoodHero({
         tone={1}
         className="absolute -top-16 -right-16 size-56 animate-in opacity-70 duration-700 zoom-in-50 fade-in"
       />
-      <MoodBubble
-        quadrant={quadrant}
-        tone={3}
-        className="absolute top-10 right-10 size-20 animate-in font-display text-3xl font-semibold duration-700 zoom-in-50 fade-in sm:size-24"
-      >
-        {emotion?.intensity}
-      </MoodBubble>
+      <div className="absolute top-10 right-10 size-20 animate-in duration-700 zoom-in-50 fade-in sm:size-24">
+        <Face
+          faceId={getQuadrantFace(quadrant)}
+          size={96}
+          priority
+          className="size-full drop-shadow-sm motion-safe:animate-mood-float"
+        />
+        {emotion ? (
+          <span className="absolute -right-1 -bottom-1 flex size-9 items-center justify-center rounded-full bg-card font-display text-lg font-semibold shadow-sm ring-1 ring-border/60">
+            {emotion.intensity}
+          </span>
+        ) : null}
+      </div>
 
       <div className="relative max-w-[calc(100%-7rem)] space-y-1">
         {quadrant ? (

@@ -1,6 +1,8 @@
+import { Face } from "@/components/faces/face";
 import { MoodBubble } from "@/components/records/mood-bubble";
 import type { MoodQuadrant } from "@/db/schema";
 import { getMoodStyles } from "@/lib/emotions";
+import { getQuadrantFace } from "@/lib/faces";
 import { cn } from "@/lib/utils";
 import { formatRecordDate } from "@/lib/utils-app";
 
@@ -38,7 +40,12 @@ export function MoodSummaryCard({
         tone={3}
         className="absolute -top-8 -right-8 size-32 opacity-80"
       />
-      <p className="relative font-display text-3xl leading-tight font-medium">
+      <Face
+        faceId={getQuadrantFace(quadrant)}
+        size={96}
+        className="absolute top-4 right-4 size-16 rotate-6 drop-shadow-sm motion-safe:animate-mood-float"
+      />
+      <p className="relative pr-16 font-display text-3xl leading-tight font-medium">
         {prefix}
         <br />
         <span className={cn("italic", styles.strong)}>

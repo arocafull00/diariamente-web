@@ -6,6 +6,7 @@ import { EmotionPickerModeToggle } from "@/components/records/emotion-picker-mod
 import { QuadrantBlob } from "@/components/records/quadrant-blob";
 import { EMOTION_TREE_GROUPS } from "@/lib/emotion-tree";
 import { EMOTION_QUADRANT_GROUPS, type EmotionGroup } from "@/lib/emotions";
+import { getEmotionGroupFace } from "@/lib/faces";
 import { useEmotionPickerModeStore } from "@/stores/emotion-picker-mode-store";
 
 const SUBTITLES = {
@@ -42,6 +43,7 @@ export function NewRecordQuadrantStep({ onSelect }: NewRecordQuadrantStepProps) 
               key={group.id}
               quadrant={group.quadrant}
               label={group.label}
+              faceId={getEmotionGroupFace(group)}
               index={index}
               onSelect={() => onSelect(group)}
             />

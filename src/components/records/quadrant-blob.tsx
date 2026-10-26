@@ -2,13 +2,16 @@
 
 import { motion } from "motion/react";
 
+import { Face } from "@/components/faces/face";
 import type { MoodQuadrant } from "@/db/schema";
 import { MOOD_STYLES } from "@/lib/emotions";
+import type { FaceId } from "@/lib/faces";
 import { cn } from "@/lib/utils";
 
 type QuadrantBlobProps = {
   quadrant: MoodQuadrant;
   label: string;
+  faceId: FaceId;
   index: number;
   onSelect: () => void;
 };
@@ -16,6 +19,7 @@ type QuadrantBlobProps = {
 export function QuadrantBlob({
   quadrant,
   label,
+  faceId,
   index,
   onSelect,
 }: QuadrantBlobProps) {
@@ -62,10 +66,16 @@ export function QuadrantBlob({
           whileTap={{ scale: 0.92 }}
           style={{ animationDuration: `${4 + index * 0.5}s`, animationDelay: `${-index * 1.1}s` }}
           className={cn(
-            "relative flex aspect-square w-full animate-mood-wobble items-center justify-center overflow-hidden rounded-full p-4 text-center text-mood-foreground outline-none focus-visible:ring-4 focus-visible:ring-ring/50",
+            "relative flex aspect-square w-full animate-mood-wobble flex-col items-center justify-center gap-1.5 overflow-hidden rounded-full p-4 text-center text-mood-foreground outline-none focus-visible:ring-4 focus-visible:ring-ring/50",
             styles.tones[3],
           )}
         >
+          <Face
+            faceId={faceId}
+            size={96}
+            priority
+            className="relative w-[38%] drop-shadow-sm"
+          />
           <span className="relative font-display text-base leading-tight font-medium whitespace-pre-line sm:text-lg">
             {label}
           </span>
