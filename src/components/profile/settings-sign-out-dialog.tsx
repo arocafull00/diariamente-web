@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { clearAppShell } from "@/lib/app-shell-cache";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
 
@@ -37,6 +38,7 @@ export function SettingsSignOutDialog({
     setPending(true);
 
     try {
+      clearAppShell();
       await signOut({ redirectUrl: "/login" });
       clearScreenCache();
       clearSession();

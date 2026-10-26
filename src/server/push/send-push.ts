@@ -39,13 +39,15 @@ function ensureVapidConfigured() {
 
 export async function sendPushToUser(userId: string, payload: PushPayload) {
   if (!ensureVapidConfigured()) {
-    return;
+    return 0;
   }
 
   const subscriptions = await db
     .select()
     .from(pushSubscriptions)
     .where(eq(pushSubscriptions.userId, userId));
+
+  let delivered = 0;
 
   for (const subscription of subscriptions) {
     try {
@@ -59,10 +61,13 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
         },
         JSON.stringify(payload),
       );
+      delivered += 1;
     } catch {
       await db
         .delete(pushSubscriptions)
         .where(eq(pushSubscriptions.id, subscription.id));
     }
   }
+
+  return delivered;
 }

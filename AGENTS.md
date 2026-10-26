@@ -180,8 +180,9 @@ Flujo de datos:
 
 - Manifest en `app/manifest.ts`.
 - Service Worker en `public/sw.js`; registro en `src/components/pwa/service-worker-register.tsx`.
-- **Network-only** para rutas autenticadas, Server Actions y datos clínicos.
-- Cache solo para assets públicos. Fallback offline en `/offline`.
+- **Network-only** para Server Actions, RSC, `/api/` y páginas que renderizan datos en servidor.
+- Las páginas cuyo HTML no contiene datos del usuario (`/inicio`, `/mis-registros`, `/perfil`; los datos llegan por `useCachedScreen`) se sirven stale-while-revalidate desde caché; `/_next/static` es cache-first. `/` redirige a la home cacheada del rol. Al cerrar sesión, `clearAppShell` limpia esa caché.
+- Fallback offline en `/offline`.
 - Push: suscripción en cliente, persistencia en Neon, envío vía `/api/cron/reminders` con VAPID.
 
 ## Seguridad y privacidad

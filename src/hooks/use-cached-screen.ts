@@ -1,8 +1,10 @@
 "use client";
 
+import { useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
+import { useOnlineStatus } from "@/hooks/use-online-status";
 import {
   useScreenCacheStore,
   type ScreenData,
@@ -15,17 +17,20 @@ export function useCachedScreen<K extends ScreenKey>(
   load: () => Promise<ScreenData[K]>,
   refreshedAt: number,
 ) {
+  const { isSignedIn, getToken } = useAuth();
+  const isOnline = useOnlineStatus();
   const userId = useSessionStore((state) => state.profile?.id);
   const entry = useScreenCacheStore((state) => state.entries[key]);
   const hasHydrated = useScreenCacheStore((state) => state.hasHydrated);
   const setEntry = useScreenCacheStore((state) => state.setEntry);
 
   useEffect(() => {
-    if (!userId || !hasHydrated) {
+    if (!userId || !hasHydrated || !isSignedIn || !isOnline) {
       return;
     }
 
-    load()
+    getToken()
+      .then(() => load())
       .then((data) => {
         if (!data) {
           return;
@@ -34,9 +39,23 @@ export function useCachedScreen<K extends ScreenKey>(
         setEntry(key, { ownerId: userId, data });
       })
       .catch(() => {
+        if (useScreenCacheStore.getState().entries[key]?.ownerId === userId) {
+          return;
+        }
+
         toast.error("No se pudieron actualizar los datos");
       });
-  }, [hasHydrated, key, load, refreshedAt, setEntry, userId]);
+  }, [
+    getToken,
+    hasHydrated,
+    isOnline,
+    isSignedIn,
+    key,
+    load,
+    refreshedAt,
+    setEntry,
+    userId,
+  ]);
 
   const data = entry && entry.ownerId === userId ? entry.data : null;
 

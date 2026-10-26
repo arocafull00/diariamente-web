@@ -1,31 +1,165 @@
-const CACHE_NAME = "diariamente-shell-v4";
-const SHELL_ASSETS = ["/offline", "/icon-192x192.png", "/icon-512x512.png"];
+const SHELL_CACHE = "diariamente-shell-v5";
+const STATIC_CACHE = "diariamente-static-v1";
+const OFFLINE_URL = "/offline";
+const HOME_KEY = "/__app-home";
+const SHELL_ASSETS = [OFFLINE_URL, "/icon-192x192.png", "/icon-512x512.png"];
+const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil"];
+const MAX_STATIC_ENTRIES = 300;
+const STATIC_URL_PATTERN = /\/_next\/static\/[^"'\\s)]+/g;
 
-const NETWORK_ONLY_PREFIXES = [
-  "/login",
-  "/registro",
-  "/recuperar-password",
-  "/onboarding",
-  "/bienvenida",
-  "/inicio",
-  "/pacientes",
-  "/perfil",
-  "/mis-registros",
-  "/nuevo-registro",
-  "/ajustes",
-];
+function getStaticUrls(html) {
+  return [...new Set(html.match(STATIC_URL_PATTERN) ?? [])].sort();
+}
 
-function isNetworkOnly(pathname) {
-  if (pathname === "/") {
-    return true;
+async function trimStaticCache(cache) {
+  const keys = await cache.keys();
+  const excess = keys.length - MAX_STATIC_ENTRIES;
+
+  if (excess <= 0) {
+    return;
   }
 
-  return NETWORK_ONLY_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  await Promise.all(keys.slice(0, excess).map((key) => cache.delete(key)));
+}
+
+async function precacheStaticUrls(urls) {
+  const cache = await caches.open(STATIC_CACHE);
+
+  await Promise.all(
+    urls.map(async (url) => {
+      if (await cache.match(url)) {
+        return;
+      }
+
+      const response = await fetch(url).catch(() => null);
+
+      if (response?.ok) {
+        await cache.put(url, response);
+      }
+    }),
+  );
+  await trimStaticCache(cache);
+}
+
+async function storeAppShell(pathname, response) {
+  const html = await response.clone().text();
+  const cache = await caches.open(SHELL_CACHE);
+
+  await cache.put(pathname, response);
+  await precacheStaticUrls(getStaticUrls(html));
+
+  return html;
+}
+
+async function notifyClients(message) {
+  const clients = await self.clients.matchAll({ type: "window" });
+
+  for (const client of clients) {
+    client.postMessage(message);
+  }
+}
+
+async function revalidateAppShell(pathname, cached) {
+  const response = await fetch(pathname).catch(() => null);
+
+  if (!response?.ok || response.redirected) {
+    return;
+  }
+
+  const [previousHtml, html] = await Promise.all([
+    cached.text(),
+    storeAppShell(pathname, response),
+  ]);
+
+  if (getStaticUrls(previousHtml).join() !== getStaticUrls(html).join()) {
+    await notifyClients({ type: "app-updated" });
+  }
+}
+
+function fetchDocument(request) {
+  return fetch(request).catch(() => caches.match(OFFLINE_URL));
+}
+
+async function openAppShell(event, pathname) {
+  const cached = await caches.match(pathname, { cacheName: SHELL_CACHE });
+
+  if (cached) {
+    event.waitUntil(revalidateAppShell(pathname, cached.clone()));
+    return cached;
+  }
+
+  try {
+    const response = await fetch(event.request);
+
+    if (response.ok && !response.redirected) {
+      event.waitUntil(storeAppShell(pathname, response.clone()));
+    }
+
+    return response;
+  } catch {
+    return caches.match(OFFLINE_URL);
+  }
+}
+
+async function openHome(request) {
+  const home = await caches.match(HOME_KEY, { cacheName: SHELL_CACHE });
+
+  if (!home) {
+    return fetchDocument(request);
+  }
+
+  return Response.redirect(new URL(await home.text(), self.location.origin), 302);
+}
+
+async function openStaticAsset(event) {
+  const cache = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(event.request);
+
+  if (cached) {
+    return cached;
+  }
+
+  const response = await fetch(event.request);
+
+  if (response.ok) {
+    event.waitUntil(cache.put(event.request, response.clone()));
+  }
+
+  return response;
+}
+
+async function cacheAppShell(home, paths) {
+  const cache = await caches.open(SHELL_CACHE);
+
+  await cache.put(HOME_KEY, new Response(home));
+  await Promise.all(
+    paths
+      .filter((path) => APP_SHELL_PATHS.includes(path))
+      .map(async (path) => {
+        if (await cache.match(path)) {
+          return;
+        }
+
+        const response = await fetch(path).catch(() => null);
+
+        if (response?.ok && !response.redirected) {
+          await storeAppShell(path, response);
+        }
+      }),
+  );
+}
+
+async function clearAppShell() {
+  const cache = await caches.open(SHELL_CACHE);
+
+  await Promise.all(
+    [HOME_KEY, ...APP_SHELL_PATHS].map((key) => cache.delete(key)),
+  );
 }
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS)),
+    caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL_ASSETS)),
   );
   self.skipWaiting();
 });
@@ -35,7 +169,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key !== SHELL_CACHE && key !== STATIC_CACHE)
           .map((key) => caches.delete(key)),
       ),
     ),
@@ -43,35 +177,47 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("message", (event) => {
+  const { data } = event;
+
+  if (data?.type === "cache-app-shell") {
+    event.waitUntil(cacheAppShell(data.home, data.paths));
+    return;
+  }
+
+  if (data?.type === "clear-app-shell") {
+    event.waitUntil(clearAppShell());
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (request.method !== "GET") {
+  if (request.method !== "GET" || url.origin !== self.location.origin) {
     return;
   }
 
-  if (url.pathname.startsWith("/api/")) {
+  if (url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(openStaticAsset(event));
     return;
   }
 
-  if (
-    isNetworkOnly(url.pathname) ||
-    url.pathname.startsWith("/_next/") ||
-    request.destination === "style" ||
-    request.destination === "script" ||
-    request.destination === "font"
-  ) {
+  if (request.mode !== "navigate") {
     return;
   }
 
-  if (request.destination !== "document") {
+  if (!url.search && url.pathname === "/") {
+    event.respondWith(openHome(request));
     return;
   }
 
-  event.respondWith(
-    fetch(request).catch(() => caches.match("/offline")),
-  );
+  if (!url.search && APP_SHELL_PATHS.includes(url.pathname)) {
+    event.respondWith(openAppShell(event, url.pathname));
+    return;
+  }
+
+  event.respondWith(fetchDocument(request));
 });
 
 self.addEventListener("push", (event) => {
