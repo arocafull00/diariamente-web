@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img" aria-label="Carita decorativa 04_naranja_amarillo">
+<style>
+  :root {
+    --blink-period: 3.6s;
+    --gesture-period: 4.1s;
+    --gesture-delay: -1.8s;
+    --feature-step: 1px;
+    --wink-scale: 0.12;
+    --mouth-tilt: 1.0deg;
+  }
+  .expression-face, .expression-eye, .expression-squint,
+  .expression-mouth, .expression-brow, .expression-tear {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .expression-face { animation: expression-face var(--gesture-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-eye-left { animation: expression-eye-left var(--blink-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-eye-right { animation: expression-eye-right var(--blink-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-squint-left { animation: expression-squint var(--blink-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-squint-right { animation: expression-squint var(--blink-period) ease-in-out calc(var(--gesture-delay) - .15s) infinite; }
+    .expression-mouth { animation: expression-mouth var(--gesture-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-brow-left { animation: expression-brow var(--gesture-period) ease-in-out var(--gesture-delay) infinite; }
+    .expression-brow-right { animation: expression-brow var(--gesture-period) ease-in-out var(--gesture-delay) infinite reverse; }
+    .expression-tear { animation: expression-tear 3.2s ease-in-out var(--gesture-delay) infinite; }
+  }
+  @keyframes expression-face {
+    0%, 10%, 40%, 48%, 82%, 100% { transform: none; }
+    23%, 29% { transform: translate(calc(var(--feature-step) * .8), calc(var(--feature-step) * -.5)) rotate(1.2deg); }
+    63%, 69% { transform: translate(calc(var(--feature-step) * -.7), calc(var(--feature-step) * .4)) rotate(-1deg); }
+  }
+  @keyframes expression-eye-left {
+    0%, 8%, 18%, 58%, 72%, 100% { transform: scaleY(1); }
+    11%, 15% { transform: scaleY(.12); }
+    13% { transform: scaleY(1); }
+    63%, 66% { transform: scaleY(var(--wink-scale)); }
+  }
+  @keyframes expression-eye-right {
+    0%, 8%, 18%, 58%, 72%, 100% { transform: scaleY(1); }
+    11%, 15% { transform: scaleY(.12); }
+    13% { transform: scaleY(1); }
+    64% { transform: scaleY(.78) rotate(-2deg); }
+  }
+  @keyframes expression-squint {
+    0%, 8%, 30%, 48%, 78%, 100% { transform: none; }
+    18%, 22% { transform: scaleY(.9) rotate(-1.5deg); }
+    60%, 66% { transform: translateY(calc(var(--feature-step) * -.5)) scaleY(.94) rotate(1deg); }
+  }
+  @keyframes expression-mouth {
+    0%, 10%, 38%, 48%, 80%, 100% { transform: none; }
+    20%, 26% { transform: translateY(calc(var(--feature-step) * -.8)) rotate(var(--mouth-tilt)) scale(1.07, 1.13); }
+    57% { transform: translateY(calc(var(--feature-step) * -.4)) rotate(calc(var(--mouth-tilt) * -.7)) scale(.98, 1.06); }
+    65%, 69% { transform: scale(1.04, 1.1); }
+  }
+  @keyframes expression-brow {
+    0%, 10%, 38%, 48%, 80%, 100% { transform: none; }
+    20%, 26% { transform: translateY(calc(var(--feature-step) * -.9)) rotate(-3deg); }
+    60%, 68% { transform: translateY(calc(var(--feature-step) * .4)) rotate(2deg); }
+  }
+  @keyframes expression-tear {
+    0%, 30%, 100% { transform: none; opacity: 1; }
+    55%, 70% { transform: translateY(calc(var(--feature-step) * 1.5)) scale(.96, 1.06); opacity: .85; }
+  }
+</style>
+
+<defs><clipPath id="round-mask"><circle cx="80" cy="80" r="68"/></clipPath></defs>
+<g clip-path="url(#round-mask)">
+  <circle cx="80" cy="80" r="68" fill="#ffce00"/>
+  <path d="M 4,119 L 27,62 Q 31,53 43,51 L 91,40 Q 99,38 107,42 L 154,69 L 164,166 L 1,166 Z" fill="#ff7300"/>
+</g>
+<g class="expression-face">
+<g fill="none" stroke="#191919" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
+  <path class="expression-eye expression-eye-left" d="M 74,66 C 78,77 89,82 98,70"/>
+  <path class="expression-eye expression-eye-right" d="M 108,75 C 112,87 122,87 131,78"/>
+  <path class="expression-mouth" d="M 53,72 C 74,102 104,117 143,93"/>
+</g>
+</g>
+</svg>

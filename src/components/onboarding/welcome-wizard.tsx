@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
+import logo from "../../../public/logo.png";
+
 import { useWelcomeWizard } from "@/components/onboarding/use-welcome-wizard";
 import { WelcomeFeatureList } from "@/components/onboarding/welcome-feature-list";
 import { WelcomeInstallStep } from "@/components/onboarding/welcome-install-step";
@@ -57,7 +59,7 @@ export function WelcomeWizard({
         header={
           <header className="relative flex items-center justify-center gap-2.5 py-1">
             <Image
-              src="/logo.png"
+              src={logo}
               alt=""
               width={44}
               height={44}

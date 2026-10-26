@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { Controller } from "react-hook-form";
 
+import logo from "../../../public/logo.png";
+
 import { OnboardingPersonalStep } from "@/components/onboarding/onboarding-personal-step";
 import { OnboardingReviewStep } from "@/components/onboarding/onboarding-review-step";
 import { OnboardingRoleStep } from "@/components/onboarding/onboarding-role-step";
@@ -63,7 +65,7 @@ export function OnboardingWizard() {
         header={
           <header className="flex items-center justify-center gap-2.5 py-1">
             <Image
-              src="/logo.png"
+              src={logo}
               alt=""
               width={44}
               height={44}

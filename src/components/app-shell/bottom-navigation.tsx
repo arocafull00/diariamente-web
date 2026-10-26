@@ -19,8 +19,8 @@ function BottomNav({ items }: { items: NavItem[] }) {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:hidden">
-      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] lg:hidden">
+      <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch justify-around rounded-full border border-border bg-background/90 px-2 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/75">
         {items.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -29,7 +29,7 @@ function BottomNav({ items }: { items: NavItem[] }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex min-w-0 flex-1 flex-col items-center gap-1 px-2 py-2.5 text-xs font-medium transition-colors",
+                "flex min-w-0 flex-1 flex-col items-center gap-1 px-2 py-2 text-xs font-medium transition-colors",
                 active ? "text-primary" : "text-muted-foreground",
               )}
             >
