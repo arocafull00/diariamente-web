@@ -1,11 +1,13 @@
-import { LoaderCircle } from "lucide-react";
+import { Face } from "@/components/faces/face";
 
 export function AppLoading() {
   return (
     <div className="flex min-h-svh flex-1 items-center justify-center">
-      <LoaderCircle
-        className="size-9 animate-spin text-primary"
-        aria-hidden="true"
+      <Face
+        faceId="01_gradiente"
+        size={64}
+        priority
+        className="size-14 drop-shadow-sm motion-safe:animate-bounce"
       />
       <span className="sr-only">Cargando la aplicación</span>
     </div>

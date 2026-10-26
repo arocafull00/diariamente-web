@@ -1,8 +1,21 @@
-const SHELL_CACHE = "diariamente-shell-v5";
+const SHELL_CACHE = "diariamente-shell-v6";
 const STATIC_CACHE = "diariamente-static-v1";
 const OFFLINE_URL = "/offline";
 const HOME_KEY = "/__app-home";
-const SHELL_ASSETS = [OFFLINE_URL, "/icon-192x192.png?v=5", "/icon-512x512.png?v=5"];
+const SHELL_ASSETS = [
+  OFFLINE_URL,
+  "/icon-192x192.png?v=5",
+  "/icon-512x512.png?v=5",
+  "/caras/01_gradiente.svg",
+  "/caras/02_azul_rosa.svg",
+  "/caras/03_verde_morado.svg",
+  "/caras/04_naranja_amarillo.svg",
+  "/caras/05_rosa_verde.svg",
+  "/caras/alegria.svg",
+  "/caras/ansiedad.svg",
+  "/caras/rabia.svg",
+  "/caras/tristeza.svg",
+];
 const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil"];
 const MAX_STATIC_ENTRIES = 300;
 const STATIC_URL_PATTERN = /\/_next\/static\/[^"'\\s)]+/g;
@@ -200,6 +213,15 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(openStaticAsset(event));
+    return;
+  }
+
+  if (url.pathname.startsWith("/caras/")) {
+    event.respondWith(
+      caches
+        .match(url.pathname, { cacheName: SHELL_CACHE })
+        .then((cached) => cached ?? fetch(request)),
+    );
     return;
   }
 

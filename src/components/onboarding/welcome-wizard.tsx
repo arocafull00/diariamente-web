@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 
 import logo from "../../../public/logo.png";
 
+import { FaceCluster } from "@/components/faces/face-cluster";
 import { useWelcomeWizard } from "@/components/onboarding/use-welcome-wizard";
 import { WelcomeFeatureList } from "@/components/onboarding/welcome-feature-list";
 import { WelcomeInstallStep } from "@/components/onboarding/welcome-install-step";
@@ -92,6 +93,7 @@ export function WelcomeWizard({
           />
         }
       >
+        {stepIndex === 0 ? <FaceCluster className="mb-8 max-w-60" /> : null}
         {step.features ? <WelcomeFeatureList features={step.features} /> : null}
         {step.id === "reminder" ? (
           <WelcomeReminderStep remindersEnabled={remindersEnabled} />
