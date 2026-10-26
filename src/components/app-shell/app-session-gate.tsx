@@ -10,8 +10,10 @@ import {
   patientItems,
   psychologistItems,
 } from "@/components/app-shell/nav-items";
+import { useIdleSignOut } from "@/hooks/use-idle-sign-out";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { cacheAppShell, clearAppShell } from "@/lib/app-shell-cache";
+import { clearLastActivity } from "@/lib/last-activity";
 import { getSessionProfile } from "@/server/actions/session";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
@@ -31,6 +33,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
   const setProfile = useSessionStore((state) => state.setProfile);
   const clearSession = useSessionStore((state) => state.clear);
   const clearScreenCache = useScreenCacheStore((state) => state.clear);
+  const idleExpired = useIdleSignOut(profile);
 
   useEffect(() => {
     if (!useSessionStore.persist.hasHydrated()) {
@@ -51,6 +54,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
       clearSession();
       clearScreenCache();
       clearAppShell();
+      clearLastActivity();
       router.replace(redirectTo);
     }
 
@@ -94,7 +98,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
     return null;
   }
 
-  if (!isLoggedIn || !profile) {
+  if (!isLoggedIn || !profile || idleExpired) {
     return <AppLoading />;
   }
 

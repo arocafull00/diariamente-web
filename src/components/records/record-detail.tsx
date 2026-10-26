@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { RecordAccessNotice } from "@/components/records/record-access-notice";
 import { RecordBodySection } from "@/components/records/record-body-section";
 import { RecordContextSection } from "@/components/records/record-context-section";
 import { RecordDetailField } from "@/components/records/record-detail-field";
@@ -36,6 +37,7 @@ type RecordDetailProps = {
   record: PatientRecord;
   note: RecordNote | null;
   gender: GrammaticalGender;
+  views: React.ComponentProps<typeof RecordAccessNotice>["views"];
 };
 
 export function RecordDetail({
@@ -43,6 +45,7 @@ export function RecordDetail({
   record,
   note,
   gender,
+  views,
 }: RecordDetailProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -57,12 +60,12 @@ export function RecordDetail({
     behaviours !== record.behaviours;
 
   useEffect(() => {
-    if (!isPsychologist || record.seenAt) {
+    if (!isPsychologist) {
       return;
     }
 
     void markRecordAsSeen(record.id);
-  }, [isPsychologist, record.id, record.seenAt]);
+  }, [isPsychologist, record.id]);
 
   function handleSave() {
     startTransition(async () => {
@@ -96,6 +99,8 @@ export function RecordDetail({
         occurredAt={record.occurredAt}
         gender={gender}
       />
+
+      {isPatient ? <RecordAccessNotice views={views} /> : null}
 
       <RecordContextSection
         context={record.context}

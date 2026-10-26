@@ -124,3 +124,9 @@ export const recordNoteSchema = z.object({
     .min(1, "La nota no puede estar vacía")
     .max(2000),
 });
+
+export const connectionConsentSchema = z.object({
+  consent: z.literal(true, {
+    error: "Debes dar tu consentimiento para conectar con tu profesional",
+  }),
+});

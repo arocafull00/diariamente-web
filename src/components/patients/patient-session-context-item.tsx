@@ -15,8 +15,8 @@ export function PatientSessionContextItem({
   return (
     <li className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
       {getContextTagLabel(tag, gender)}
-      <span className="font-semibold text-muted-foreground tabular-nums">
-        ×{count}
+      <span className="rounded-full bg-background px-1.5 font-semibold text-muted-foreground tabular-nums">
+        {count}
       </span>
     </li>
   );

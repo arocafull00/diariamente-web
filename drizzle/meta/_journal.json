@@ -57,6 +57,13 @@
       "when": 1793021152765,
       "tag": "0007_youthful_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793021995504,
+      "tag": "0008_freezing_kabuki",
+      "breakpoints": true
     }
   ]
 }

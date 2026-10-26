@@ -30,7 +30,6 @@ type UseBodyFigureCameraOptions = {
 const FIGURE_PADDING = 8;
 const MIN_SCALE = 1;
 const MAX_SCALE = 4;
-const ZOOM_STEP = 1.5;
 const FOCUS_SCALE = 1.6;
 const TAP_THRESHOLD = 8;
 const DRAG_RADIUS = 28;
@@ -199,10 +198,6 @@ export function useBodyFigureCamera({ onTap, dragPoint, onDrag }: UseBodyFigureC
     }
   }
 
-  function zoomTo(scale: number) {
-    setCamera({ scale: clampScale(scale), center });
-  }
-
   return {
     ref,
     svgRef,
@@ -210,10 +205,6 @@ export function useBodyFigureCamera({ onTap, dragPoint, onDrag }: UseBodyFigureC
     viewBox,
     markerScale: viewBox.width / Math.max(size.width, 1),
     interacting,
-    canZoomIn: camera.scale < MAX_SCALE,
-    canZoomOut: camera.scale > MIN_SCALE,
-    zoomIn: () => zoomTo(camera.scale * ZOOM_STEP),
-    zoomOut: () => zoomTo(camera.scale / ZOOM_STEP),
     reset: () => setCamera(INITIAL_CAMERA),
     focusOn: (point: Point) =>
       setCamera((value) => ({

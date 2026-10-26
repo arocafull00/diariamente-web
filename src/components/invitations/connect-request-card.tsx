@@ -1,14 +1,22 @@
 "use client";
 
-import { LoaderCircle, UserPlus } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle, UserPlus } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  PRIVACY_POLICY_PATH,
+  PSYCHOLOGIST_HIDDEN_DATA,
+  PSYCHOLOGIST_VISIBLE_DATA,
+} from "@/lib/privacy";
 import { getFullName, getInitials } from "@/lib/utils-app";
 import { requestConnection } from "@/server/actions/invitations";
+
+import { ConnectConsentList } from "./connect-consent-list";
 
 type ConnectRequestCardProps = {
   psychologist: {
@@ -21,10 +29,11 @@ type ConnectRequestCardProps = {
 export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [consent, setConsent] = useState(false);
 
   function handleRequest() {
     startTransition(async () => {
-      const result = await requestConnection();
+      const result = await requestConnection({ consent });
 
       if (result.error) {
         toast.error(result.error);
@@ -56,7 +65,43 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           psicólogo/a deberá aceptarla para vincularos.
         </p>
       </div>
-      <Button size="lg" className="w-full" disabled={pending} onClick={handleRequest}>
+      <div className="w-full space-y-4 rounded-2xl bg-card p-4 text-left">
+        <ConnectConsentList
+          title="Qué podrá ver"
+          icon={Eye}
+          items={PSYCHOLOGIST_VISIBLE_DATA}
+        />
+        <ConnectConsentList
+          title="Qué no podrá ver ni hacer"
+          icon={EyeOff}
+          items={PSYCHOLOGIST_HIDDEN_DATA}
+        />
+        <p className="text-xs text-muted-foreground">
+          Podrás ver cuándo consulta cada registro y retirar el consentimiento
+          en cualquier momento desvinculándote desde tu perfil.{" "}
+          <Link href={PRIVACY_POLICY_PATH} className="font-medium text-primary underline">
+            Política de privacidad
+          </Link>
+        </p>
+      </div>
+      <label className="flex w-full items-start gap-3 text-left text-sm text-foreground">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(event) => setConsent(event.target.checked)}
+          className="mt-0.5 size-4 shrink-0 accent-primary"
+        />
+        <span>
+          He leído qué información verá y doy mi consentimiento explícito para
+          compartir mis datos de salud con este profesional.
+        </span>
+      </label>
+      <Button
+        size="lg"
+        className="w-full"
+        disabled={pending || !consent}
+        onClick={handleRequest}
+      >
         {pending ? (
           <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
         ) : (

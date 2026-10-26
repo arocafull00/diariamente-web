@@ -1,7 +1,7 @@
 export function Background() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-0 bg-background"
+      className="pointer-events-none fixed inset-0 z-0 bg-background print:hidden"
       aria-hidden
     >
       <svg

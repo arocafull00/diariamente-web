@@ -3,7 +3,6 @@
 import { Trash2, X } from "lucide-react";
 
 import { BodyFigure } from "@/components/records/body-figure";
-import { BodyFigureZoomControls } from "@/components/records/body-figure-zoom-controls";
 import { BodySideToggle } from "@/components/records/body-side-toggle";
 import { BodySensationChip } from "@/components/records/body-sensation-chip";
 import { BodySensationEditor } from "@/components/records/body-sensation-editor";
@@ -29,19 +28,7 @@ export function NewRecordBodyStep({
 }: NewRecordBodyStepProps) {
   const body = useBodySensationsStep({ sensations, onSave, onRemove });
   const { active } = body;
-  const {
-    ref,
-    svgRef,
-    hitPathRef,
-    handlers,
-    viewBox,
-    markerScale,
-    interacting,
-    canZoomIn,
-    canZoomOut,
-    zoomIn,
-    zoomOut,
-  } = body.camera;
+  const { ref, svgRef, hitPathRef, handlers, viewBox, markerScale, interacting } = body.camera;
   const closeAction = { icon: X, label: "Volver al cuerpo", onClick: body.showOverview };
   const removeAction = { icon: Trash2, label: "Eliminar sensación", onClick: body.removeSensation };
 
@@ -84,16 +71,9 @@ export function NewRecordBodyStep({
           <BodySideToggle
             value={body.side}
             onChange={body.setSide}
-            className="absolute bottom-4 left-4 z-20"
+            className="absolute bottom-0 left-4 z-20"
           />
         )}
-        <BodyFigureZoomControls
-          canZoomIn={canZoomIn}
-          canZoomOut={canZoomOut}
-          onZoomIn={zoomIn}
-          onZoomOut={zoomOut}
-          className="absolute right-4 bottom-4 z-20"
-        />
       </div>
       <div className="relative shrink-0 px-6 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         {active ? (

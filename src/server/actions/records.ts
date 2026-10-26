@@ -1,12 +1,16 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq, gte } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
 import { db } from "@/db";
-import { patientRecords } from "@/db/schema";
+import { auditEvents, patientRecords } from "@/db/schema";
 import { getRecordIntensity } from "@/lib/intensity";
+import {
+  RECORD_VIEW_ACTION,
+  RECORD_VIEW_DEDUPE_MINUTES,
+} from "@/lib/privacy";
 import { logAuditEvent } from "@/server/audit";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import { requireRole } from "@/server/auth/get-current-profile";
@@ -120,6 +124,32 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
     return { error: "No autorizado" };
   }
 
+  const [recentView] = await db
+    .select({ id: auditEvents.id })
+    .from(auditEvents)
+    .where(
+      and(
+        eq(auditEvents.actorId, profile.id),
+        eq(auditEvents.action, RECORD_VIEW_ACTION),
+        eq(auditEvents.entityId, record.id),
+        gte(
+          auditEvents.createdAt,
+          new Date(Date.now() - RECORD_VIEW_DEDUPE_MINUTES * 60 * 1000),
+        ),
+      ),
+    )
+    .limit(1);
+
+  if (!recentView) {
+    await logAuditEvent({
+      actorId: profile.id,
+      action: RECORD_VIEW_ACTION,
+      entityType: "patient_record",
+      entityId: record.id,
+      metadata: { patientId: record.patientId },
+    });
+  }
+
   if (record.seenAt) {
     return { success: true };
   }
@@ -128,13 +158,6 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
     .update(patientRecords)
     .set({ seenAt: new Date(), updatedAt: new Date() })
     .where(eq(patientRecords.id, record.id));
-
-  await logAuditEvent({
-    actorId: profile.id,
-    action: "record.viewed_by_psychologist",
-    entityType: "patient_record",
-    entityId: record.id,
-  });
 
   revalidatePath("/pacientes");
   revalidatePath(`/registro/${recordId}`);

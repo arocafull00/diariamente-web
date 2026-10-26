@@ -1,7 +1,6 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -9,6 +8,7 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { logAuditEvent } from "@/server/audit";
 import { requireUser } from "@/server/auth/get-current-profile";
+import { deleteProfileAndIdentity } from "@/server/profiles/delete-profile";
 import { onboardingSchema } from "@/validation/schemas";
 
 export type ActionResult = {
@@ -87,10 +87,7 @@ export async function deleteAccount(): Promise<ActionResult> {
     entityId: userId,
   });
 
-  await db.delete(profiles).where(eq(profiles.id, userId));
-
-  const client = await clerkClient();
-  await client.users.deleteUser(userId);
+  await deleteProfileAndIdentity(userId);
 
   revalidatePath("/");
   redirect("/login");

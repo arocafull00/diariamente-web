@@ -1,7 +1,6 @@
 "use client";
 
 import { LoaderCircle, LogOut } from "lucide-react";
-import { useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 
 import {
@@ -16,9 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { clearAppShell } from "@/lib/app-shell-cache";
-import { useScreenCacheStore } from "@/stores/screen-cache-store";
-import { useSessionStore } from "@/stores/session-store";
+import { useSignOut } from "@/hooks/use-sign-out";
 
 import { SettingsRowContent, settingsRowClassName } from "./settings-row-content";
 
@@ -29,19 +26,14 @@ type SettingsSignOutDialogProps = {
 export function SettingsSignOutDialog({
   variant = "button",
 }: SettingsSignOutDialogProps) {
-  const { signOut } = useClerk();
-  const clearScreenCache = useScreenCacheStore((state) => state.clear);
-  const clearSession = useSessionStore((state) => state.clear);
+  const signOut = useSignOut();
   const [pending, setPending] = useState(false);
 
   async function handleSignOut() {
     setPending(true);
 
     try {
-      clearAppShell();
-      await signOut({ redirectUrl: "/login" });
-      clearScreenCache();
-      clearSession();
+      await signOut();
     } finally {
       setPending(false);
     }

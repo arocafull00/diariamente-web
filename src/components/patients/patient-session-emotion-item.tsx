@@ -20,10 +20,10 @@ export function PatientSessionEmotionItem({
         tone={3}
         className="size-3.5"
       />
-      <span className="min-w-0 flex-1 truncate font-medium">
+      <span className="min-w-0 truncate font-medium">
         {getEmotionLabel(emotion, gender)}
       </span>
-      <span className="text-xs font-semibold text-muted-foreground tabular-nums">
+      <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-muted-foreground tabular-nums">
         {count}
       </span>
     </li>

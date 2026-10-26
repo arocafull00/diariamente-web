@@ -11,6 +11,7 @@ import {
   generateInviteToken,
   INVITE_COOKIE_NAME,
 } from "@/lib/invitations";
+import { CONSENT_VERSION } from "@/lib/privacy";
 import { logAuditEvent } from "@/server/audit";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { sendPushToUser } from "@/server/push/send-push";
@@ -19,6 +20,7 @@ import {
   getInviteLinkByToken,
   getPatientPsychologist,
 } from "@/server/queries";
+import { connectionConsentSchema } from "@/validation/schemas";
 
 import type { ActionResult } from "./onboarding";
 
@@ -47,8 +49,14 @@ export async function generateInviteLink(): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function requestConnection(): Promise<ActionResult> {
+export async function requestConnection(input: unknown): Promise<ActionResult> {
   const profile = await requireRole("patient");
+
+  const parsed = connectionConsentSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+  }
 
   const cookieStore = await cookies();
   const token = cookieStore.get(INVITE_COOKIE_NAME)?.value;
@@ -81,13 +89,19 @@ export async function requestConnection(): Promise<ActionResult> {
   if (existingRequest) {
     await db
       .update(connectionRequests)
-      .set({ status: "pending", resolvedAt: null, createdAt: new Date() })
+      .set({
+        status: "pending",
+        resolvedAt: null,
+        createdAt: new Date(),
+        consentedAt: new Date(),
+      })
       .where(eq(connectionRequests.id, existingRequest.id));
   } else {
     try {
       await db.insert(connectionRequests).values({
         psychologistId: link.psychologistId,
         patientId: profile.id,
+        consentedAt: new Date(),
       });
     } catch {
       return { error: "No se pudo enviar la solicitud" };
@@ -98,7 +112,10 @@ export async function requestConnection(): Promise<ActionResult> {
     actorId: profile.id,
     action: "connection.requested",
     entityType: "connection_request",
-    metadata: { psychologistId: link.psychologistId },
+    metadata: {
+      psychologistId: link.psychologistId,
+      consentVersion: CONSENT_VERSION,
+    },
   });
 
   cookieStore.delete(INVITE_COOKIE_NAME);

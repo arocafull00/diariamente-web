@@ -17,3 +17,15 @@ export function getGrammaticalGenderLabel(gender: GrammaticalGender) {
       ?.label ?? ""
   );
 }
+
+export function getPsychologistNoun(gender: GrammaticalGender) {
+  if (gender === "feminine") {
+    return "psicóloga";
+  }
+
+  if (gender === "masculine") {
+    return "psicólogo";
+  }
+
+  return "profesional";
+}

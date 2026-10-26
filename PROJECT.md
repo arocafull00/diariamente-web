@@ -724,6 +724,10 @@ DiariaMente maneja información de salud potencialmente sensible. La arquitectur
 - Auditoría de accesos como mejora recomendada antes de producción real.
 - Revisión contractual y legal de los proveedores y sus regiones de tratamiento.
 
+### TODO
+
+- Verificación en dos pasos obligatoria para psicólogos (Clerk la soporta: comprobar `twoFactorEnabled` y redirigir a una pantalla de activación).
+
 Usar Clerk, Neon y Vercel no convierte automáticamente el producto en conforme con RGPD ni con requisitos sanitarios. Eso sería demasiado cómodo para ser cierto.
 
 ---

@@ -5,6 +5,7 @@ import { requireRecordAccess } from "@/server/auth/require-record-access";
 import {
   getProfileGrammaticalGender,
   getRecordNote,
+  getRecordViews,
 } from "@/server/queries";
 
 type RecordPageProps = {
@@ -20,6 +21,7 @@ export default async function RecordPage({ params }: RecordPageProps) {
     profile.role === "patient"
       ? profile.grammaticalGender
       : await getProfileGrammaticalGender(record.patientId);
+  const views = profile.role === "patient" ? await getRecordViews(recordId) : [];
 
   return (
     <>
@@ -37,6 +39,7 @@ export default async function RecordPage({ params }: RecordPageProps) {
         record={record}
         note={note}
         gender={gender}
+        views={views}
       />
     </>
   );

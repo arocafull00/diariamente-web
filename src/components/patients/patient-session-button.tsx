@@ -49,12 +49,12 @@ export function PatientSessionButton({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         className={cn(
-          buttonVariants({ variant: "secondary", size: "sm" }),
-          "shrink-0",
+          buttonVariants({ variant: "secondary" }),
+          "w-full",
         )}
       >
         <CalendarCheck data-icon="inline-start" aria-hidden="true" />
-        Marcar sesión
+        Marcar sesión de hoy
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

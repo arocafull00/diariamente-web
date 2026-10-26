@@ -87,6 +87,9 @@ export const profiles = pgTable("profiles", {
   onboardingCompleted: boolean("onboarding_completed")
     .default(false)
     .notNull(),
+  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -210,6 +213,7 @@ export const connectionRequests = pgTable(
       .defaultNow()
       .notNull(),
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    consentedAt: timestamp("consented_at", { withTimezone: true }),
   },
   (table) => [
     unique("connection_requests_pair_unique").on(
@@ -263,19 +267,26 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
     .notNull(),
 });
 
-export const auditEvents = pgTable("audit_events", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  actorId: text("actor_id")
-    .notNull()
-    .references(() => profiles.id, { onDelete: "cascade" }),
-  action: text("action").notNull(),
-  entityType: text("entity_type").notNull(),
-  entityId: text("entity_id"),
-  metadata: jsonb("metadata").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const auditEvents = pgTable(
+  "audit_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    actorId: text("actor_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    action: text("action").notNull(),
+    entityType: text("entity_type").notNull(),
+    entityId: text("entity_id"),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("audit_events_action_entity_idx").on(table.action, table.entityId),
+    index("audit_events_created_at_idx").on(table.createdAt),
+  ],
+);
 
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;

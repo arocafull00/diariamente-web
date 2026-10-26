@@ -1,9 +1,12 @@
-import { and, count, desc, eq, gte, inArray, isNull } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
+import { RECORD_VIEW_ACTION } from "@/lib/privacy";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 import {
+  auditEvents,
   connectionRequests,
+  customEmotions,
   inviteLinks,
   patientRecords,
   profiles,
@@ -355,4 +358,198 @@ export async function getConnectionRequestForPair(
     .limit(1);
 
   return request ?? null;
+}
+
+export async function getRecordAccessLog(patientId: string) {
+  return db
+    .select({
+      id: auditEvents.id,
+      viewedAt: auditEvents.createdAt,
+      recordId: patientRecords.id,
+      recordOccurredAt: patientRecords.occurredAt,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      grammaticalGender: profiles.grammaticalGender,
+    })
+    .from(auditEvents)
+    .innerJoin(
+      patientRecords,
+      eq(sql`${patientRecords.id}::text`, auditEvents.entityId),
+    )
+    .innerJoin(profiles, eq(profiles.id, auditEvents.actorId))
+    .where(
+      and(
+        eq(auditEvents.action, RECORD_VIEW_ACTION),
+        eq(patientRecords.patientId, patientId),
+      ),
+    )
+    .orderBy(desc(auditEvents.createdAt));
+}
+
+export async function getRecordViews(recordId: string) {
+  return db
+    .select({
+      id: auditEvents.id,
+      viewedAt: auditEvents.createdAt,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      grammaticalGender: profiles.grammaticalGender,
+    })
+    .from(auditEvents)
+    .innerJoin(profiles, eq(profiles.id, auditEvents.actorId))
+    .where(
+      and(
+        eq(auditEvents.action, RECORD_VIEW_ACTION),
+        eq(auditEvents.entityId, recordId),
+      ),
+    )
+    .orderBy(desc(auditEvents.createdAt));
+}
+
+export async function getDataExport(profileId: string) {
+  const [
+    profile,
+    records,
+    emotions,
+    reminders,
+    links,
+    requests,
+    sessions,
+    notes,
+    accessLog,
+    activity,
+  ] = await Promise.all([
+    db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, profileId))
+      .limit(1)
+      .then(([row]) => row ?? null),
+    getPatientRecords(profileId),
+    db
+      .select({
+        name: customEmotions.name,
+        quadrant: customEmotions.quadrant,
+        createdAt: customEmotions.createdAt,
+      })
+      .from(customEmotions)
+      .where(eq(customEmotions.userId, profileId)),
+    getReminderSettings(profileId),
+    db
+      .select({
+        psychologistId: psychologistPatient.psychologistId,
+        patientId: psychologistPatient.patientId,
+        linkedAt: psychologistPatient.linkedAt,
+      })
+      .from(psychologistPatient)
+      .where(
+        or(
+          eq(psychologistPatient.patientId, profileId),
+          eq(psychologistPatient.psychologistId, profileId),
+        ),
+      ),
+    db
+      .select({
+        psychologistId: connectionRequests.psychologistId,
+        patientId: connectionRequests.patientId,
+        status: connectionRequests.status,
+        createdAt: connectionRequests.createdAt,
+        resolvedAt: connectionRequests.resolvedAt,
+        consentedAt: connectionRequests.consentedAt,
+      })
+      .from(connectionRequests)
+      .where(
+        or(
+          eq(connectionRequests.patientId, profileId),
+          eq(connectionRequests.psychologistId, profileId),
+        ),
+      ),
+    db
+      .select({
+        psychologistId: therapySessions.psychologistId,
+        patientId: therapySessions.patientId,
+        heldAt: therapySessions.heldAt,
+      })
+      .from(therapySessions)
+      .where(
+        or(
+          eq(therapySessions.patientId, profileId),
+          eq(therapySessions.psychologistId, profileId),
+        ),
+      )
+      .orderBy(desc(therapySessions.heldAt)),
+    db
+      .select({
+        recordId: recordNotes.recordId,
+        content: recordNotes.content,
+        createdAt: recordNotes.createdAt,
+        updatedAt: recordNotes.updatedAt,
+      })
+      .from(recordNotes)
+      .where(eq(recordNotes.psychologistId, profileId)),
+    getRecordAccessLog(profileId),
+    db
+      .select({ action: auditEvents.action, createdAt: auditEvents.createdAt })
+      .from(auditEvents)
+      .where(eq(auditEvents.actorId, profileId))
+      .orderBy(desc(auditEvents.createdAt)),
+  ]);
+
+  const counterpartIds = [
+    ...new Set(
+      [...links, ...requests, ...sessions].map((item) =>
+        item.patientId === profileId ? item.psychologistId : item.patientId,
+      ),
+    ),
+  ];
+  const counterparts =
+    counterpartIds.length > 0
+      ? await db
+          .select({
+            id: profiles.id,
+            firstName: profiles.firstName,
+            lastName: profiles.lastName,
+          })
+          .from(profiles)
+          .where(inArray(profiles.id, counterpartIds))
+      : [];
+  const counterpartNames = new Map(
+    counterparts.map((item) => [
+      item.id,
+      [item.firstName, item.lastName].filter(Boolean).join(" "),
+    ]),
+  );
+
+  function withCounterpart<T extends { psychologistId: string; patientId: string }>(
+    items: T[],
+  ) {
+    return items.map(({ psychologistId, patientId, ...item }) => {
+      const counterpartId = patientId === profileId ? psychologistId : patientId;
+
+      return { ...item, with: counterpartNames.get(counterpartId) ?? "" };
+    });
+  }
+
+  return {
+    exportedAt: new Date(),
+    profile: profile && {
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      role: profile.role,
+      grammaticalGender: profile.grammaticalGender,
+      bodyFigure: profile.bodyFigure,
+      avatarUrl: profile.avatarUrl,
+      createdAt: profile.createdAt,
+      lastActiveAt: profile.lastActiveAt,
+    },
+    records,
+    customEmotions: emotions,
+    reminders: { enabled: reminders?.enabled ?? false },
+    links: withCounterpart(links),
+    connectionRequests: withCounterpart(requests),
+    therapySessions: withCounterpart(sessions),
+    recordNotes: notes,
+    accessLog,
+    activity,
+  };
 }

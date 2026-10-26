@@ -9,6 +9,7 @@ import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 import { PushSubscribeButton } from "@/components/pwa/push-subscribe-button";
 import { SettingsGrammaticalGenderRow } from "@/components/profile/settings-grammatical-gender-row";
 import { SettingsGroup } from "@/components/profile/settings-group";
+import { SettingsPrivacyGroup } from "@/components/profile/settings-privacy-group";
 import {
   SettingsRowContent,
   settingsRowClassName,
@@ -140,6 +141,8 @@ export function SettingsSheet({
             ) : null}
             <PushSubscribeButton />
           </SettingsGroup>
+
+          <SettingsPrivacyGroup role={role} />
 
           <SettingsGroup title="Cuenta">
             <SettingsSignOutDialog />
