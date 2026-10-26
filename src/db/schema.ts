@@ -47,20 +47,25 @@ export type RecordEmotion = {
   intensity: number;
 };
 
+export type BodySide = "front" | "back";
+
 export type BodySensation = {
   id: string;
   x: number;
   y: number;
+  side: BodySide;
   pleasantness: number;
   intensity: number;
   tags: string[];
 };
 
-export type LegacyBodySensation = Omit<BodySensation, "id" | "x" | "y"> & {
+export type UnsidedBodySensation = Omit<BodySensation, "side">;
+
+export type LegacyBodySensation = Omit<BodySensation, "id" | "x" | "y" | "side"> & {
   region: string;
 };
 
-export type StoredBodySensation = BodySensation | LegacyBodySensation;
+export type StoredBodySensation = BodySensation | UnsidedBodySensation | LegacyBodySensation;
 
 export type RecordContext = {
   topics: string[];

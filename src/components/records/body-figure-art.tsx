@@ -1,14 +1,16 @@
+import { BodyFigureSideCues } from "@/components/records/body-figure-side-cues";
 import { BodySensationGlow } from "@/components/records/body-sensation-glow";
-import type { StoredBodySensation } from "@/db/schema";
+import type { BodySide, StoredBodySensation } from "@/db/schema";
 import { BODY_FIGURE_PATH, BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 import { getSensationKey } from "@/lib/body-sensations";
 
 type BodyFigureArtProps = {
   id: string;
+  side: BodySide;
   sensations: StoredBodySensation[];
 };
 
-export function BodyFigureArt({ id, sensations }: BodyFigureArtProps) {
+export function BodyFigureArt({ id, side, sensations }: BodyFigureArtProps) {
   return (
     <>
       <defs>
@@ -34,6 +36,7 @@ export function BodyFigureArt({ id, sensations }: BodyFigureArtProps) {
           className="fill-foreground"
           opacity={0.06}
         />
+        <BodyFigureSideCues side={side} />
         {sensations.map((sensation, index) => (
           <BodySensationGlow
             key={getSensationKey(sensation, index)}

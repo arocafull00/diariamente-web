@@ -4,6 +4,7 @@ import { Trash2, X } from "lucide-react";
 
 import { BodyFigure } from "@/components/records/body-figure";
 import { BodyFigureZoomControls } from "@/components/records/body-figure-zoom-controls";
+import { BodySideToggle } from "@/components/records/body-side-toggle";
 import { BodySensationChip } from "@/components/records/body-sensation-chip";
 import { BodySensationEditor } from "@/components/records/body-sensation-editor";
 import { BodySensationsHeader } from "@/components/records/body-sensations-header";
@@ -63,6 +64,7 @@ export function NewRecordBodyStep({
           viewBox={viewBox}
           markerScale={markerScale}
           interacting={interacting}
+          side={body.side}
           sensations={body.preview}
           focusPoint={body.focusPoint}
           className="absolute inset-0"
@@ -78,6 +80,13 @@ export function NewRecordBodyStep({
             ))
           }
         </BodyFigure>
+        {active ? null : (
+          <BodySideToggle
+            value={body.side}
+            onChange={body.setSide}
+            className="absolute bottom-4 left-4 z-20"
+          />
+        )}
         <BodyFigureZoomControls
           canZoomIn={canZoomIn}
           canZoomOut={canZoomOut}

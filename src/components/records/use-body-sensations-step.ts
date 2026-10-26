@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { useBodyFigureCamera } from "@/components/records/use-body-figure-camera";
-import type { BodySensation } from "@/db/schema";
+import type { BodySensation, BodySide } from "@/db/schema";
 import {
   MAX_BODY_SENSATIONS,
   toFigurePoint,
@@ -17,13 +17,14 @@ type UseBodySensationsStepOptions = {
   onRemove: (id: string) => void;
 };
 
-type ActivePoint = Pick<BodySensation, "id" | "x" | "y">;
+type ActivePoint = Pick<BodySensation, "id" | "x" | "y" | "side">;
 
 export function useBodySensationsStep({
   sensations,
   onSave,
   onRemove,
 }: UseBodySensationsStepOptions) {
+  const [side, setSide] = useState<BodySide>("front");
   const [active, setActive] = useState<ActivePoint | null>(null);
   const [draft, setDraft] = useState<SensationValue | null>(null);
   const [editingValue, setEditingValue] = useState(true);
@@ -37,15 +38,16 @@ export function useBodySensationsStep({
   const tags = saved?.tags ?? [];
   const value =
     draft ?? (saved ? { pleasantness: saved.pleasantness, intensity: saved.intensity } : null);
-  const others = sensations.filter((sensation) => sensation.id !== active?.id);
-  const preview = active && draft ? [...others, { ...active, ...draft, tags }] : sensations;
+  const visible = sensations.filter((sensation) => sensation.side === side);
+  const others = visible.filter((sensation) => sensation.id !== active?.id);
+  const preview = active && draft ? [...others, { ...active, ...draft, tags }] : visible;
 
   function addPoint(point: { x: number; y: number }) {
     if (sensations.length >= MAX_BODY_SENSATIONS) {
       return;
     }
 
-    setActive({ id: crypto.randomUUID(), ...toNormalizedPoint(point) });
+    setActive({ id: crypto.randomUUID(), side, ...toNormalizedPoint(point) });
     setDraft(null);
     setEditingValue(true);
     camera.focusOn(point);
@@ -72,7 +74,7 @@ export function useBodySensationsStep({
       return;
     }
 
-    setActive({ id: sensation.id, x: sensation.x, y: sensation.y });
+    setActive({ id: sensation.id, x: sensation.x, y: sensation.y, side: sensation.side });
     setDraft(null);
     setEditingValue(false);
     camera.focusOn(toFigurePoint(sensation));
@@ -116,6 +118,8 @@ export function useBodySensationsStep({
 
   return {
     camera,
+    side,
+    setSide,
     active,
     focusPoint,
     saved,

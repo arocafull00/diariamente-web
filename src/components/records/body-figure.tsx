@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useId, type ReactNode, type RefObject } from "react";
 
 import { BodyFigureArt } from "@/components/records/body-figure-art";
-import type { BodySensation } from "@/db/schema";
+import type { BodySensation, BodySide } from "@/db/schema";
 import { BODY_FIGURE_PATH } from "@/lib/body-figures";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +20,7 @@ type BodyFigureProps = {
   viewBox: ViewBox;
   markerScale: number;
   interacting: boolean;
+  side: BodySide;
   sensations: BodySensation[];
   focusPoint: { x: number; y: number } | null;
   className?: string;
@@ -34,6 +35,7 @@ export function BodyFigure({
   viewBox,
   markerScale,
   interacting,
+  side,
   sensations,
   focusPoint,
   className,
@@ -66,7 +68,17 @@ export function BodyFigure({
         className="absolute inset-0 size-full"
         aria-hidden="true"
       >
-        <BodyFigureArt id={id} sensations={sensations} />
+        <AnimatePresence initial={false} mode="wait">
+          <motion.g
+            key={side}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            exit={{ scaleX: 0 }}
+            transition={{ duration: 0.16, ease: "easeInOut" }}
+          >
+            <BodyFigureArt id={id} side={side} sensations={sensations} />
+          </motion.g>
+        </AnimatePresence>
         <path
           ref={hitPathRef}
           d={BODY_FIGURE_PATH}

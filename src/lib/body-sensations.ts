@@ -1,4 +1,9 @@
-import type { BodySensation, MoodQuadrant, StoredBodySensation } from "@/db/schema";
+import type {
+  BodySensation,
+  BodySide,
+  MoodQuadrant,
+  StoredBodySensation,
+} from "@/db/schema";
 
 import { BODY_FIGURE_VIEWBOX } from "@/lib/body-figures";
 
@@ -33,6 +38,17 @@ const LEGACY_BODY_REGIONS: Record<string, LegacyBodyRegion> = {
 export const MAX_BODY_SENSATIONS = 30;
 
 export const BODY_POINT_PHRASE = "Esta zona se siente";
+
+export const BODY_SIDES: BodySide[] = ["front", "back"];
+
+export const BODY_SIDE_LABELS: Record<BodySide, string> = {
+  front: "Delante",
+  back: "Detrás",
+};
+
+export function getSensationSide(sensation: StoredBodySensation): BodySide {
+  return "side" in sensation ? sensation.side : "front";
+}
 
 function clampUnit(value: number) {
   return Math.min(Math.max(value, 0), 1);

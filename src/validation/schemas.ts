@@ -76,6 +76,7 @@ export const bodySensationSchema = z.object({
   id: z.string().trim().min(1).max(64),
   x: z.number().min(0).max(1),
   y: z.number().min(0).max(1),
+  side: z.enum(["front", "back"]),
   pleasantness: z.number().int().min(0).max(100),
   intensity: z.number().int().min(0).max(100),
   tags: contextTagsSchema,
