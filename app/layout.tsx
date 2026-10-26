@@ -49,12 +49,12 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "DiariaMente",
+  title: "Diariamente",
   description: "Registro emocional diario para pacientes y psicólogos",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "DiariaMente",
+    title: "Diariamente",
   },
   icons: {
     icon: "/icon.png?v=2",

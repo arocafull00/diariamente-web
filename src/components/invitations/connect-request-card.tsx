@@ -61,7 +61,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           {getFullName(psychologist.firstName, psychologist.lastName)}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Te invita a conectar en DiariaMente. Al enviar la solicitud, tu
+          Te invita a conectar en Diariamente. Al enviar la solicitud, tu
           psicólogo/a deberá aceptarla para vincularos.
         </p>
       </div>

@@ -13,7 +13,7 @@ export function InstallGuideToolbarItem({
   if (item === "address") {
     return (
       <span className="flex h-7 min-w-0 flex-1 items-center justify-center truncate rounded-full bg-background px-3 text-xs text-muted-foreground">
-        DiariaMente
+        Diariamente
       </span>
     );
   }

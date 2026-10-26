@@ -54,7 +54,7 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Conecta conmigo en DiariaMente",
+          title: "Conecta conmigo en Diariamente",
           url: inviteUrl,
         });
       } catch {

@@ -37,7 +37,7 @@ export function DesktopSidebar({
           priority
         />
         <div className="min-w-0">
-          <p className="truncate font-semibold">DiariaMente</p>
+          <p className="truncate font-semibold">Diariamente</p>
           <p className="truncate text-xs text-muted-foreground">
             {ROLE_SUBTITLE[role]}
           </p>

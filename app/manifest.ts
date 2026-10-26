@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "DiariaMente",
-    short_name: "DiariaMente",
+    name: "Diariamente",
+    short_name: "Diariamente",
     description: "Registro emocional diario",
     start_url: "/",
     display: "standalone",
@@ -25,6 +25,12 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/icon-512x512.png",
         sizes: "512x512",
         type: "image/png",
+      },
+      {
+        src: "/icon-maskable-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
       },
     ],
   };

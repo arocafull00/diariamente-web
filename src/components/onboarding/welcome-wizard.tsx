@@ -64,7 +64,7 @@ export function WelcomeWizard({
               priority
               className="size-11 object-contain"
             />
-            <p className="text-lg font-bold tracking-tight text-primary">DiariaMente</p>
+            <p className="text-lg font-bold tracking-tight text-primary">Diariamente</p>
             {isLastStep ? null : (
               <Button
                 type="button"

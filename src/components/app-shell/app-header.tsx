@@ -23,7 +23,7 @@ export function AppHeader({ title, eyebrow, showBack, action }: AppHeaderProps) 
           ) : (
             <Image
               src={appIcon}
-              alt="DiariaMente"
+              alt="Diariamente"
               width={32}
               height={32}
               className="size-8 rounded-lg lg:hidden"

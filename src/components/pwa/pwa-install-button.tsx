@@ -30,7 +30,7 @@ export function PwaInstallButton() {
           title={
             installed ? "Ya instalada" : loading ? "Instalando..." : "Descargar app"
           }
-          description="Añade DiariaMente a tu pantalla de inicio."
+          description="Añade Diariamente a tu pantalla de inicio."
           loading={loading}
         />
       </button>

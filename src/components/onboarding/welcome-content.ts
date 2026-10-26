@@ -34,7 +34,7 @@ export type WelcomeStep = {
 const INSTALL_STEP: WelcomeStep = {
   id: "install",
   label: "Instalar",
-  title: "Lleva DiariaMente contigo",
+  title: "Lleva Diariamente contigo",
   description:
     "Añádela a tu pantalla de inicio para abrirla como una app, sin pasar por el navegador.",
 };
@@ -49,7 +49,7 @@ export const PATIENT_WELCOME_STEPS: readonly WelcomeStep[] = [
   {
     id: "features",
     label: "Bienvenida",
-    title: "Así te acompaña DiariaMente",
+    title: "Así te acompaña Diariamente",
     description:
       "Un espacio para registrar lo que vives y entender cómo te afecta, de la mano de tu terapia.",
     features: [
@@ -139,7 +139,7 @@ export const PSYCHOLOGIST_WELCOME_STEPS: readonly WelcomeStep[] = [
     label: "Bienvenida",
     title: "Acompaña a tus pacientes entre sesiones",
     description:
-      "DiariaMente reúne los registros de tus pacientes para que llegues a cada sesión con contexto.",
+      "Diariamente reúne los registros de tus pacientes para que llegues a cada sesión con contexto.",
     features: [
       {
         icon: Users,

@@ -45,7 +45,7 @@ const safariHint = "Si no ves la barra del navegador, toca la parte inferior de 
 
 export const installGuides: Record<InstallPlatform, InstallGuide> = {
   "ios-safari": {
-    title: "Instala DiariaMente en tu iPhone",
+    title: "Instala Diariamente en tu iPhone",
     description: "Safari no instala apps con un solo botón, pero son pocos toques:",
     steps: [
       { icon: Ellipsis, text: "Pulsa ··· en la barra de abajo, a la derecha." },
@@ -63,7 +63,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: null,
   },
   "ios-safari-legacy": {
-    title: "Instala DiariaMente en tu iPhone",
+    title: "Instala Diariamente en tu iPhone",
     description: "Safari no instala apps con un solo botón, pero son pocos toques:",
     steps: [
       { icon: Share, text: "Pulsa Compartir en la barra de abajo, en el centro." },
@@ -80,7 +80,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: null,
   },
   "ipad-safari": {
-    title: "Instala DiariaMente en tu iPad",
+    title: "Instala Diariamente en tu iPad",
     description: "Safari no instala apps con un solo botón, pero son pocos toques:",
     steps: [
       { icon: Share, text: "Pulsa Compartir arriba a la derecha." },
@@ -97,7 +97,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: null,
   },
   "ios-chrome": {
-    title: "Instala DiariaMente en tu iPhone",
+    title: "Instala Diariamente en tu iPhone",
     description: "Chrome en iPhone no instala apps con un solo botón, pero son pocos toques:",
     steps: [
       { icon: Share, text: "Pulsa Compartir en la barra de dirección, arriba a la derecha." },
@@ -119,7 +119,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
   "ios-in-app": {
     title: "Ábrela en Safari",
     description:
-      "Estás navegando dentro de otra app y desde aquí no se puede instalar DiariaMente.",
+      "Estás navegando dentro de otra app y desde aquí no se puede instalar Diariamente.",
     steps: [
       {
         icon: Ellipsis,
@@ -134,7 +134,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: "copy-link",
   },
   "ios-other": {
-    title: "Instala DiariaMente",
+    title: "Instala Diariamente",
     description:
       "Tu navegador puede añadirla a la pantalla de inicio desde su menú. En Safari es más sencillo.",
     steps: [
@@ -148,7 +148,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: "copy-link",
   },
   "mac-safari": {
-    title: "Instala DiariaMente en tu Mac",
+    title: "Instala Diariamente en tu Mac",
     description: "Safari la añade al Dock como una app más:",
     steps: [
       { icon: Share, text: "Pulsa Compartir arriba a la derecha." },
@@ -165,7 +165,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: null,
   },
   "android-chrome": {
-    title: "Instala DiariaMente",
+    title: "Instala Diariamente",
     description: "Puedes instalarla desde el menú de Chrome:",
     steps: [
       { icon: EllipsisVertical, text: "Pulsa ⋮ arriba a la derecha." },
@@ -187,7 +187,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
   "android-other": {
     title: "Ábrela en Chrome para instalarla",
     description:
-      "Este navegador no permite instalar DiariaMente. En Chrome se instala con un solo toque.",
+      "Este navegador no permite instalar Diariamente. En Chrome se instala con un solo toque.",
     steps: [
       { icon: ExternalLink, text: "Pulsa «Abrir en Chrome»." },
       { icon: Download, text: "En Chrome, vuelve a pulsar «Descargar app»." },
@@ -198,7 +198,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
     action: "open-chrome",
   },
   unknown: {
-    title: "Instala DiariaMente",
+    title: "Instala Diariamente",
     description: "Tu navegador no muestra el instalador automático.",
     steps: [
       { icon: EllipsisVertical, text: "Abre el menú del navegador." },
@@ -206,7 +206,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
         icon: Download,
         text: "Elige «Instalar aplicación» o «Añadir a pantalla de inicio».",
       },
-      { icon: ExternalLink, text: "Si no aparece, abre DiariaMente en Chrome." },
+      { icon: ExternalLink, text: "Si no aparece, abre Diariamente en Chrome." },
     ],
     toolbar: null,
     pointer: null,

@@ -16,10 +16,10 @@ const STEP_LABELS = ["Tus datos", "Tu perfil", "Confirmación"] as const;
 const STEP_CONTENT = [
   {
     title: "Empecemos por conocerte",
-    description: "Usaremos tu nombre para personalizar tu experiencia en DiariaMente.",
+    description: "Usaremos tu nombre para personalizar tu experiencia en Diariamente.",
   },
   {
-    title: "¿Cómo vas a usar DiariaMente?",
+    title: "¿Cómo vas a usar Diariamente?",
     description: "Tu elección adapta las herramientas y la navegación a tus necesidades.",
   },
   {
@@ -70,7 +70,7 @@ export function OnboardingWizard() {
               priority
               className="size-11 object-contain"
             />
-            <p className="text-lg font-bold tracking-tight text-primary">DiariaMente</p>
+            <p className="text-lg font-bold tracking-tight text-primary">Diariamente</p>
           </header>
         }
         footer={

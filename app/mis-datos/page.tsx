@@ -7,7 +7,7 @@ import { requireProfile } from "@/server/auth/get-current-profile";
 import { getDataExport } from "@/server/queries";
 
 export const metadata: Metadata = {
-  title: "Mis datos · DiariaMente",
+  title: "Mis datos · Diariamente",
   robots: { index: false },
 };
 

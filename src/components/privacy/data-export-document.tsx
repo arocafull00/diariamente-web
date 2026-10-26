@@ -25,7 +25,7 @@ export function DataExportDocument({ data }: DataExportDocumentProps) {
   return (
     <div className="space-y-8">
       <header className="space-y-1">
-        <h1 className="font-display text-3xl font-medium">Mis datos en DiariaMente</h1>
+        <h1 className="font-display text-3xl font-medium">Mis datos en Diariamente</h1>
         <p className="text-sm text-muted-foreground">
           Copia generada el {formatRecordDate(data.exportedAt)}
         </p>
