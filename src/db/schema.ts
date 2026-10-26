@@ -1,5 +1,6 @@
 import {
   boolean,
+  index,
   jsonb,
   pgEnum,
   pgTable,
@@ -138,6 +139,30 @@ export const psychologistPatient = pgTable(
       .notNull(),
   },
   (table) => [unique("psychologist_patient_patient_id_unique").on(table.patientId)],
+);
+
+export const therapySessions = pgTable(
+  "therapy_sessions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    psychologistId: text("psychologist_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    patientId: text("patient_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    heldAt: timestamp("held_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("therapy_sessions_pair_held_at_idx").on(
+      table.psychologistId,
+      table.patientId,
+      table.heldAt,
+    ),
+  ],
 );
 
 export const recordNotes = pgTable("record_notes", {

@@ -9,6 +9,7 @@ import {
   profiles,
   psychologistPatient,
   recordNotes,
+  therapySessions,
   userReminders,
 } from "@/db/schema";
 
@@ -57,6 +58,25 @@ export async function getPatientRecordsForPsychologist(
     ...record,
     hasNote: noteId !== null,
   }));
+}
+
+export async function getLastTherapySession(
+  psychologistId: string,
+  patientId: string,
+) {
+  const [session] = await db
+    .select({ id: therapySessions.id, heldAt: therapySessions.heldAt })
+    .from(therapySessions)
+    .where(
+      and(
+        eq(therapySessions.psychologistId, psychologistId),
+        eq(therapySessions.patientId, patientId),
+      ),
+    )
+    .orderBy(desc(therapySessions.heldAt))
+    .limit(1);
+
+  return session ?? null;
 }
 
 export async function getRecordNote(recordId: string) {

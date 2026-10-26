@@ -1,9 +1,13 @@
 import { PatientDetailHeader } from "@/components/patients/patient-detail-header";
+import { PatientSessionSummary } from "@/components/patients/patient-session-summary";
 import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
 import { RecordMoodOverview } from "@/components/records/record-mood-overview";
 import { RecordTimeline } from "@/components/records/record-timeline";
 import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
-import { getPatientRecordsForPsychologist } from "@/server/queries";
+import {
+  getLastTherapySession,
+  getPatientRecordsForPsychologist,
+} from "@/server/queries";
 import { getFullName } from "@/lib/utils-app";
 
 type PatientDetailPageProps = {
@@ -21,10 +25,10 @@ export default async function PatientDetailPage({
   }
 
   const { profile, patient } = result;
-  const records = await getPatientRecordsForPsychologist(
-    patientId,
-    profile.id,
-  );
+  const [records, lastSession] = await Promise.all([
+    getPatientRecordsForPsychologist(patientId, profile.id),
+    getLastTherapySession(profile.id, patientId),
+  ]);
   const patientName = getFullName(patient.firstName, patient.lastName);
   const lastActivityAt = records[0]?.occurredAt ?? null;
 
@@ -39,6 +43,14 @@ export default async function PatientDetailPage({
         lastActivityAt={lastActivityAt}
       />
       <div className="space-y-6">
+        <PatientSessionSummary
+          patientId={patientId}
+          patientName={patientName}
+          gender={patient.grammaticalGender}
+          lastSessionAt={lastSession?.heldAt ?? null}
+          records={records}
+        />
+
         {records.length === 0 ? (
           <div className="rounded-3xl bg-card p-8 text-center text-sm text-muted-foreground shadow-sm ring-1 ring-border/60">
             Este paciente aún no tiene registros.
