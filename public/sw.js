@@ -2,7 +2,7 @@ const SHELL_CACHE = "diariamente-shell-v5";
 const STATIC_CACHE = "diariamente-static-v1";
 const OFFLINE_URL = "/offline";
 const HOME_KEY = "/__app-home";
-const SHELL_ASSETS = [OFFLINE_URL, "/icon-192x192.png?v=3", "/icon-512x512.png?v=3"];
+const SHELL_ASSETS = [OFFLINE_URL, "/icon-192x192.png?v=5", "/icon-512x512.png?v=5"];
 const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil"];
 const MAX_STATIC_ENTRIES = 300;
 const STATIC_URL_PATTERN = /\/_next\/static\/[^"'\\s)]+/g;
@@ -245,7 +245,7 @@ self.addEventListener("push", (event) => {
 
         return self.registration.showNotification(data.title, {
           body: data.body,
-          icon: "/icon-192x192.png?v=3",
+          icon: "/icon-192x192.png?v=5",
           data: { url: data.url ?? "/" },
         });
       }),

@@ -57,8 +57,9 @@ export const metadata: Metadata = {
     title: "Diariamente",
   },
   icons: {
-    icon: "/icon.png?v=3",
-    apple: "/apple-touch-icon.png?v=3",
+    icon: "/icon.png?v=5",
+    shortcut: "/favicon.ico?v=5",
+    apple: "/apple-touch-icon.png?v=5",
   },
 };
 
