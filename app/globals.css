@@ -180,6 +180,20 @@
   }
 }
 
+@utility btn-raised-joy {
+  background: linear-gradient(var(--mood-lp-2), var(--mood-lp-3));
+  box-shadow:
+    inset 0 1px 0 #ffffff59,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006,
+    0 8px 24px -6px color-mix(in oklab, var(--mood-lp-3) 60%, transparent);
+
+  &:active {
+    translate: 0 1px;
+    box-shadow: inset 0 2px 4px #0004;
+  }
+}
+
 @theme {
   --animate-mood-ghost: mood-orbit 7s linear infinite, mood-wobble 6s ease-in-out infinite;
   --animate-mood-float: mood-float 7s ease-in-out infinite;
