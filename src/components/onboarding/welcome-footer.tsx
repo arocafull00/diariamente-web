@@ -21,7 +21,7 @@ export function WelcomeFooter({
   onNotNow,
 }: WelcomeFooterProps) {
   return (
-    <div className="mt-auto flex flex-col gap-2 pt-10 lg:mt-0">
+    <div className="sticky bottom-0 z-10 -mx-5 mt-auto flex flex-col gap-2 bg-linear-to-t from-background from-75% to-transparent px-5 pt-8 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-8 lg:mt-0">
       <WelcomeContinueButton
         label={label}
         disabled={disabled}

@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { useWelcomeNotifications } from "@/components/onboarding/use-welcome-notifications";
 import { WELCOME_FLOWS } from "@/components/onboarding/welcome-content";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
+import { useWizardHistory } from "@/hooks/use-wizard-history";
 import { useWelcomeStore } from "@/stores/welcome-store";
 
 export function useWelcomeWizard(
@@ -18,7 +19,7 @@ export function useWelcomeWizard(
   const markSeen = useWelcomeStore((state) => state.markSeen);
   const notifications = useWelcomeNotifications(role);
   const install = usePwaInstall();
-  const [stepIndex, setStepIndex] = useState(0);
+  const { goBack, goToStep, step: stepIndex } = useWizardHistory();
   const [goalId, setGoalId] = useState<string | null>(null);
   const [finishing, startFinishTransition] = useTransition();
   const { steps, goals } = WELCOME_FLOWS[role];
@@ -56,11 +57,7 @@ export function useWelcomeWizard(
       return;
     }
 
-    setStepIndex(stepIndex + 1);
-  }
-
-  function goBack() {
-    setStepIndex(stepIndex - 1);
+    goToStep(stepIndex + 1);
   }
 
   async function activateNotifications() {

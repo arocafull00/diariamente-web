@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -9,13 +9,15 @@ import type {
   OnboardingFormValues,
   OnboardingStep,
 } from "@/components/onboarding/onboarding-types";
+import { useWizardHistory } from "@/hooks/use-wizard-history";
 import { completeOnboarding } from "@/server/actions/onboarding";
 import { onboardingSchema } from "@/validation/schemas";
 
 const initialState = { error: undefined as string | undefined };
 
 export function useOnboardingWizard() {
-  const [step, setStep] = useState<OnboardingStep>(0);
+  const { goBack, goToStep, step: historyStep } = useWizardHistory();
+  const step = historyStep as OnboardingStep;
   const [state, formAction, pending] = useActionState(
     completeOnboarding,
     initialState,
@@ -49,11 +51,7 @@ export function useOnboardingWizard() {
       return;
     }
 
-    setStep((step + 1) as OnboardingStep);
-  }
-
-  function goBack() {
-    setStep((step - 1) as OnboardingStep);
+    goToStep(step + 1);
   }
 
   return { form, formAction, goBack, goForward, pending, state, step };

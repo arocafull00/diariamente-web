@@ -32,8 +32,8 @@ export default async function WelcomePage() {
     : "/pacientes";
 
   return (
-    <div className="relative flex min-h-svh flex-1 flex-col overflow-hidden">
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:py-8">
+    <div className="relative flex min-h-svh flex-1 flex-col overflow-x-clip">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
         <WelcomeWizard
           role={profile.role}
           profileId={profile.id}
