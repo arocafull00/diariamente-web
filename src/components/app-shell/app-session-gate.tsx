@@ -17,6 +17,7 @@ import { clearLastActivity } from "@/lib/last-activity";
 import { getSessionProfile } from "@/server/actions/session";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
+import { useWelcomeStore } from "@/stores/welcome-store";
 
 type AppSessionGateProps = {
   refreshedAt: number;
@@ -75,6 +76,14 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
             items[0].href,
             items.map((item) => item.href),
           );
+
+          if (
+            !useWelcomeStore
+              .getState()
+              .seenProfileIds.includes(result.profile.id)
+          ) {
+            router.replace("/bienvenida");
+          }
           return;
         }
 
