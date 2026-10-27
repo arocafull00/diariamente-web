@@ -16,6 +16,38 @@ function urlBase64ToUint8Array(base64String: string) {
   return outputArray;
 }
 
+const SUBSCRIBE_ERROR_MESSAGES: Record<string, string> = {
+  NotAllowedError: "Permiso de notificaciones denegado",
+  AbortError:
+    "Tu navegador ha bloqueado el servicio de notificaciones. Revisa su configuración de privacidad.",
+  InvalidStateError:
+    "Las notificaciones no están disponibles. Recarga la página e inténtalo de nuevo.",
+  InvalidAccessError: "La configuración de notificaciones no es válida",
+};
+
+async function createSubscription(
+  registration: ServiceWorkerRegistration,
+  publicKey: string,
+) {
+  const options = {
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(publicKey),
+  };
+
+  try {
+    return await registration.pushManager.subscribe(options);
+  } catch (error) {
+    const existing = await registration.pushManager.getSubscription();
+
+    if (!existing) {
+      throw error;
+    }
+
+    await existing.unsubscribe();
+    return registration.pushManager.subscribe(options);
+  }
+}
+
 export function usePushSubscription() {
   const [loading, setLoading] = useState(false);
   const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -41,11 +73,13 @@ export function usePushSubscription() {
         return false;
       }
 
+      if (!(await navigator.serviceWorker.getRegistration())) {
+        toast.error("Las notificaciones no están disponibles. Recarga la página e inténtalo de nuevo.");
+        return false;
+      }
+
       const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey),
-      });
+      const subscription = await createSubscription(registration, publicKey);
 
       const response = await fetch("/api/push/subscribe", {
         method: "POST",
@@ -59,8 +93,12 @@ export function usePushSubscription() {
       }
 
       return true;
-    } catch {
-      toast.error("Error al activar notificaciones");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        (error instanceof DOMException && SUBSCRIBE_ERROR_MESSAGES[error.name]) ||
+          "Error al activar notificaciones",
+      );
       return false;
     } finally {
       setLoading(false);
