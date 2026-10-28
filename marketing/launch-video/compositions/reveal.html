@@ -1,0 +1,59 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #reveal-meet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 455px;
+      text-align: center;
+      font-size: 150px;
+    }
+    #reveal-meet span {
+      display: inline-block;
+    }
+    #reveal-lockup {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 400px;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+    #reveal-logo {
+      width: 260px;
+      height: 260px;
+    }
+    #reveal-word {
+      font-size: 170px;
+      padding-bottom: 20px;
+    }
+  </style>
+  <div data-hf-id="hf-yqoq" id="root" data-composition-id="reveal" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-kast" id="reveal-meet" class="display"><span data-hf-id="hf-lzk6">C</span><span data-hf-id="hf-txoq">o</span><span data-hf-id="hf-tjdp">n</span><span data-hf-id="hf-rzwu">o</span><span data-hf-id="hf-ypd2">c</span><span data-hf-id="hf-xwr0">e</span></div>
+    <div data-hf-id="hf-9bql" id="reveal-lockup">
+      <img data-hf-id="hf-okiv" id="reveal-logo" src="assets/logo.png" />
+      <div data-hf-id="hf-k31t" id="reveal-word" class="display">Diariamente</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#reveal-meet span", { opacity: 0.15, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, stagger: 0.06, ease: "power2.out" }, 0.02);
+      tl.to("#reveal-meet", { opacity: 0, filter: "blur(10px)", duration: 0.13, ease: "power3.in" }, 0.62);
+      tl.fromTo("#reveal-logo", { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.72);
+      tl.fromTo("#reveal-word", { clipPath: "inset(0% 100% 0% 0%)", x: -40 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.5, ease: "expo.out" }, 0.95);
+      tl.to("#reveal-lockup", { opacity: 0, filter: "blur(12px)", scale: 0.92, duration: 0.15, ease: "power3.in" }, 1.7);
+      window.__timelines["reveal"] = tl;
+    })();
+  </script>
+</template>

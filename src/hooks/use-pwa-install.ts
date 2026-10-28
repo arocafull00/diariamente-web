@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
 import { getInstallPlatform, type InstallPlatform } from "@/lib/install-platform";
+import { logger } from "@/lib/logger";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -108,7 +109,8 @@ export function usePwaInstall() {
           setInstalled(true);
           toast.success("App instalada");
         }
-      } catch {
+      } catch (error) {
+        logger.error("pwa.install_failed", error);
         toast.error("No se pudo instalar la app");
       } finally {
         setDeferredPrompt(null);

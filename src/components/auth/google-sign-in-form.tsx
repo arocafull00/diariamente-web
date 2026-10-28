@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { logger } from "@/lib/logger";
 
 type GoogleSignInFormProps = {
   redirectUrl?: string;
@@ -74,6 +75,7 @@ export function GoogleSignInForm({
       return;
     }
 
+    logger.error("auth.login.sso_failed", ssoError, { strategy: "oauth_google" });
     setError(ssoError.message ?? "No se pudo iniciar sesión");
   };
 

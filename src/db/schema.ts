@@ -1,6 +1,7 @@
 import {
   boolean,
   index,
+  integer,
   jsonb,
   pgEnum,
   pgTable,
@@ -36,6 +37,8 @@ export const grammaticalGenderEnum = pgEnum("grammatical_gender", [
   "masculine",
   "unspecified",
 ]);
+
+export const requiredScreenEnum = pgEnum("required_screen", ["welcome"]);
 
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
@@ -267,6 +270,28 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
     .notNull(),
 });
 
+export const screenAcknowledgements = pgTable(
+  "screen_acknowledgements",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    profileId: text("profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    screen: requiredScreenEnum("screen").notNull(),
+    version: integer("version").notNull(),
+    acknowledgedAt: timestamp("acknowledged_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("screen_acknowledgements_profile_screen_version_unique").on(
+      table.profileId,
+      table.screen,
+      table.version,
+    ),
+  ],
+);
+
 export const auditEvents = pgTable(
   "audit_events",
   {
@@ -297,6 +322,7 @@ export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
 export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];
+export type RequiredScreen = (typeof requiredScreenEnum.enumValues)[number];
 export type BodyFigure = (typeof bodyFigureEnum.enumValues)[number];
 export type GrammaticalGender =
   (typeof grammaticalGenderEnum.enumValues)[number];

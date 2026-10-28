@@ -1,0 +1,55 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #final-lockup {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 330px;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+    #final-logo {
+      width: 250px;
+      height: 250px;
+    }
+    #final-word {
+      font-size: 160px;
+      padding-bottom: 20px;
+    }
+    #final-url {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 680px;
+      text-align: center;
+      font-size: 60px;
+      color: #1e2124;
+    }
+  </style>
+  <div data-hf-id="hf-l54h" id="root" data-composition-id="final" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-hdoe" id="final-lockup">
+      <img data-hf-id="hf-e7vw" id="final-logo" src="assets/logo.png" />
+      <div data-hf-id="hf-17ae" id="final-word" class="display">Diariamente</div>
+    </div>
+    <div data-hf-id="hf-m001" id="final-url" class="body-font" data-var-text="url">diariamente.es</div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#final-logo", { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.05);
+      tl.fromTo("#final-word", { clipPath: "inset(0% 100% 0% 0%)", x: -40 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.5, ease: "expo.out" }, 0.3);
+      tl.fromTo("#final-url", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.55);
+      window.__timelines["final"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,171 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #dn-ground {
+      position: absolute;
+      inset: 0;
+      background: #fff8dc;
+    }
+    .dn-title {
+      position: absolute;
+      left: 170px;
+      top: 220px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 140px;
+    }
+    .dn-title svg {
+      width: 120px;
+      height: 120px;
+    }
+    #dn-notif {
+      position: absolute;
+      left: 170px;
+      top: 520px;
+      width: 760px;
+      height: 230px;
+      border-radius: 40px;
+      background: #ffffff;
+      box-shadow: 0 30px 60px rgba(10, 20, 60, 0.28);
+    }
+    #dn-notif img {
+      position: absolute;
+      left: 40px;
+      top: 44px;
+      width: 84px;
+      height: 84px;
+    }
+    #dn-app {
+      position: absolute;
+      left: 150px;
+      top: 40px;
+      font-size: 30px;
+      color: #7a7d82;
+    }
+    #dn-now {
+      position: absolute;
+      right: 44px;
+      top: 40px;
+      font-size: 30px;
+      color: #9a9da2;
+    }
+    #dn-head {
+      position: absolute;
+      left: 150px;
+      top: 86px;
+      font-size: 46px;
+      color: #1e2124;
+      white-space: nowrap;
+    }
+    #dn-sub {
+      position: absolute;
+      left: 150px;
+      top: 150px;
+      width: 570px;
+      font-size: 30px;
+      line-height: 1.25;
+      color: #8a8d92;
+    }
+    #dn-ticker {
+      position: absolute;
+      left: 1080px;
+      top: 0;
+      width: 760px;
+      height: 1080px;
+      -webkit-mask: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+      mask: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+    }
+    .dn-list {
+      position: absolute;
+      left: 90px;
+      top: 498px;
+      width: 670px;
+    }
+    .dn-list div {
+      height: 96px;
+      line-height: 84px;
+      font-size: 76px;
+      white-space: nowrap;
+    }
+    #dn-list-grey {
+      color: rgba(30, 33, 36, 0.2);
+    }
+    #dn-list-ink-clip {
+      position: absolute;
+      inset: 0;
+      clip-path: inset(498px 0 486px 0);
+    }
+    #dn-list-ink {
+      color: #1e2124;
+    }
+    #dn-dot {
+      position: absolute;
+      left: 30px;
+      top: 524px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--mood-conic);
+    }
+  </style>
+  <div data-hf-id="hf-gcnt" id="root" data-composition-id="diaynoche" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-c335" id="dn-ground"></div>
+    <div data-hf-id="hf-0nrw" id="dn-day" class="dn-title display">
+      <svg data-hf-id="hf-x9xb" viewBox="0 0 24 24" fill="none" stroke="#ffbe2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle data-hf-id="hf-kysq" cx="12" cy="12" r="4" /><path data-hf-id="hf-qca4" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
+      <span data-hf-id="hf-vxik">De día</span>
+    </div>
+    <div data-hf-id="hf-rjfq" id="dn-night" class="dn-title display" style="color: #ffffff">
+      <svg data-hf-id="hf-6hky" viewBox="0 0 24 24" fill="none" stroke="#ffd84a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-izvo" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+      <span data-hf-id="hf-nyr9">De noche</span>
+    </div>
+    <div data-hf-id="hf-nvfy" id="dn-notif">
+      <img data-hf-id="hf-r1im" src="assets/logo.png" />
+      <div data-hf-id="hf-dhh1" id="dn-app" class="body-font">Diariamente</div>
+      <div data-hf-id="hf-6lm0" id="dn-now" class="body-font">ahora</div>
+      <div data-hf-id="hf-ndxv" id="dn-head" class="body-font">¿Cómo ha ido tu día?</div>
+      <div data-hf-id="hf-gvhx" id="dn-sub" class="body-font">Tómate un minuto para registrar cómo te sientes.</div>
+    </div>
+    <div data-hf-id="hf-vw2e" id="dn-ticker" data-layout-allow-overflow data-layout-ignore>
+      <div data-hf-id="hf-oq6d" id="dn-dot"></div>
+      <div data-hf-id="hf-u5jm" id="dn-list-grey" class="dn-list display">
+        <div data-hf-id="hf-3q3j">Ilusionada</div><div data-hf-id="hf-e7np">Tranquila</div><div data-hf-id="hf-wyck">Inquieta</div><div data-hf-id="hf-cfv2">Orgullosa</div><div data-hf-id="hf-nrbp">Cansada</div><div data-hf-id="hf-w1bl">Agradecida</div><div data-hf-id="hf-n0rd">Nerviosa</div><div data-hf-id="hf-cats">Serena</div><div data-hf-id="hf-iah2">Frustrada</div><div data-hf-id="hf-sdqd">Motivada</div><div data-hf-id="hf-a8l5">Frágil</div><div data-hf-id="hf-kjiz">Animada</div><div data-hf-id="hf-yuop">Cómoda</div><div data-hf-id="hf-cx6m">Esperanzada</div><div data-hf-id="hf-g0qh">Celosa</div><div data-hf-id="hf-aq88">Divertida</div><div data-hf-id="hf-9b88">Ansiosa</div><div data-hf-id="hf-ojge">Curiosa</div>
+      </div>
+      <div data-hf-id="hf-rhve" id="dn-list-ink-clip">
+        <div data-hf-id="hf-mzfx" id="dn-list-ink" class="dn-list display">
+          <div data-hf-id="hf-nwwv">Ilusionada</div><div data-hf-id="hf-j6op">Tranquila</div><div data-hf-id="hf-zxjw">Inquieta</div><div data-hf-id="hf-p1zm">Orgullosa</div><div data-hf-id="hf-b4uh">Cansada</div><div data-hf-id="hf-nsmd">Agradecida</div><div data-hf-id="hf-dn59">Nerviosa</div><div data-hf-id="hf-neso">Serena</div><div data-hf-id="hf-1w22">Frustrada</div><div data-hf-id="hf-56mx">Motivada</div><div data-hf-id="hf-mpxp">Frágil</div><div data-hf-id="hf-jbiz">Animada</div><div data-hf-id="hf-rhkd">Cómoda</div><div data-hf-id="hf-06w2">Esperanzada</div><div data-hf-id="hf-mb2l">Celosa</div><div data-hf-id="hf-aim8">Divertida</div><div data-hf-id="hf-9a40">Ansiosa</div><div data-hf-id="hf-0axu">Curiosa</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const lists = "#dn-list-grey, #dn-list-ink";
+      tl.set(lists, { y: -96 * 2 }, 0);
+      for (let i = 0; i < 13; i++) {
+        tl.to(lists, { y: -96 * (3 + i), duration: 0.28, ease: "power3.inOut" }, 0.15 + i * 0.37);
+      }
+      tl.fromTo("#dn-ticker", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 0);
+      tl.fromTo("#dn-day", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.1);
+      tl.fromTo("#dn-day svg", { rotation: -90, scale: 0.4 }, { rotation: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 0.1);
+      tl.to("#dn-day", { opacity: 0, filter: "blur(10px)", duration: 0.15, ease: "power3.in" }, 2.22);
+      tl.to("#dn-ground", { backgroundColor: "#2953b8", duration: 0.45, ease: "power2.inOut" }, 2.1);
+      tl.to("#dn-list-grey", { color: "rgba(255, 255, 255, 0.28)", duration: 0.45, ease: "power2.inOut" }, 2.1);
+      tl.to("#dn-list-ink", { color: "#ffffff", duration: 0.45, ease: "power2.inOut" }, 2.1);
+      tl.fromTo("#dn-night", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 2.4);
+      tl.fromTo("#dn-night svg", { rotation: 40, scale: 0.4 }, { rotation: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 2.4);
+      tl.fromTo("#dn-notif", { y: -720, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "back.out(1.2)" }, 2.9);
+      tl.to("#dn-notif, #dn-night", { y: -60, opacity: 0, filter: "blur(10px)", duration: 0.22, ease: "power3.in" }, 4.97);
+      tl.to("#dn-ticker", { opacity: 0, duration: 0.2, ease: "power2.in" }, 5.0);
+      tl.to("#dn-ground", { backgroundColor: "#fafafa", duration: 0.2, ease: "power2.inOut" }, 5.0);
+      window.__timelines["diaynoche"] = tl;
+    })();
+  </script>
+</template>

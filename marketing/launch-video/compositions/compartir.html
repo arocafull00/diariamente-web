@@ -1,0 +1,115 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #comp-row {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 470px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+    #comp-text {
+      font-size: 104px;
+      padding-bottom: 14px;
+    }
+    #comp-text span {
+      display: inline-block;
+    }
+    #comp-toggle-slot {
+      position: relative;
+      width: 200px;
+      height: 106px;
+    }
+    #comp-toggle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 200px;
+      height: 106px;
+      border-radius: 53px;
+      background: #d4d6d9;
+    }
+    #comp-knob {
+      position: absolute;
+      left: 9px;
+      top: 9px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(30, 33, 36, 0.18);
+    }
+    #comp-tiles {
+      position: absolute;
+      inset: 0;
+    }
+    .comp-tile {
+      position: absolute;
+      width: 343px;
+      overflow: hidden;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(30, 33, 36, 0.12);
+    }
+    .comp-tile img {
+      position: absolute;
+      left: -16px;
+      width: 375px;
+      height: 812px;
+    }
+    .comp-face {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+    }
+  </style>
+  <div data-hf-id="hf-d6zm" id="root" data-composition-id="compartir" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-k9qh" id="comp-tiles" data-layout-ignore>
+      <div data-hf-id="hf-q2du" class="comp-tile" style="left: 60px; top: 50px; height: 152px"><img data-hf-id="hf-ylky" src="assets/screens/11-inicio-ultimos-registros.jpg" style="top: -110px" /></div>
+      <div data-hf-id="hf-yo1c" class="comp-tile" style="left: 520px; top: 90px; height: 94px"><img data-hf-id="hf-k6zr" src="assets/screens/27-psico-ficha-registros.jpg" style="top: -168px" /></div>
+      <div data-hf-id="hf-adry" class="comp-tile" style="left: 1000px; top: 40px; height: 206px"><img data-hf-id="hf-2sdo" src="assets/screens/22-mis-registros-balance.jpg" style="top: -72px" /></div>
+      <div data-hf-id="hf-f0at" class="comp-tile" style="left: 1480px; top: 110px; height: 126px"><img data-hf-id="hf-b37w" src="assets/screens/27-psico-ficha-registros.jpg" style="top: -277px" /></div>
+      <div data-hf-id="hf-u51f" class="comp-tile" style="left: 120px; top: 760px; height: 134px"><img data-hf-id="hf-qwz7" src="assets/screens/27-psico-ficha-registros.jpg" style="top: -465px" /></div>
+      <div data-hf-id="hf-zghd" class="comp-tile" style="left: 600px; top: 830px; height: 96px"><img data-hf-id="hf-l8z3" src="assets/screens/11-inicio-ultimos-registros.jpg" style="top: -322px" /></div>
+      <div data-hf-id="hf-6o3b" class="comp-tile" style="left: 1060px; top: 780px; height: 150px"><img data-hf-id="hf-tg8h" src="assets/screens/11-inicio-ultimos-registros.jpg" style="top: -566px" /></div>
+      <div data-hf-id="hf-688q" class="comp-tile" style="left: 1530px; top: 800px; height: 112px"><img data-hf-id="hf-v1c0" src="assets/screens/28-psico-ficha-historial.jpg" style="top: -363px" /></div>
+      <img data-hf-id="hf-i6yb" class="comp-face" src="assets/caras/alegria.svg" style="left: 40px; top: 330px" />
+      <img data-hf-id="hf-61r0" class="comp-face" src="assets/caras/tristeza.svg" style="left: 1760px; top: 330px" />
+      <img data-hf-id="hf-3qcw" class="comp-face" src="assets/caras/05_rosa_verde.svg" style="left: 300px; top: 600px; width: 90px; height: 90px" />
+      <img data-hf-id="hf-k3vc" class="comp-face" src="assets/caras/rabia.svg" style="left: 1560px; top: 620px; width: 90px; height: 90px" />
+    </div>
+    <div data-hf-id="hf-zicb" id="comp-row">
+      <div data-hf-id="hf-9a4v" id="comp-text" class="display"><span data-hf-id="hf-by03">Compartido</span> <span data-hf-id="hf-wi73">con</span> <span data-hf-id="hf-r7im">tu</span> <span data-hf-id="hf-e8xa">psicólogo/a</span></div>
+      <div data-hf-id="hf-yk8u" id="comp-toggle-slot">
+        <div data-hf-id="hf-del1" id="comp-toggle"><div data-hf-id="hf-ks4t" id="comp-knob"></div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#comp-toggle", { scale: 0, x: -760 }, { scale: 2.2, x: -760, duration: 0.45, ease: "back.out(1.5)" }, 0.02);
+      tl.to("#comp-knob", { x: 94, duration: 0.3, ease: "power3.inOut" }, 0.55);
+      tl.to("#comp-toggle", { backgroundColor: "#4fd284", duration: 0.25, ease: "power2.inOut" }, 0.6);
+      tl.to("#comp-toggle", { scale: 1, x: 0, duration: 0.5, ease: "expo.inOut" }, 0.92);
+      tl.fromTo("#comp-text span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.07, ease: "power4.out" }, 1.05);
+      const tiles = gsap.utils.toArray("#comp-tiles > *");
+      tiles.forEach(function (el, i) {
+        const top = el.offsetTop < 540;
+        tl.fromTo(el, { y: top ? -260 : 260, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 0.95 + (i % 6) * 0.04);
+        tl.to(el, { y: top ? -340 : 340, opacity: 0, duration: 0.2, ease: "power3.in" }, 2.07 + (i % 4) * 0.015);
+      });
+      tl.to("#comp-row", { opacity: 0, filter: "blur(12px)", scale: 0.94, duration: 0.16, ease: "power3.in" }, 2.12);
+      window.__timelines["compartir"] = tl;
+    })();
+  </script>
+</template>

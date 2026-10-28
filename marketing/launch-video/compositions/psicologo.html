@@ -1,0 +1,83 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    .psi-line {
+      position: absolute;
+      left: 170px;
+      font-size: 96px;
+    }
+    .psi-line span {
+      display: inline-block;
+    }
+    #psi-l1 {
+      top: 340px;
+    }
+    #psi-l2 {
+      top: 480px;
+    }
+    #psi-stage {
+      position: absolute;
+      left: 1150px;
+      top: 50px;
+      width: 560px;
+      height: 980px;
+    }
+    #psi-phone {
+      position: absolute;
+      left: 80px;
+      top: 72px;
+      width: 399px;
+      height: 836px;
+    }
+    .psi-shot {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div data-hf-id="hf-za3k" id="root" data-composition-id="psicologo" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-ofmv" id="psi-l1" class="psi-line display"><span data-hf-id="hf-v5im">Tu</span> <span data-hf-id="hf-e8xa">psicólogo/a</span></div>
+    <div data-hf-id="hf-frr0" id="psi-l2" class="psi-line display"><span data-hf-id="hf-xe2w">lo</span> <span data-hf-id="hf-z3qo">ve</span> <span data-hf-id="hf-bq6r" class="mood-fill">antes</span> <span data-hf-id="hf-1zf2">de</span> <span data-hf-id="hf-y6oy">la</span> <span data-hf-id="hf-3338">sesión</span></div>
+    <div data-hf-id="hf-sx8h" id="psi-stage" data-layout-allow-overflow>
+      <div data-hf-id="hf-03vc" class="halo" style="left: 0; top: 140px; width: 420px; height: 520px; background: #8fb8ff"></div>
+      <div data-hf-id="hf-97gv" class="halo" style="left: 170px; top: 420px; width: 400px; height: 480px; background: #86e3a6"></div>
+      <div data-hf-id="hf-d848" id="psi-phone">
+        <div data-hf-id="hf-xznb" class="phone" style="left: 0; top: 0">
+          <div data-hf-id="hf-cdmk" class="screen">
+            <div data-hf-id="hf-eigy" id="psi-s25" class="psi-shot">
+              <img data-hf-id="hf-q1zn" class="shot" src="assets/screens/25-psico-pacientes.jpg" />
+              <div data-hf-id="hf-hpvv" class="mask-face" style="left: 30px; top: 86px; width: 48px; height: 48px; background: #ffffff"><img data-hf-id="hf-7uir" src="assets/caras/04_naranja_amarillo.svg" /></div>
+              <div data-hf-id="hf-06bz" class="mask-name" style="left: 86px; top: 88px; width: 140px; height: 24px; background: #ffffff; font-size: 15px; line-height: 24px">Lucía M.</div>
+            </div>
+            <div data-hf-id="hf-akcx" id="psi-s26" class="psi-shot">
+              <img data-hf-id="hf-x0ed" class="shot" src="assets/screens/26-psico-ficha-resumen.jpg" />
+              <div data-hf-id="hf-g1am" class="mask-face" style="left: 74px; top: 18px; width: 52px; height: 52px; background: #ffffff"><img data-hf-id="hf-sl37" src="assets/caras/04_naranja_amarillo.svg" /></div>
+              <div data-hf-id="hf-87ia" class="mask-name" style="left: 136px; top: 22px; width: 142px; height: 26px; background: #ffffff; font-size: 16px; line-height: 26px">Lucía M.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.set("#psi-phone", { scale: 1.12, transformOrigin: "50% 50%" }, 0);
+      tl.fromTo("#psi-stage", { y: 760 }, { y: 0, duration: 0.7, ease: "expo.out" }, 0);
+      tl.fromTo("#psi-l1 span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.08, ease: "power4.out" }, 0.2);
+      tl.fromTo("#psi-l2 span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.07, ease: "power4.out" }, 0.5);
+      tl.set("#psi-s26", { opacity: 0 }, 0);
+      tl.to("#psi-s25", { scale: 0.97, duration: 0.1, ease: "power2.in", transformOrigin: "50% 15%" }, 1.15);
+      tl.fromTo("#psi-s26", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.35, ease: "expo.out" }, 1.3);
+      tl.to("#psi-phone", { scale: 1.6, x: 110, y: 240, duration: 0.6, ease: "power2.inOut" }, 2.32);
+      tl.to("#psi-l1, #psi-l2", { opacity: 0, filter: "blur(12px)", duration: 0.18, ease: "power3.in" }, 3.86);
+      tl.to("#psi-stage", { opacity: 0, filter: "blur(14px)", duration: 0.18, ease: "power3.in" }, 3.86);
+      window.__timelines["psicologo"] = tl;
+    })();
+  </script>
+</template>

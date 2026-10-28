@@ -22,6 +22,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { logger } from "@/lib/logger";
 import { updateProfile } from "@/server/actions/profile";
 
 const profileEditFormSchema = z.object({
@@ -100,7 +101,8 @@ export function ProfileEditSheet({
           await user.setProfileImage({ file: selectedFile });
           await user.reload();
           nextAvatarUrl = user.imageUrl;
-        } catch {
+        } catch (error) {
+          logger.error("profile.avatar_upload_failed", error);
           toast.error("No se pudo actualizar la foto de perfil");
           return;
         }

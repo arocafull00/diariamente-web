@@ -1,0 +1,116 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #bal-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 110px;
+      text-align: center;
+      font-size: 120px;
+    }
+    #bal-title span {
+      display: inline-block;
+    }
+    #bal-card {
+      position: absolute;
+      left: 290px;
+      top: 330px;
+      width: 1340px;
+      height: 620px;
+      border-radius: 64px;
+      background: #ffffff;
+      box-shadow: 0 30px 70px rgba(30, 33, 36, 0.1);
+    }
+    #bal-head {
+      position: absolute;
+      left: 80px;
+      top: 70px;
+      font-size: 72px;
+    }
+    #bal-count {
+      position: absolute;
+      right: 80px;
+      top: 92px;
+      font-size: 38px;
+      color: #8a8d92;
+    }
+    #bal-bar {
+      position: absolute;
+      left: 80px;
+      top: 210px;
+      width: 1180px;
+      height: 56px;
+      display: flex;
+      gap: 14px;
+    }
+    .bal-seg {
+      height: 56px;
+      border-radius: 28px;
+    }
+    .bal-row {
+      position: absolute;
+      width: 560px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 34px;
+      white-space: nowrap;
+      color: #5c5f64;
+    }
+    .bal-row i {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+    }
+    .bal-row b {
+      margin-left: auto;
+      font-size: 44px;
+      color: #1e2124;
+    }
+  </style>
+  <div data-hf-id="hf-akbx" id="root" data-composition-id="balance" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-0iz8" id="bal-title" class="display"><span data-hf-id="hf-daui">Descubre</span> <span data-hf-id="hf-j91j">tus</span> <span data-hf-id="hf-y9ee" class="mood-fill">patrones</span></div>
+    <div data-hf-id="hf-innp" id="bal-card">
+      <div data-hf-id="hf-zn6o" id="bal-head" class="display">Tu balance emocional</div>
+      <div data-hf-id="hf-ym5n" id="bal-count" class="body-font"><span data-hf-id="hf-zm82" id="bal-total">13</span> registros</div>
+      <div data-hf-id="hf-e5by" id="bal-bar">
+        <div data-hf-id="hf-zit5" class="bal-seg" style="flex: 5; background: #ff6464"></div>
+        <div data-hf-id="hf-d0gx" class="bal-seg" style="flex: 1; background: #ffbe2e"></div>
+        <div data-hf-id="hf-81qj" class="bal-seg" style="flex: 3; background: #6a9cf5"></div>
+        <div data-hf-id="hf-500q" class="bal-seg" style="flex: 4; background: #4fd284"></div>
+      </div>
+      <div data-hf-id="hf-s6el" class="bal-row body-font" style="left: 80px; top: 340px"><i data-hf-id="hf-wwqy" style="background: #ff6464"></i>Alta energía · Desagradable<b data-hf-id="hf-ftag" data-n="5">5</b></div>
+      <div data-hf-id="hf-n6t4" class="bal-row body-font" style="left: 700px; top: 340px"><i data-hf-id="hf-7dna" style="background: #ffbe2e"></i>Alta energía · Agradable<b data-hf-id="hf-pmg8" data-n="1">1</b></div>
+      <div data-hf-id="hf-nixj" class="bal-row body-font" style="left: 80px; top: 450px"><i data-hf-id="hf-ca5u" style="background: #6a9cf5"></i>Baja energía · Desagradable<b data-hf-id="hf-y56w" data-n="3">3</b></div>
+      <div data-hf-id="hf-aqmq" class="bal-row body-font" style="left: 700px; top: 450px"><i data-hf-id="hf-8s1y" style="background: #4fd284"></i>Baja energía · Agradable<b data-hf-id="hf-6s1c" data-n="4">4</b></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#bal-title span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.08, ease: "power4.out" }, 0.1);
+      tl.fromTo("#bal-card", { y: 500, scale: 0.92 }, { y: 0, scale: 1, duration: 0.7, ease: "expo.out" }, 0.05);
+      tl.fromTo(".bal-seg", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.55, ease: "expo.out", stagger: 0.12 }, 0.6);
+      tl.fromTo(".bal-row", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, stagger: 0.12, ease: "power4.out" }, 0.75);
+      gsap.utils.toArray(".bal-row b").forEach(function (b, i) {
+        const o = { v: 0 };
+        const n = Number(b.dataset.n);
+        tl.fromTo(o, { v: 0 }, { v: n, duration: 0.5, ease: "power2.out", onUpdate: function () { b.textContent = String(Math.round(o.v)); } }, 0.75 + i * 0.12);
+      });
+      const tot = { v: 0 };
+      const totEl = document.querySelector("#bal-total");
+      tl.fromTo(tot, { v: 0 }, { v: 13, duration: 0.9, ease: "power2.out", onUpdate: function () { totEl.textContent = String(Math.round(tot.v)); } }, 0.6);
+      tl.to("#bal-card", { scale: 0.9, opacity: 0, filter: "blur(12px)", duration: 0.18, ease: "power3.in" }, 3.28);
+      tl.to("#bal-title", { opacity: 0, filter: "blur(10px)", duration: 0.15, ease: "power3.in" }, 3.3);
+      window.__timelines["balance"] = tl;
+    })();
+  </script>
+</template>

@@ -11,6 +11,7 @@ import {
   generateInviteToken,
   INVITE_COOKIE_NAME,
 } from "@/lib/invitations";
+import { logger } from "@/lib/logger";
 import { CONSENT_VERSION } from "@/lib/privacy";
 import { logAuditEvent } from "@/server/audit";
 import { requireRole } from "@/server/auth/get-current-profile";
@@ -103,7 +104,11 @@ export async function requestConnection(input: unknown): Promise<ActionResult> {
         patientId: profile.id,
         consentedAt: new Date(),
       });
-    } catch {
+    } catch (error) {
+      logger.error("invitations.request_failed", error, {
+        patientId: profile.id,
+        psychologistId: link.psychologistId,
+      });
       return { error: "No se pudo enviar la solicitud" };
     }
   }
@@ -193,7 +198,12 @@ export async function acceptConnectionRequest(
       psychologistId: profile.id,
       patientId: request.patientId,
     });
-  } catch {
+  } catch (error) {
+    logger.warn("invitations.accept_link_conflict", {
+      psychologistId: profile.id,
+      patientId: request.patientId,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    });
     return { error: "El paciente ya está vinculado con otro psicólogo" };
   }
 

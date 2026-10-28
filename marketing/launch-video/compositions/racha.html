@@ -1,0 +1,123 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #racha-count {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 170px;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+    #racha-num {
+      font-size: 280px;
+      width: 200px;
+      text-align: center;
+      padding-bottom: 30px;
+    }
+    #racha-label {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 22px 40px;
+      border-radius: 999px;
+      background: #fff8dc;
+      color: #9a5b00;
+      font-size: 52px;
+      white-space: nowrap;
+    }
+    #racha-label svg {
+      width: 52px;
+      height: 52px;
+    }
+    #racha-week {
+      position: absolute;
+      left: 345px;
+      top: 560px;
+      width: 1230px;
+      height: 260px;
+    }
+    .racha-day {
+      position: absolute;
+      top: 0;
+      width: 150px;
+      height: 260px;
+    }
+    .racha-day span {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      text-align: center;
+      font-size: 44px;
+      color: #8a8d92;
+    }
+    .racha-day div {
+      position: absolute;
+      left: 0;
+      top: 90px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: #efefef;
+    }
+    .racha-day div b {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+    .racha-day div svg {
+      position: absolute;
+      left: 40px;
+      top: 40px;
+      width: 70px;
+      height: 70px;
+    }
+  </style>
+  <div data-hf-id="hf-q57o" id="root" data-composition-id="racha" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-5ehm" id="racha-count">
+      <div data-hf-id="hf-9qer" id="racha-num" class="display">1</div>
+      <div data-hf-id="hf-h5kl" id="racha-label" class="body-font">
+        <svg data-hf-id="hf-wpen" viewBox="0 0 24 24" fill="#ffbe2e" stroke="#9a5b00" stroke-width="1.5" stroke-linejoin="round"><path data-hf-id="hf-jet5" d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+        días de racha
+      </div>
+    </div>
+    <div data-hf-id="hf-a5zh" id="racha-week">
+      <div data-hf-id="hf-59sp" class="racha-day" style="left: 0px"><span data-hf-id="hf-tt2z" class="body-font">L</span><div data-hf-id="hf-yeow"><b data-hf-id="hf-zlhl" style="background: #6a9cf5"></b><svg data-hf-id="hf-dy64" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-2q26" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-pnzk" class="racha-day" style="left: 180px"><span data-hf-id="hf-u7e0" class="body-font">M</span><div data-hf-id="hf-y7yw"><b data-hf-id="hf-f06x" style="background: #ffbe2e"></b><svg data-hf-id="hf-rv78" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-l5ki" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-nmsg" class="racha-day" style="left: 360px"><span data-hf-id="hf-ykrb" class="body-font">X</span><div data-hf-id="hf-x11t"><b data-hf-id="hf-373p" style="background: #4fd284"></b><svg data-hf-id="hf-qoa5" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-ljvj" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-mwz4" class="racha-day" style="left: 540px"><span data-hf-id="hf-rf8t" class="body-font">J</span><div data-hf-id="hf-xfcu"><b data-hf-id="hf-lu99" style="background: #ff6464"></b><svg data-hf-id="hf-r2l6" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-ly6k" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-vkeo" class="racha-day" style="left: 720px"><span data-hf-id="hf-2jtl" class="body-font">V</span><div data-hf-id="hf-w8fr"><b data-hf-id="hf-bla5" style="background: #6a9cf5"></b><svg data-hf-id="hf-t24b" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-mchl" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-ecpc" class="racha-day" style="left: 900px"><span data-hf-id="hf-1cwi" class="body-font">S</span><div data-hf-id="hf-wmqs"><b data-hf-id="hf-m8b1" style="background: #ffbe2e"></b><svg data-hf-id="hf-tgfc" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-mqsm" d="M20 6 9 17l-5-5" /></svg></div></div>
+      <div data-hf-id="hf-8lrs" class="racha-day" style="left: 1080px"><span data-hf-id="hf-wzj7" class="body-font">D</span><div data-hf-id="hf-vftp"><b data-hf-id="hf-0fl5" style="background: #4fd284"></b><svg data-hf-id="hf-s9i9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-n53n" d="M20 6 9 17l-5-5" /></svg></div></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#racha-count", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.05);
+      tl.fromTo(".racha-day", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out", stagger: 0.03 }, 0.05);
+      tl.set(".racha-day b, .racha-day svg", { scale: 0 }, 0);
+      const num = document.querySelector("#racha-num");
+      gsap.utils.toArray(".racha-day").forEach(function (d, i) {
+        const at = 0.3 + i * 0.2;
+        tl.to(d.querySelector("b"), { scale: 1, duration: 0.3, ease: "back.out(1.8)" }, at);
+        tl.to(d.querySelector("svg"), { scale: 1, duration: 0.3, ease: "back.out(2)" }, at + 0.06);
+      });
+      const cnt = { v: 1 };
+      tl.fromTo(cnt, { v: 1 }, { v: 7, duration: 1.2, ease: "none", onUpdate: function () { num.textContent = String(Math.min(7, 1 + Math.floor(((cnt.v - 1) / 6) * 6.999))); } }, 0.3);
+      tl.fromTo("#racha-num", { scale: 1 }, { scale: 1.12, duration: 0.15, ease: "power2.out", yoyo: true, repeat: 1 }, 1.5);
+      tl.to("#racha-count, #racha-week", { opacity: 0, filter: "blur(12px)", duration: 0.15, ease: "power3.in" }, 2.15);
+      window.__timelines["racha"] = tl;
+    })();
+  </script>
+</template>

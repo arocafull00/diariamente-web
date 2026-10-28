@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { usePushSubscription } from "@/hooks/use-push-subscription";
+import { logger } from "@/lib/logger";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
 export function useWelcomeNotifications(role: "patient" | "psychologist") {
@@ -20,7 +21,11 @@ export function useWelcomeNotifications(role: "patient" | "psychologist") {
       .getRegistration()
       .then((registration) => registration?.pushManager.getSubscription() ?? null)
       .then((subscription) => setEnabled(subscription !== null))
-      .catch(() => {});
+      .catch((error: unknown) => {
+        logger.warn("push.subscription_check_failed", {
+          errorMessage: error instanceof Error ? error.message : String(error),
+        });
+      });
   }, []);
 
   async function activate() {

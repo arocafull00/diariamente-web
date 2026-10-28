@@ -1,0 +1,65 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #claim-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 440px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 132px;
+    }
+    #claim-line > span {
+      display: inline-block;
+      padding-bottom: 18px;
+    }
+    .claim-gap {
+      display: inline-block;
+      width: 40px;
+    }
+    .claim-face {
+      display: inline-block;
+      width: 0;
+      height: 120px;
+      overflow: hidden;
+    }
+    .claim-face img {
+      width: 120px;
+      height: 120px;
+      margin-left: 16px;
+    }
+  </style>
+  <div data-hf-id="hf-dc55" id="root" data-composition-id="claim" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-jj2e" id="claim-line" class="display" data-layout-allow-overflow>
+      <span data-hf-id="hf-6iog" id="claim-w1">Tu</span>
+      <i data-hf-id="hf-3aaj" class="claim-gap"></i>
+      <span data-hf-id="hf-4yl8" id="claim-w2">diario</span>
+      <span data-hf-id="hf-ekq3" id="claim-f1" class="claim-face"><img data-hf-id="hf-6bxu" src="assets/caras/alegria.svg" /></span>
+      <i data-hf-id="hf-ammz" class="claim-gap"></i>
+      <span data-hf-id="hf-r8x9" id="claim-w3" class="mood-fill">entre</span>
+      <span data-hf-id="hf-3p8g" id="claim-f2" class="claim-face"><img data-hf-id="hf-ry26" src="assets/caras/02_azul_rosa.svg" /></span>
+      <i data-hf-id="hf-a8by" class="claim-gap"></i>
+      <span data-hf-id="hf-gk03" id="claim-w4">sesiones</span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#claim-w1, #claim-w2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.09, ease: "power4.out" }, 0.05);
+      tl.fromTo("#claim-w3, #claim-w4", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.09, ease: "power4.out" }, 0.55);
+      tl.fromTo(".claim-face", { width: 0 }, { width: 152, duration: 0.45, ease: "expo.out", stagger: 0.1 }, 1.12);
+      tl.fromTo(".claim-face img", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.8)", stagger: 0.1 }, 1.16);
+      tl.to("#claim-line", { opacity: 0, filter: "blur(12px)", duration: 0.15, ease: "power3.in" }, 2.16);
+      window.__timelines["claim"] = tl;
+    })();
+  </script>
+</template>

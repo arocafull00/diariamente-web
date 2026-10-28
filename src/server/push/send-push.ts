@@ -3,6 +3,7 @@ import webpush from "web-push";
 
 import { db } from "@/db";
 import { pushSubscriptions } from "@/db/schema";
+import { logger } from "@/lib/logger";
 
 type PushTopic =
   | "connection_request"
@@ -40,6 +41,7 @@ function ensureVapidConfigured() {
 
 export async function sendPushToUser(userId: string, payload: PushPayload) {
   if (!ensureVapidConfigured()) {
+    logger.warn("push.vapid_not_configured", { topic: payload.topic });
     return 0;
   }
 
@@ -63,7 +65,13 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
         JSON.stringify(payload),
       );
       delivered += 1;
-    } catch {
+    } catch (error) {
+      logger.warn("push.send_failed", {
+        userId,
+        topic: payload.topic,
+        statusCode:
+          error instanceof webpush.WebPushError ? error.statusCode : null,
+      });
       await db
         .delete(pushSubscriptions)
         .where(eq(pushSubscriptions.id, subscription.id));

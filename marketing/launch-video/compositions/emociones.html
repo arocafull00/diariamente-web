@@ -1,0 +1,92 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    .emo-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 470px;
+      text-align: center;
+      font-size: 140px;
+    }
+    .emo-line span {
+      display: inline-block;
+    }
+    #emo-field {
+      position: absolute;
+      inset: 0;
+    }
+    .emo-chip {
+      position: absolute;
+      padding: 14px 30px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 2px solid #ececec;
+      font-size: 34px;
+      white-space: nowrap;
+    }
+    .emo-face {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+    }
+    .emo-card {
+      position: absolute;
+      width: 343px;
+      overflow: hidden;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(30, 33, 36, 0.1);
+    }
+    .emo-card img {
+      position: absolute;
+      left: -16px;
+      width: 375px;
+      height: 812px;
+    }
+  </style>
+  <div data-hf-id="hf-yilz" id="root" data-composition-id="emociones" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-z3kq" id="emo-field" data-layout-ignore>
+      <div data-hf-id="hf-9omc" class="emo-chip body-font" style="left: 220px; top: 150px; color: #9a5b00">Ilusionada</div>
+      <div data-hf-id="hf-c8xz" class="emo-chip body-font" style="left: 760px; top: 110px; color: #c42a3a">Inquieta</div>
+      <div data-hf-id="hf-1rlm" class="emo-chip body-font" style="left: 1480px; top: 210px; color: #2953b8">Frágil</div>
+      <div data-hf-id="hf-ne1a" class="emo-chip body-font" style="left: 120px; top: 820px; color: #157a43">Serena</div>
+      <div data-hf-id="hf-zp94" class="emo-chip body-font" style="left: 1440px; top: 860px; color: #9a5b00">Orgullosa</div>
+      <div data-hf-id="hf-2mlt" class="emo-chip body-font" style="left: 860px; top: 900px; color: #2953b8">Cansada</div>
+      <div data-hf-id="hf-7zat" class="emo-chip body-font" style="left: 1680px; top: 560px; color: #c42a3a">Celosa</div>
+      <div data-hf-id="hf-43uq" class="emo-chip body-font" style="left: 60px; top: 480px; color: #157a43">Agradecida</div>
+      <img data-hf-id="hf-wypt" class="emo-face" src="assets/caras/alegria.svg" style="left: 560px; top: 250px" />
+      <img data-hf-id="hf-5s9q" class="emo-face" src="assets/caras/tristeza.svg" style="left: 1240px; top: 270px" />
+      <img data-hf-id="hf-5amk" class="emo-face" src="assets/caras/rabia.svg" style="left: 600px; top: 720px" />
+      <img data-hf-id="hf-clpx" class="emo-face" src="assets/caras/ansiedad.svg" style="left: 1240px; top: 700px" />
+      <img data-hf-id="hf-by4r" class="emo-face" src="assets/caras/02_azul_rosa.svg" style="left: 1760px; top: 360px; width: 100px; height: 100px" />
+      <img data-hf-id="hf-9k5r" class="emo-face" src="assets/caras/04_naranja_amarillo.svg" style="left: 330px; top: 640px; width: 100px; height: 100px" />
+      <div data-hf-id="hf-1paq" class="emo-card" style="left: 30px; top: 250px; height: 96px"><img data-hf-id="hf-l8z3" src="assets/screens/11-inicio-ultimos-registros.jpg" style="top: -322px" /></div>
+      <div data-hf-id="hf-jtjd" class="emo-card" style="left: 1560px; top: 640px; height: 150px"><img data-hf-id="hf-tg8h" src="assets/screens/11-inicio-ultimos-registros.jpg" style="top: -566px" /></div>
+    </div>
+    <div data-hf-id="hf-p4r3" id="emo-l1" class="display emo-line"><span data-hf-id="hf-qtpy">Cada</span> <span data-hf-id="hf-88q9">emoción</span></div>
+    <div data-hf-id="hf-e99g" id="emo-l2" class="display emo-line"><span data-hf-id="hf-28aq">merece</span> <span data-hf-id="hf-m2hi">un</span> <span data-hf-id="hf-hapr" class="mood-fill">nombre</span></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const items = gsap.utils.toArray("#emo-field > *");
+      items.forEach(function (el, i) {
+        const dx = (i % 2 ? 1 : -1) * (30 + (i % 5) * 12);
+        tl.fromTo(el, { opacity: 0, scale: 0.7, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 0.02 + (i % 8) * 0.04);
+        tl.fromTo(el, { x: 0, y: 0 }, { x: dx, y: (i % 3 - 1) * 18, duration: 2.2, ease: "none" }, 0);
+      });
+      tl.fromTo("#emo-l1 span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.08, ease: "power4.out" }, 0.1);
+      tl.to("#emo-l1", { opacity: 0, filter: "blur(10px)", duration: 0.13, ease: "power3.in" }, 0.85);
+      tl.fromTo("#emo-l2 span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.08, ease: "power4.out" }, 0.95);
+      tl.to("#emo-l2", { opacity: 0, filter: "blur(12px)", scale: 1.1, duration: 0.18, ease: "power3.in" }, 1.98);
+      tl.to("#emo-field", { opacity: 0, scale: 1.15, filter: "blur(12px)", duration: 0.2, ease: "power3.in" }, 1.98);
+      window.__timelines["emociones"] = tl;
+    })();
+  </script>
+</template>

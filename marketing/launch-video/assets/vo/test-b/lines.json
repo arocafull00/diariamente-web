@@ -1,0 +1,20 @@
+[
+  {
+    "line": 1,
+    "text": "Lo que sientes importa.",
+    "file": "line-01.wav",
+    "seconds": 2.4
+  },
+  {
+    "line": 4,
+    "text": "Conoce Diariamente.",
+    "file": "line-04.wav",
+    "seconds": 1.56
+  },
+  {
+    "line": 6,
+    "text": "Elige la emoción, su intensidad, dónde estabas, dónde lo notas… y qué ha pasado.",
+    "file": "line-06.wav",
+    "seconds": 6.2
+  }
+]

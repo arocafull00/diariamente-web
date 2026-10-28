@@ -14,10 +14,10 @@ import { useIdleSignOut } from "@/hooks/use-idle-sign-out";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { cacheAppShell, clearAppShell } from "@/lib/app-shell-cache";
 import { clearLastActivity } from "@/lib/last-activity";
+import { logger } from "@/lib/logger";
 import { getSessionProfile } from "@/server/actions/session";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
-import { useWelcomeStore } from "@/stores/welcome-store";
 
 type AppSessionGateProps = {
   refreshedAt: number;
@@ -56,6 +56,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
       clearScreenCache();
       clearAppShell();
       clearLastActivity();
+      logger.identify(null);
       router.replace(redirectTo);
     }
 
@@ -72,24 +73,23 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
             result.profile.role === "patient" ? patientItems : psychologistItems;
 
           setProfile(result.profile);
+          logger.identify(result.profile.id);
           cacheAppShell(
             items[0].href,
             items.map((item) => item.href),
           );
 
-          if (
-            !useWelcomeStore
-              .getState()
-              .seenProfileIds.includes(result.profile.id)
-          ) {
-            router.replace("/bienvenida");
+          if (result.pendingScreenHref) {
+            router.replace(result.pendingScreenHref);
           }
           return;
         }
 
         signOutLocally(result.status === "signed-out" ? "/login" : "/onboarding");
       })
-      .catch(() => {});
+      .catch((error: unknown) => {
+        logger.error("auth.session_check_failed", error);
+      });
   }, [
     clearScreenCache,
     clearSession,

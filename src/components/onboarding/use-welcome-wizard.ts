@@ -7,16 +7,14 @@ import { useWelcomeNotifications } from "@/components/onboarding/use-welcome-not
 import { WELCOME_FLOWS } from "@/components/onboarding/welcome-content";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
-import { useWelcomeStore } from "@/stores/welcome-store";
+import { acknowledgeScreen } from "@/server/actions/required-screens";
 
 export function useWelcomeWizard(
   role: "patient" | "psychologist",
-  profileId: string,
   firstName: string,
   finishHref: string,
 ) {
   const router = useRouter();
-  const markSeen = useWelcomeStore((state) => state.markSeen);
   const notifications = useWelcomeNotifications(role);
   const install = usePwaInstall();
   const { goBack, goToStep, step: stepIndex } = useWizardHistory();
@@ -41,8 +39,8 @@ export function useWelcomeWizard(
         };
 
   function finish() {
-    markSeen(profileId);
-    startFinishTransition(() => {
+    startFinishTransition(async () => {
+      await acknowledgeScreen("welcome");
       router.replace(finishHref);
     });
   }

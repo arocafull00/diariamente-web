@@ -1,0 +1,96 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #diario-ground {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.28) 0 80px, rgba(255, 255, 255, 0) 80px 160px),
+        linear-gradient(90deg, #ffc2b8 0%, #ffeaa0 35%, #c4f2d1 68%, #c4dbff 100%);
+    }
+    #diario-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 70px;
+      text-align: center;
+      font-size: 200px;
+    }
+    #diario-phone-wrap {
+      position: absolute;
+      left: 760px;
+      top: 340px;
+      width: 399px;
+      height: 836px;
+    }
+    .diario-face {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+    }
+    .diario-dot {
+      position: absolute;
+      left: 950px;
+      top: 530px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+  </style>
+  <div data-hf-id="hf-r0yj" id="root" data-composition-id="diario" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-4wnz" id="diario-ground"></div>
+    <div data-hf-id="hf-9hx1" id="diario-dots" data-layout-ignore></div>
+    <div data-hf-id="hf-gpdg" id="diario-title" class="display">Cada día</div>
+    <img data-hf-id="hf-ge42" id="diario-f1" class="diario-face" src="assets/caras/alegria.svg" style="left: 330px; top: 420px" />
+    <img data-hf-id="hf-qqmt" id="diario-f2" class="diario-face" src="assets/caras/tristeza.svg" style="left: 1430px; top: 380px" />
+    <img data-hf-id="hf-nloo" id="diario-f3" class="diario-face" src="assets/caras/ansiedad.svg" style="left: 470px; top: 760px" />
+    <img data-hf-id="hf-9mpk" id="diario-f4" class="diario-face" src="assets/caras/rabia.svg" style="left: 1300px; top: 740px" />
+    <img data-hf-id="hf-yu35" id="diario-f5" class="diario-face" src="assets/caras/03_verde_morado.svg" style="left: 160px; top: 140px; width: 110px; height: 110px" />
+    <img data-hf-id="hf-8wup" id="diario-f6" class="diario-face" src="assets/caras/05_rosa_verde.svg" style="left: 1650px; top: 130px; width: 110px; height: 110px" />
+    <div data-hf-id="hf-i0gw" id="diario-phone-wrap" data-layout-allow-overflow>
+      <div data-hf-id="hf-xznb" class="phone" style="left: 0; top: 0">
+        <div data-hf-id="hf-cdmk" class="screen"><img data-hf-id="hf-crcx" class="shot" src="assets/screens/10-inicio-anillo.jpg" /></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const colors = ["#ff6464", "#ffbe2e", "#4fd284", "#6a9cf5"];
+      const host = document.querySelector("#diario-dots");
+      const tl = gsap.timeline({ paused: true });
+      for (let i = 0; i < 36; i++) {
+        const d = document.createElement("div");
+        d.className = "diario-dot";
+        d.style.background = colors[i % 4];
+        host.appendChild(d);
+        const a = (i / 36) * Math.PI * 2 + (i % 3) * 0.21;
+        const r = 260 + ((i * 97) % 520);
+        const s = 0.6 + ((i * 37) % 10) / 10;
+        tl.fromTo(
+          d,
+          { x: Math.cos(a) * r * 1.5, y: Math.sin(a) * r * 0.75, scale: s, opacity: 1 },
+          { x: 0, y: 160, scale: 0.2, opacity: 0, duration: 0.45, ease: "power3.in" },
+          (i % 7) * 0.012,
+        );
+      }
+      tl.fromTo("#diario-ground", { clipPath: "circle(0% at 50% 62%)" }, { clipPath: "circle(75% at 50% 62%)", duration: 0.6, ease: "power2.inOut" }, 0.3);
+      tl.fromTo("#diario-phone-wrap", { y: 520, scale: 0.9 }, { y: 0, scale: 1, duration: 0.7, ease: "expo.out" }, 0.38);
+      tl.fromTo("#diario-title", { opacity: 0, filter: "blur(10px)", scale: 1.08 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "power4.out" }, 0.55);
+      ["#diario-f1", "#diario-f2", "#diario-f3", "#diario-f4", "#diario-f5", "#diario-f6"].forEach(function (sel, i) {
+        tl.fromTo(sel, { scale: 0, rotation: -18 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.6)" }, 0.6 + i * 0.06);
+        tl.to(sel, { y: i % 2 ? -26 : 22, x: i % 3 ? 14 : -14, duration: 1.2, ease: "sine.inOut" }, 1.0 + i * 0.06);
+      });
+      tl.to("#diario-title", { opacity: 0, filter: "blur(12px)", duration: 0.16, ease: "power3.in" }, 2.15);
+      tl.to("#diario-phone-wrap", { y: 380, opacity: 0, filter: "blur(12px)", duration: 0.25, ease: "power3.in" }, 2.1);
+      tl.to(".diario-face", { scale: 0.4, opacity: 0, duration: 0.2, ease: "power3.in", stagger: 0.015 }, 2.1);
+      tl.to("#diario-ground", { opacity: 0, duration: 0.2, ease: "power2.in" }, 2.18);
+      window.__timelines["diario"] = tl;
+    })();
+  </script>
+</template>

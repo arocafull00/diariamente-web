@@ -1,0 +1,112 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #hook-w1 {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 390px;
+      text-align: center;
+      font-size: 260px;
+    }
+    #hook-w1 span {
+      display: inline-block;
+      padding: 0 20px 30px;
+    }
+    #hook-pill {
+      position: absolute;
+      left: 410px;
+      top: 390px;
+      width: 1100px;
+      height: 300px;
+    }
+    #hook-pill-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 150px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 70px, rgba(255, 255, 255, 0) 70px 140px),
+        var(--mood-gradient);
+      filter: blur(14px);
+      opacity: 0;
+    }
+    .hook-txt {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 90px;
+      text-align: center;
+      font-size: 120px;
+      color: #ffffff;
+      text-shadow: 0 2px 14px rgba(30, 33, 36, 0.22);
+    }
+    .hook-txt span {
+      display: inline-block;
+    }
+    #hook-dots {
+      position: absolute;
+      inset: 0;
+    }
+    .hook-dot {
+      position: absolute;
+      left: 950px;
+      top: 530px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+  </style>
+  <div data-hf-id="hf-ktv8" id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-rmdd" id="hook-w1"><span data-hf-id="hf-2ftc" class="display mood-fill">Lo que</span></div>
+    <div data-hf-id="hf-ifmk" id="hook-pill">
+      <div data-hf-id="hf-pt84" id="hook-pill-bg"></div>
+      <div data-hf-id="hf-37j1" id="hook-t1" class="display hook-txt"><span data-hf-id="hf-1c2w">Lo</span> <span data-hf-id="hf-d45q">que</span> <span data-hf-id="hf-fd2a">sientes</span></div>
+      <div data-hf-id="hf-ckkm" id="hook-t2" class="display hook-txt">importa</div>
+    </div>
+    <div data-hf-id="hf-lvim" id="hook-dots" data-layout-ignore></div>
+  </div>
+  <script>
+    (function () {
+      const colors = ["#ff6464", "#ffbe2e", "#4fd284", "#6a9cf5"];
+      const host = document.querySelector("#hook-dots");
+      const dots = [];
+      for (let i = 0; i < 36; i++) {
+        const d = document.createElement("div");
+        d.className = "hook-dot";
+        d.style.background = colors[i % 4];
+        host.appendChild(d);
+        dots.push(d);
+      }
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#hook-w1", { opacity: 0.7, scaleX: 1.35, filter: "blur(14px)" }, { opacity: 1, scaleX: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 0);
+      tl.to("#hook-w1", { opacity: 0, filter: "blur(16px)", scale: 0.8, duration: 0.18, ease: "power3.in" }, 0.72);
+
+      tl.fromTo("#hook-pill-bg", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, 0.78);
+      tl.fromTo("#hook-t1 span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.09, ease: "power4.out" }, 0.86);
+      tl.to("#hook-t1", { opacity: 0, filter: "blur(10px)", duration: 0.14, ease: "power3.in" }, 1.5);
+      tl.fromTo("#hook-t2", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 1.6);
+      tl.to("#hook-pill-bg", { scaleX: 0.58, duration: 0.5, ease: "power2.inOut" }, 1.55);
+      tl.to("#hook-pill", { scale: 0.86, duration: 0.5, ease: "power2.inOut" }, 1.55);
+      tl.to("#hook-t2", { opacity: 0, filter: "blur(10px)", duration: 0.12, ease: "power3.in" }, 2.16);
+      tl.to("#hook-pill-bg", { opacity: 0, scale: 0.2, duration: 0.18, ease: "power3.in" }, 2.16);
+
+      dots.forEach(function (d, i) {
+        const a = (i / dots.length) * Math.PI * 2 + (i % 3) * 0.21;
+        const r = 260 + ((i * 97) % 520);
+        tl.fromTo(
+          d,
+          { x: 0, y: 0, scale: 0, opacity: 0 },
+          { x: Math.cos(a) * r * 1.5, y: Math.sin(a) * r * 0.75, scale: 0.6 + ((i * 37) % 10) / 10, opacity: 1, duration: 0.42, ease: "expo.out" },
+          2.18 + (i % 6) * 0.01,
+        );
+      });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

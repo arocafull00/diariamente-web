@@ -17,6 +17,7 @@ import {
   getEmotionDefinition,
   type EmotionOption,
 } from "@/lib/emotions";
+import { logger } from "@/lib/logger";
 import { createPatientRecord } from "@/server/actions/records";
 import {
   NEW_RECORD_STEPS,
@@ -91,6 +92,9 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
         situation: draft.situation,
         thoughts: draft.thoughts,
         behaviours: draft.behaviours,
+      }).catch((error: unknown) => {
+        logger.error("records.create_request_failed", error);
+        return { error: "No se pudo guardar el registro", recordId: undefined };
       });
 
       if (result.error || !result.recordId) {

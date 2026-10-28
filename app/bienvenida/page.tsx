@@ -36,7 +36,6 @@ export default async function WelcomePage() {
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
         <WelcomeWizard
           role={profile.role}
-          profileId={profile.id}
           firstName={profile.firstName ?? ""}
           finishHref={finishHref}
           inviteToken={inviteLink?.token ?? null}

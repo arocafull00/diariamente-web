@@ -12,6 +12,7 @@ import type {
   OnboardingStep,
 } from "@/components/onboarding/onboarding-types";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
+import { logger } from "@/lib/logger";
 import { completeOnboarding } from "@/server/actions/onboarding";
 import { onboardingSchema } from "@/validation/schemas";
 
@@ -19,6 +20,24 @@ const initialState = { error: undefined as string | undefined };
 const DRAFT_KEY = "diariamente.onboarding-draft";
 const LEGAL_ERROR =
   "Debes aceptar los términos de servicio y la política de privacidad";
+const SIGN_UP_TIMEOUT_MS = 15000;
+const SIGN_UP_TIMEOUT_ERROR = Symbol("sign-up-timeout");
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(SIGN_UP_TIMEOUT_ERROR), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
 
 function readDraft(): OnboardingFormValues | null {
   try {
@@ -167,12 +186,23 @@ export function useOnboardingWizard() {
       });
 
       if (error) {
+        logger.error("auth.signup.update_failed", error, {
+          signUpStatus: signUp.status,
+        });
         toast.error(error.message ?? "No se pudo completar el registro");
         return "failed" as const;
       }
     }
 
     if (signUp.status !== "complete") {
+      logger.error(
+        "auth.signup.incomplete",
+        new Error("Sign-up is not complete after update"),
+        {
+          signUpStatus: signUp.status,
+          missingFields: signUp.missingFields.join(","),
+        },
+      );
       toast.error("No se pudo completar el registro. Vuelve a iniciar sesión.");
       return "failed" as const;
     }
@@ -181,6 +211,9 @@ export function useOnboardingWizard() {
     const { error } = await signUp.finalize({
       navigate: async ({ session, decorateUrl }) => {
         if (session?.currentTask) {
+          logger.warn("auth.signup.pending_task", {
+            task: session.currentTask.key,
+          });
           toast.error(
             "Tu cuenta requiere un paso adicional. Vuelve a iniciar sesión para continuar.",
           );
@@ -200,6 +233,7 @@ export function useOnboardingWizard() {
     });
 
     if (error) {
+      logger.error("auth.signup.finalize_failed", error);
       toast.error(error.message ?? "No se pudo iniciar sesión");
       return "failed" as const;
     }
@@ -221,7 +255,25 @@ export function useOnboardingWizard() {
 
     if (!isSignedIn) {
       setIsCompletingSignUp(true);
-      const outcome = await finishPendingSignUp(parsed.data);
+
+      let outcome: "failed" | "ready" | "redirecting";
+      try {
+        outcome = await withTimeout(
+          finishPendingSignUp(parsed.data),
+          SIGN_UP_TIMEOUT_MS,
+        );
+      } catch (error) {
+        if (error === SIGN_UP_TIMEOUT_ERROR) {
+          toast.error(
+            "La conexión está tardando demasiado. Comprueba tu conexión e inténtalo de nuevo.",
+          );
+        } else {
+          toast.error("No se pudo completar el registro");
+        }
+        setIsCompletingSignUp(false);
+        return;
+      }
+
       if (outcome !== "ready") {
         if (outcome === "failed") {
           setIsCompletingSignUp(false);

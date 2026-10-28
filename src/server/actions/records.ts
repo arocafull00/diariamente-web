@@ -7,6 +7,7 @@ import { after } from "next/server";
 import { db } from "@/db";
 import { auditEvents, patientRecords } from "@/db/schema";
 import { getRecordIntensity } from "@/lib/intensity";
+import { logger } from "@/lib/logger";
 import {
   RECORD_VIEW_ACTION,
   RECORD_VIEW_DEDUPE_MINUTES,
@@ -28,53 +29,75 @@ export async function createPatientRecord(
   const parsed = createRecordSchema.safeParse(input);
 
   if (!parsed.success) {
+    logger.warn("records.create_invalid", {
+      patientId: profile.id,
+      field: parsed.error.issues[0]?.path.join(".") ?? null,
+    });
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const emotionIntensity = getRecordIntensity(parsed.data.emotions);
 
-  const [record] = await db
-    .insert(patientRecords)
-    .values({
-      patientId: profile.id,
-      occurredAt: parsed.data.occurredAt,
-      situation: parsed.data.situation,
-      thoughts: parsed.data.thoughts,
-      behaviours: parsed.data.behaviours,
-      emotions: parsed.data.emotions,
-      quadrant: parsed.data.quadrant,
-      context: parsed.data.context,
-      bodySensations: parsed.data.bodySensations,
-      emotionIntensity,
-    })
-    .returning({ id: patientRecords.id });
+  let recordId: string;
 
-  await logAuditEvent({
-    actorId: profile.id,
-    action: "record.created",
-    entityType: "patient_record",
-    entityId: record.id,
-  });
+  try {
+    const [record] = await db
+      .insert(patientRecords)
+      .values({
+        patientId: profile.id,
+        occurredAt: parsed.data.occurredAt,
+        situation: parsed.data.situation,
+        thoughts: parsed.data.thoughts,
+        behaviours: parsed.data.behaviours,
+        emotions: parsed.data.emotions,
+        quadrant: parsed.data.quadrant,
+        context: parsed.data.context,
+        bodySensations: parsed.data.bodySensations,
+        emotionIntensity,
+      })
+      .returning({ id: patientRecords.id });
+
+    recordId = record.id;
+
+    await logAuditEvent({
+      actorId: profile.id,
+      action: "record.created",
+      entityType: "patient_record",
+      entityId: recordId,
+    });
+  } catch (error) {
+    logger.error("records.create_failed", error, { patientId: profile.id });
+    return { error: "No se pudo guardar el registro" };
+  }
+
+  logger.info("records.created", { patientId: profile.id, recordId });
 
   after(async () => {
-    const link = await getPatientPsychologist(profile.id);
+    try {
+      const link = await getPatientPsychologist(profile.id);
 
-    if (!link) {
-      return;
+      if (!link) {
+        return;
+      }
+
+      await sendPushToUser(link.psychologistId, {
+        topic: "patient_record",
+        title: "Nuevo registro",
+        body: "Un paciente ha añadido un registro nuevo.",
+        url: `/pacientes/${profile.id}`,
+      });
+    } catch (error) {
+      logger.error("records.notify_psychologist_failed", error, {
+        patientId: profile.id,
+        recordId,
+      });
     }
-
-    await sendPushToUser(link.psychologistId, {
-      topic: "patient_record",
-      title: "Nuevo registro",
-      body: "Un paciente ha añadido un registro nuevo.",
-      url: `/pacientes/${profile.id}`,
-    });
   });
 
   revalidatePath("/mis-registros");
   revalidatePath("/inicio");
 
-  return { success: true, recordId: record.id };
+  return { success: true, recordId };
 }
 
 export async function updatePatientRecord(

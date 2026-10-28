@@ -12,6 +12,7 @@ import {
 } from "@/components/profile/settings-row-content";
 import type { UserRole } from "@/db/schema";
 import { getDateKey } from "@/lib/dates";
+import { logger } from "@/lib/logger";
 import {
   ACCESS_LOG_PATH,
   DATA_EXPORT_PDF_PATH,
@@ -40,7 +41,8 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
         link.download = `diariamente-mis-datos-${getDateKey(new Date())}.json`;
         link.click();
         URL.revokeObjectURL(url);
-      } catch {
+      } catch (error) {
+        logger.error("privacy.data_export_failed", error);
         toast.error("No se pudieron descargar tus datos");
       }
     });

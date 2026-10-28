@@ -1,0 +1,123 @@
+[
+ {
+  "file": "line-01.wav",
+  "seconds": 1.48,
+  "text": "Lo que sientes importa.",
+  "words": [
+   [
+    "Lo",
+    0.0,
+    0.16
+   ],
+   [
+    "que",
+    0.16,
+    0.26
+   ],
+   [
+    "sientes",
+    0.26,
+    0.5
+   ],
+   [
+    "importa.",
+    0.5,
+    0.86
+   ]
+  ]
+ },
+ {
+  "file": "line-04.wav",
+  "seconds": 2.2,
+  "text": "Conoce diariamente.",
+  "words": [
+   [
+    "Conoce",
+    0.0,
+    0.44
+   ],
+   [
+    "diariamente.",
+    0.44,
+    0.84
+   ]
+  ]
+ },
+ {
+  "file": "line-06.wav",
+  "seconds": 5.6,
+  "text": "Elige la emoción, su intensidad, dónde estabas, dónde lo notas y qué ha pasado.",
+  "words": [
+   [
+    "Elige",
+    0.0,
+    0.3
+   ],
+   [
+    "la",
+    0.3,
+    0.42
+   ],
+   [
+    "emoción,",
+    0.42,
+    1.04
+   ],
+   [
+    "su",
+    1.28,
+    1.36
+   ],
+   [
+    "intensidad,",
+    1.36,
+    2.0
+   ],
+   [
+    "dónde",
+    2.12,
+    2.26
+   ],
+   [
+    "estabas,",
+    2.26,
+    2.98
+   ],
+   [
+    "dónde",
+    3.24,
+    3.5
+   ],
+   [
+    "lo",
+    3.5,
+    3.7
+   ],
+   [
+    "notas",
+    3.7,
+    4.26
+   ],
+   [
+    "y",
+    4.26,
+    4.58
+   ],
+   [
+    "qué",
+    4.58,
+    4.7
+   ],
+   [
+    "ha",
+    4.7,
+    4.8
+   ],
+   [
+    "pasado.",
+    4.8,
+    5.08
+   ]
+  ]
+ }
+]

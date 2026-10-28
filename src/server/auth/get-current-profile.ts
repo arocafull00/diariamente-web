@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { profiles, type Profile } from "@/db/schema";
+import { logger } from "@/lib/logger";
 
 export async function getCurrentProfile(): Promise<Profile | null> {
   const { userId } = await auth();
@@ -27,6 +28,8 @@ export async function requireUser() {
   if (!userId) {
     redirect("/login");
   }
+
+  logger.identify(userId);
 
   return userId;
 }

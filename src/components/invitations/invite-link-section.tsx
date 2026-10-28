@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { buildInviteUrl } from "@/lib/invitations";
+import { logger } from "@/lib/logger";
 import { generateInviteLink } from "@/server/actions/invitations";
 
 type InviteLinkSectionProps = {
@@ -57,7 +58,12 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
           title: "Conecta conmigo en Diariamente",
           url: inviteUrl,
         });
-      } catch {
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          logger.warn("invitations.share_failed", {
+            errorName: error instanceof Error ? error.name : null,
+          });
+        }
         return;
       }
       return;

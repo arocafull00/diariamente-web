@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { logger } from "@/lib/logger";
+
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -37,6 +39,9 @@ async function createSubscription(
   try {
     return await registration.pushManager.subscribe(options);
   } catch (error) {
+    logger.warn("push.subscribe.retrying", {
+      errorName: error instanceof Error ? error.name : null,
+    });
     const existing = await registration.pushManager.getSubscription();
 
     if (!existing) {
@@ -88,13 +93,18 @@ export function usePushSubscription() {
       });
 
       if (!response.ok) {
+        logger.error(
+          "push.subscribe.request_failed",
+          new Error(`Push subscribe responded ${response.status}`),
+          { status: response.status },
+        );
         toast.error("No se pudo guardar la suscripción");
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error(error);
+      logger.error("push.subscribe_failed", error);
       toast.error(
         (error instanceof DOMException && SUBSCRIBE_ERROR_MESSAGES[error.name]) ||
           "Error al activar notificaciones",

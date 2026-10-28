@@ -1,0 +1,129 @@
+<template>
+  <link rel="stylesheet" href="assets/brand.css" />
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    #ahora-word {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 330px;
+      text-align: center;
+      font-size: 340px;
+    }
+    #ahora-word span {
+      display: inline-block;
+      padding: 0 30px 60px;
+    }
+    #ahora-stage {
+      position: absolute;
+      left: 560px;
+      top: 140px;
+      width: 800px;
+      height: 800px;
+    }
+    #ahora-ring {
+      position: absolute;
+      left: 120px;
+      top: 120px;
+      width: 560px;
+      height: 560px;
+      border-radius: 50%;
+      background: var(--mood-conic);
+      -webkit-mask: radial-gradient(circle, transparent 0 190px, #000 192px);
+      mask: radial-gradient(circle, transparent 0 190px, #000 192px);
+    }
+    #ahora-ring-soft {
+      position: absolute;
+      left: 80px;
+      top: 80px;
+      width: 640px;
+      height: 640px;
+      border-radius: 50%;
+      background: var(--mood-conic);
+      filter: blur(60px);
+      opacity: 0.35;
+    }
+    #ahora-face {
+      position: absolute;
+      left: 290px;
+      top: 290px;
+      width: 220px;
+      height: 220px;
+    }
+    #ahora-orbit {
+      position: absolute;
+      left: 400px;
+      top: 400px;
+      width: 0;
+      height: 0;
+    }
+    .ahora-tag {
+      position: absolute;
+      left: -100px;
+      top: -28px;
+      width: 200px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(30, 33, 36, 0.12);
+      font-size: 28px;
+      color: #1e2124;
+    }
+    .ahora-tag i {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+  </style>
+  <div data-hf-id="hf-tffe" id="root" data-composition-id="ahora" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-qjqz" id="ahora-word"><span data-hf-id="hf-mw2v" class="display mood-fill">Ahora</span></div>
+    <div data-hf-id="hf-gcsq" id="ahora-stage" data-layout-allow-overflow data-layout-allow-overlap>
+      <div data-hf-id="hf-gwdy" id="ahora-ring-soft"></div>
+      <div data-hf-id="hf-tz59" id="ahora-ring"></div>
+      <img data-hf-id="hf-bv4r" id="ahora-face" src="assets/caras/01_gradiente.svg" />
+      <div data-hf-id="hf-72wh" id="ahora-orbit">
+        <div data-hf-id="hf-3p5g" class="ahora-tag body-font" data-a="0"><i data-hf-id="hf-7dna" style="background: #ffbe2e"></i>Ilusionada</div>
+        <div data-hf-id="hf-mtmb" class="ahora-tag body-font" data-a="36"><i data-hf-id="hf-ca5u" style="background: #6a9cf5"></i>Frágil</div>
+        <div data-hf-id="hf-c89i" class="ahora-tag body-font" data-a="72"><i data-hf-id="hf-wwqy" style="background: #ff6464"></i>Inquieta</div>
+        <div data-hf-id="hf-9jly" class="ahora-tag body-font" data-a="108"><i data-hf-id="hf-8s1y" style="background: #4fd284"></i>Serena</div>
+        <div data-hf-id="hf-tnmg" class="ahora-tag body-font" data-a="144"><i data-hf-id="hf-6hmi" style="background: #ffbe2e"></i>Orgullosa</div>
+        <div data-hf-id="hf-7y5j" class="ahora-tag body-font" data-a="180"><i data-hf-id="hf-dzcm" style="background: #6a9cf5"></i>Cansada</div>
+        <div data-hf-id="hf-egzk" class="ahora-tag body-font" data-a="216"><i data-hf-id="hf-2r2m" style="background: #ff6464"></i>Ansiosa</div>
+        <div data-hf-id="hf-96m5" class="ahora-tag body-font" data-a="252"><i data-hf-id="hf-737u" style="background: #4fd284"></i>Tranquila</div>
+        <div data-hf-id="hf-23jc" class="ahora-tag body-font" data-a="288"><i data-hf-id="hf-35dn" style="background: #ff6464"></i>Celosa</div>
+        <div data-hf-id="hf-9chb" class="ahora-tag body-font" data-a="324"><i data-hf-id="hf-7hiv" style="background: #4fd284"></i>Cómoda</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#ahora-word", { opacity: 0, scaleY: 1.7, scaleX: 0.7, filter: "blur(30px)" }, { opacity: 1, scaleY: 1, scaleX: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 0.05);
+      tl.to("#ahora-word", { scale: 0.35, opacity: 0, filter: "blur(20px)", duration: 0.28, ease: "power3.in" }, 1.1);
+      tl.fromTo("#ahora-stage", { scale: 0.3, opacity: 0, filter: "blur(30px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 1.25);
+      tl.fromTo("#ahora-ring, #ahora-ring-soft", { rotation: 0 }, { rotation: 140, duration: 2.0, ease: "none" }, 1.2);
+      const tags = gsap.utils.toArray(".ahora-tag");
+      const proxy = { a: 0 };
+      function place() {
+        tags.forEach(function (t) {
+          const ang = ((Number(t.dataset.a) + proxy.a) * Math.PI) / 180;
+          gsap.set(t, { x: Math.cos(ang) * 400, y: Math.sin(ang) * 330 });
+        });
+      }
+      place();
+      tl.fromTo(proxy, { a: 0 }, { a: 70, duration: 2.0, ease: "none", onUpdate: place }, 1.2);
+      tl.fromTo(tags, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)", stagger: 0.04 }, 1.45);
+      tl.to("#ahora-stage", { scale: 3, opacity: 0, filter: "blur(16px)", duration: 0.3, ease: "power3.in" }, 2.88);
+      window.__timelines["ahora"] = tl;
+    })();
+  </script>
+</template>

@@ -7,6 +7,7 @@ import type { InstallGuide } from "@/components/pwa/install-guide-content";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { getOpenInChromeUrl } from "@/lib/install-platform";
+import { logger } from "@/lib/logger";
 
 type InstallGuideActionsProps = {
   action: InstallGuide["action"];
@@ -17,7 +18,10 @@ export function InstallGuideActions({ action }: InstallGuideActionsProps) {
     try {
       await navigator.clipboard.writeText(location.origin);
       toast.success("Enlace copiado");
-    } catch {
+    } catch (error) {
+      logger.warn("pwa.copy_link_failed", {
+        errorName: error instanceof Error ? error.name : null,
+      });
       toast.error("No se pudo copiar el enlace");
     }
   }

@@ -18,8 +18,8 @@ const STEP_LABELS = ["Tus datos", "Tu perfil", "Confirmación"] as const;
 
 const STEP_CONTENT = [
   {
-    title: "Empecemos por conocerte",
-    description: "Usaremos tu nombre para personalizar tu experiencia en Diariamente.",
+    title: undefined,
+    description: undefined,
   },
   {
     title: "¿Cómo vas a usar Diariamente?",

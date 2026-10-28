@@ -10,6 +10,7 @@ import {
   getStreak,
 } from "@/lib/dates";
 import { getRecordQuadrant } from "@/lib/emotions";
+import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import {
   getPatientPendingRequest,
@@ -31,7 +32,10 @@ export async function getHomeScreenData() {
   const [windowRecords, recentRecords] = await Promise.all([
     getPatientRecordsSince(profile.id, subDays(now, STREAK_WINDOW_DAYS)),
     getRecentPatientRecords(profile.id, RECENT_RECORDS_LIMIT),
-  ]);
+  ]).catch((error: unknown) => {
+    logger.error("records.fetch_home_failed", error, { patientId: profile.id });
+    throw error;
+  });
 
   const recordsByDay = new Map<string, typeof windowRecords>();
 
@@ -68,10 +72,14 @@ export async function getHomeScreenData() {
 
 export async function getMyRecordsScreenData() {
   const profile = await requireRole("patient");
+  const records = await getPatientRecords(profile.id).catch((error: unknown) => {
+    logger.error("records.fetch_list_failed", error, { patientId: profile.id });
+    throw error;
+  });
 
   return {
     grammaticalGender: profile.grammaticalGender,
-    records: await getPatientRecords(profile.id),
+    records,
   };
 }
 

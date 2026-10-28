@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { useOnlineStatus } from "@/hooks/use-online-status";
+import { logger } from "@/lib/logger";
 import {
   useScreenCacheStore,
   type ScreenData,
@@ -38,7 +39,9 @@ export function useCachedScreen<K extends ScreenKey>(
 
         setEntry(key, { ownerId: userId, data });
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        logger.error("screen.fetch_failed", error, { screen: key });
+
         if (useScreenCacheStore.getState().entries[key]?.ownerId === userId) {
           return;
         }

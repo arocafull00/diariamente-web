@@ -6,6 +6,11 @@ PWA de apoyo a la terapia cognitivo-conductual (TCC) que conecta **pacientes** y
 
 Especificación completa del producto, rutas, modelo de datos y fases: `PROJECT.md`.
 
+## Dominios
+
+- Producción (app): `https://diariamente.es`
+- Landing page: `https://info.diariamente.es`
+
 ## Documentación
 
 Next.js cambia entre versiones. Antes de escribir o modificar código de Next.js, consulta la documentación **exacta** de esta versión en `node_modules/next/dist/docs/`.

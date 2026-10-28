@@ -130,3 +130,5 @@ export const connectionConsentSchema = z.object({
     error: "Debes dar tu consentimiento para conectar con tu profesional",
   }),
 });
+
+export const requiredScreenSchema = z.enum(["welcome"]);

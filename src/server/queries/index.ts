@@ -12,6 +12,7 @@ import {
   profiles,
   psychologistPatient,
   recordNotes,
+  screenAcknowledgements,
   therapySessions,
   userReminders,
 } from "@/db/schema";
@@ -552,4 +553,14 @@ export async function getDataExport(profileId: string) {
     accessLog,
     activity,
   };
+}
+
+export async function getScreenAcknowledgements(profileId: string) {
+  return db
+    .select({
+      screen: screenAcknowledgements.screen,
+      version: screenAcknowledgements.version,
+    })
+    .from(screenAcknowledgements)
+    .where(eq(screenAcknowledgements.profileId, profileId));
 }

@@ -8,6 +8,7 @@ import {
   getLastTherapySession,
   getPatientRecordsForPsychologist,
 } from "@/server/queries";
+import { logger } from "@/lib/logger";
 import { getFullName } from "@/lib/utils-app";
 
 type PatientDetailPageProps = {
@@ -28,7 +29,13 @@ export default async function PatientDetailPage({
   const [records, lastSession] = await Promise.all([
     getPatientRecordsForPsychologist(patientId, profile.id),
     getLastTherapySession(profile.id, patientId),
-  ]);
+  ]).catch((error: unknown) => {
+    logger.error("records.fetch_patient_failed", error, {
+      patientId,
+      psychologistId: profile.id,
+    });
+    throw error;
+  });
   const patientName = getFullName(patient.firstName, patient.lastName);
   const lastActivityAt = records[0]?.occurredAt ?? null;
 

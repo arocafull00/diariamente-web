@@ -17,7 +17,6 @@ import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
 
 type WelcomeWizardProps = {
   role: "patient" | "psychologist";
-  profileId: string;
   firstName: string;
   finishHref: string;
   inviteToken: string | null;
@@ -26,7 +25,6 @@ type WelcomeWizardProps = {
 
 export function WelcomeWizard({
   role,
-  profileId,
   firstName,
   finishHref,
   inviteToken,
@@ -47,7 +45,7 @@ export function WelcomeWizard({
     selectGoal,
     step,
     stepIndex,
-  } = useWelcomeWizard(role, profileId, firstName, finishHref);
+  } = useWelcomeWizard(role, firstName, finishHref);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hero =
     !step.features &&

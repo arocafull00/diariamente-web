@@ -3,6 +3,7 @@
 import { useClerk, useSignIn, useSignUp } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -132,6 +133,11 @@ export function SsoCallbackHandler() {
           signUp.existingSession?.sessionId;
 
         if (!existingSessionId) {
+          logger.error(
+            "auth.login.sso_callback_unresolved",
+            new Error("SSO callback ended without a session"),
+            { signInStatus: signIn.status, signUpStatus: signUp.status },
+          );
           setError("No se pudo completar el inicio de sesión. Inténtalo de nuevo.");
           return;
         }
@@ -147,6 +153,10 @@ export function SsoCallbackHandler() {
           },
         });
       } catch (caughtError) {
+        logger.error("auth.login.sso_callback_failed", caughtError, {
+          signInStatus: signIn.status,
+          signUpStatus: signUp.status,
+        });
         const message =
           caughtError instanceof Error
             ? caughtError.message
