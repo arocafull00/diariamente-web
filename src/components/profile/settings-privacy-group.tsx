@@ -1,6 +1,6 @@
 "use client";
 
-import { FileBraces, FileText, History, ShieldCheck } from "lucide-react";
+import { FileBraces, FileCheck, FileText, History, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -100,6 +100,18 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
           tone="green"
           title="Política de privacidad"
           description="Qué datos guardamos, durante cuánto tiempo y tus derechos."
+        />
+      </Link>
+      <Link
+        href="/terminos"
+        data-slot="settings-row"
+        className={settingsRowClassName}
+      >
+        <SettingsRowContent
+          icon={FileCheck}
+          tone="primary"
+          title="Términos de servicio"
+          description="Condiciones de uso para pacientes y profesionales."
         />
       </Link>
     </SettingsGroup>

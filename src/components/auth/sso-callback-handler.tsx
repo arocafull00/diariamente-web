@@ -114,6 +114,11 @@ export function SsoCallbackHandler() {
           return;
         }
 
+        if (signUp.status === "missing_requirements" && signUp.id) {
+          router.replace("/login/continue");
+          return;
+        }
+
         if (
           signIn.status === "needs_second_factor" ||
           signIn.status === "needs_new_password"

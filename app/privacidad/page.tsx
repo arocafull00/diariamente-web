@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { LegalLinks } from "@/components/legal/legal-links";
 import { PRIVACY_POLICY_SECTIONS } from "@/components/privacy/privacy-policy-content";
 import { PrivacyPolicySection } from "@/components/privacy/privacy-policy-section";
 
@@ -26,6 +27,9 @@ export default function PrivacyPolicyPage() {
           paragraphs={section.paragraphs}
         />
       ))}
+      <footer className="border-t border-border pt-6">
+        <LegalLinks />
+      </footer>
     </div>
   );
 }
