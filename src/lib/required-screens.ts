@@ -13,6 +13,12 @@ type ScreenAcknowledgement = {
 };
 
 export const REQUIRED_SCREENS: Record<RequiredScreen, RequiredScreenConfig> = {
+  terms: {
+    id: "terms",
+    version: 1,
+    href: "/aceptar-terminos",
+    roles: ["patient", "psychologist"],
+  },
   welcome: {
     id: "welcome",
     version: 1,

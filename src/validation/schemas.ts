@@ -131,4 +131,4 @@ export const connectionConsentSchema = z.object({
   }),
 });
 
-export const requiredScreenSchema = z.enum(["welcome"]);
+export const requiredScreenSchema = z.enum(["welcome", "terms"]);

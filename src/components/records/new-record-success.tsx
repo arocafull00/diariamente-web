@@ -1,7 +1,9 @@
 "use client";
 
+import { play } from "cuelume";
 import { ArrowRight, House } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 
 import { Face } from "@/components/faces/face";
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
@@ -39,6 +41,10 @@ export function NewRecordSuccess({
   onOpenRecord,
   onGoHome,
 }: NewRecordSuccessProps) {
+  useEffect(() => {
+    play("success", { emphasis: "strong" });
+  }, []);
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col justify-center gap-8 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
       <div className="relative">

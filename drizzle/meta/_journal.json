@@ -71,6 +71,20 @@
       "when": 1793228604632,
       "tag": "0009_superb_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793230906194,
+      "tag": "0010_amazing_johnny_blaze",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793231664858,
+      "tag": "0011_magical_morlocks",
+      "breakpoints": true
     }
   ]
 }

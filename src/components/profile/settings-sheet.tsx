@@ -15,6 +15,7 @@ import {
   settingsRowClassName,
 } from "@/components/profile/settings-row-content";
 import { SettingsSignOutDialog } from "@/components/profile/settings-sign-out-dialog";
+import { SettingsSoundRow } from "@/components/profile/settings-sound-row";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -139,6 +140,7 @@ export function SettingsSheet({
                 />
               </label>
             ) : null}
+            <SettingsSoundRow />
             <PushSubscribeButton />
           </SettingsGroup>
 

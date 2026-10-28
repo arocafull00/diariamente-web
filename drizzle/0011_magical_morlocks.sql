@@ -1,0 +1,1 @@
+ALTER TYPE "public"."required_screen" ADD VALUE 'terms';

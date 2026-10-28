@@ -2,6 +2,7 @@
 
 import { useClerk, useSignIn, useSignUp } from "@clerk/nextjs";
 
+import { SsoLoadingFaces } from "@/components/auth/sso-loading-faces";
 import { Button } from "@/components/ui/button";
 import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";
@@ -178,7 +179,5 @@ export function SsoCallbackHandler() {
     );
   }
 
-  return (
-    <p className="text-sm text-muted-foreground">Completando inicio de sesión...</p>
-  );
+  return <SsoLoadingFaces />;
 }

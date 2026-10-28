@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Background } from "@/components/background";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
+import { SoundFeedback } from "@/components/sound/sound-feedback";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
@@ -93,6 +94,7 @@ export default function RootLayout({
             </div>
           </MotionProvider>
           <Toaster richColors position="top-center" />
+          <SoundFeedback />
           <ServiceWorkerRegister />
           <Analytics />
         </ClerkProvider>

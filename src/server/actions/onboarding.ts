@@ -5,8 +5,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
+import { profiles, screenAcknowledgements } from "@/db/schema";
 import { logger } from "@/lib/logger";
+import { REQUIRED_SCREENS } from "@/lib/required-screens";
 import { logAuditEvent } from "@/server/audit";
 import { requireUser } from "@/server/auth/get-current-profile";
 import { deleteProfileAndIdentity } from "@/server/profiles/delete-profile";
@@ -75,6 +76,17 @@ export async function completeOnboarding(
           updatedAt: new Date(),
         },
       });
+
+    if (clerkUser.legalAcceptedAt) {
+      await db
+        .insert(screenAcknowledgements)
+        .values({
+          profileId: userId,
+          screen: REQUIRED_SCREENS.terms.id,
+          version: REQUIRED_SCREENS.terms.version,
+        })
+        .onConflictDoNothing();
+    }
 
     await client.users.updateUserMetadata(userId, {
       publicMetadata: { role },

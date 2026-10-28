@@ -25,6 +25,7 @@ export function NewRecordTopBar({
       <button
         type="button"
         onClick={canGoBack ? onBack : onClose}
+        data-cuelume-tap={canGoBack ? "navigate" : "close"}
         aria-label={canGoBack ? "Volver al paso anterior" : "Cerrar"}
         className="flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"
       >
@@ -61,6 +62,7 @@ export function NewRecordTopBar({
         <button
           type="button"
           onClick={onClose}
+          data-cuelume-close=""
           aria-label="Cerrar"
           className="flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"
         >

@@ -22,6 +22,7 @@ export function ContextTagChip({
   return (
     <motion.button
       type="button"
+      data-cuelume-toggle=""
       layout
       onClick={onToggle}
       aria-pressed={selected}

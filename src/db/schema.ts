@@ -38,7 +38,7 @@ export const grammaticalGenderEnum = pgEnum("grammatical_gender", [
   "unspecified",
 ]);
 
-export const requiredScreenEnum = pgEnum("required_screen", ["welcome"]);
+export const requiredScreenEnum = pgEnum("required_screen", ["welcome", "terms"]);
 
 export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "pending",
@@ -105,7 +105,7 @@ export const patientRecords = pgTable("patient_records", {
   id: uuid("id").defaultRandom().primaryKey(),
   patientId: text("patient_id")
     .notNull()
-    .references(() => profiles.id, { onDelete: "cascade" }),
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
   situation: text("situation").default("").notNull(),
   thoughts: text("thoughts").default("").notNull(),
@@ -136,10 +136,10 @@ export const psychologistPatient = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     psychologistId: text("psychologist_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     patientId: text("patient_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     linkedAt: timestamp("linked_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -153,10 +153,10 @@ export const therapySessions = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     psychologistId: text("psychologist_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     patientId: text("patient_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     heldAt: timestamp("held_at", { withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -179,7 +179,7 @@ export const recordNotes = pgTable("record_notes", {
     .unique(),
   psychologistId: text("psychologist_id")
     .notNull()
-    .references(() => profiles.id, { onDelete: "cascade" }),
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   content: text("content").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -195,7 +195,7 @@ export const inviteLinks = pgTable("invite_links", {
   psychologistId: text("psychologist_id")
     .notNull()
     .unique()
-    .references(() => profiles.id, { onDelete: "cascade" }),
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -207,10 +207,10 @@ export const connectionRequests = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     psychologistId: text("psychologist_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     patientId: text("patient_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     status: connectionRequestStatusEnum("status").default("pending").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -232,7 +232,7 @@ export const customEmotions = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     name: text("name").notNull(),
     quadrant: moodQuadrantEnum("quadrant"),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -247,7 +247,7 @@ export const userReminders = pgTable("user_reminders", {
   userId: text("user_id")
     .notNull()
     .unique()
-    .references(() => profiles.id, { onDelete: "cascade" }),
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   enabled: boolean("enabled").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -261,7 +261,7 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => profiles.id, { onDelete: "cascade" }),
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   endpoint: text("endpoint").notNull().unique(),
   p256dh: text("p256dh").notNull(),
   auth: text("auth").notNull(),
@@ -276,7 +276,7 @@ export const screenAcknowledgements = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     profileId: text("profile_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     screen: requiredScreenEnum("screen").notNull(),
     version: integer("version").notNull(),
     acknowledgedAt: timestamp("acknowledged_at", { withTimezone: true })
@@ -298,7 +298,7 @@ export const auditEvents = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     actorId: text("actor_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
     action: text("action").notNull(),
     entityType: text("entity_type").notNull(),
     entityId: text("entity_id"),
