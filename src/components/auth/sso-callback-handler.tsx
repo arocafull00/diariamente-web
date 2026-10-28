@@ -105,7 +105,7 @@ export function SsoCallbackHandler() {
             return;
           }
 
-          router.push("/login/continue");
+          router.push("/onboarding");
           return;
         }
 
@@ -115,7 +115,7 @@ export function SsoCallbackHandler() {
         }
 
         if (signUp.status === "missing_requirements" && signUp.id) {
-          router.replace("/login/continue");
+          router.replace("/onboarding");
           return;
         }
 

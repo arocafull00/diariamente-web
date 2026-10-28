@@ -6,6 +6,7 @@ import { Controller } from "react-hook-form";
 
 import logo from "../../../public/logo.png";
 
+import { OnboardingLegalAcceptance } from "@/components/onboarding/onboarding-legal-acceptance";
 import { OnboardingPersonalStep } from "@/components/onboarding/onboarding-personal-step";
 import { OnboardingReviewStep } from "@/components/onboarding/onboarding-review-step";
 import { OnboardingRoleStep } from "@/components/onboarding/onboarding-role-step";
@@ -31,8 +32,20 @@ const STEP_CONTENT = [
 ] as const;
 
 export function OnboardingWizard() {
-  const { form, formAction, goBack, goForward, pending, state, step } =
-    useOnboardingWizard();
+  const {
+    createProfile,
+    form,
+    formAction,
+    goBack,
+    goForward,
+    legalAccepted,
+    legalError,
+    pending,
+    requiresLegalAcceptance,
+    setLegalAccepted,
+    state,
+    step,
+  } = useOnboardingWizard();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const values = form.getValues();
 
@@ -48,10 +61,13 @@ export function OnboardingWizard() {
       noValidate
       className="flex w-full flex-1 flex-col"
       onSubmit={(event) => {
+        event.preventDefault();
         if (step < 2) {
-          event.preventDefault();
           void goForward();
+          return;
         }
+
+        void createProfile(event.currentTarget);
       }}
     >
       <WizardShell
@@ -114,7 +130,18 @@ export function OnboardingWizard() {
           />
         ) : null}
 
-        {step === 2 ? <OnboardingReviewStep values={values} /> : null}
+        {step === 2 ? (
+          <div className="grid gap-5">
+            <OnboardingReviewStep values={values} />
+            {requiresLegalAcceptance ? (
+              <OnboardingLegalAcceptance
+                checked={legalAccepted}
+                error={legalError}
+                onChange={setLegalAccepted}
+              />
+            ) : null}
+          </div>
+        ) : null}
 
         {step === 2 ? (
           <>

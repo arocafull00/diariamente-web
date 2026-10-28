@@ -22,16 +22,6 @@ const grammaticalGenderSchema = z.enum(["feminine", "masculine", "unspecified"],
   error: "Elige cómo prefieres que te llame",
 });
 
-export const completeSignUpSchema = (requiresLegalAcceptance: boolean) =>
-  z.object({
-    firstName: z.string().trim().min(1, "El nombre es obligatorio"),
-    lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
-    legalAccepted: z.boolean().refine(
-      (accepted) => !requiresLegalAcceptance || accepted,
-      "Debes aceptar los términos de servicio y la política de privacidad",
-    ),
-  });
-
 export const onboardingSchema = z.object({
   firstName: z.string().trim().min(1, "El nombre es obligatorio"),
   lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
