@@ -70,7 +70,6 @@ export function NewRecordReflectionStep({
             <button
               type="button"
               data-cuelume-tap=""
-              data-cuelume-emphasis="subtle"
               onClick={onContinue}
               className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
             >

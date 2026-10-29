@@ -37,7 +37,7 @@ export function SoundFeedback() {
       const sound = toast.type ? TOAST_SOUNDS[toast.type] : undefined;
 
       if (sound) {
-        play(sound, { emphasis: "subtle" });
+        play(sound);
       }
     }
   }, [toasts]);

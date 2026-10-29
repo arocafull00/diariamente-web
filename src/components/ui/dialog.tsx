@@ -24,7 +24,6 @@ function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
     <DialogPrimitive.Close
       data-slot="dialog-close"
       data-cuelume-tap="close"
-      data-cuelume-emphasis="subtle"
       {...props}
     />
   )

@@ -72,7 +72,6 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
         disabled={exportPending}
         onClick={handleExportJson}
         data-cuelume-tap=""
-        data-cuelume-emphasis="subtle"
       >
         <SettingsRowContent
           icon={FileBraces}

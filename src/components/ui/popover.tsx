@@ -14,7 +14,6 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
     <PopoverPrimitive.Trigger
       data-slot="popover-trigger"
       data-cuelume-tap="open"
-      data-cuelume-emphasis="subtle"
       {...props}
     />
   )

@@ -39,7 +39,6 @@ export function BodySensationDetails({
         <button
           type="button"
           data-cuelume-open=""
-          data-cuelume-emphasis="subtle"
           onClick={onEditValue}
           aria-label="Cambiar intensidad y agrado"
           className="size-14 shrink-0 rounded-2xl bg-card p-1.5 shadow-sm ring-1 ring-border outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"

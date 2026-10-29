@@ -20,7 +20,6 @@ function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
     <SheetPrimitive.Close
       data-slot="sheet-close"
       data-cuelume-tap="close"
-      data-cuelume-emphasis="subtle"
       {...props}
     />
   )
