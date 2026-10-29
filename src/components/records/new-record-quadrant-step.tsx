@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { EmotionPickerModeToggle } from "@/components/records/emotion-picker-mode-toggle";
 import { QuadrantBlob } from "@/components/records/quadrant-blob";
-import { EMOTION_TREE_GROUPS } from "@/lib/emotion-tree";
+import { EMOTION_TREE_GROUPS, getEmotionGroupPalette } from "@/lib/emotion-tree";
 import { EMOTION_QUADRANT_GROUPS, type EmotionGroup } from "@/lib/emotions";
 import { getEmotionGroupFace } from "@/lib/faces";
 import { useEmotionPickerModeStore } from "@/stores/emotion-picker-mode-store";
@@ -41,7 +41,7 @@ export function NewRecordQuadrantStep({ onSelect }: NewRecordQuadrantStepProps) 
           {groups.map((group, index) => (
             <QuadrantBlob
               key={group.id}
-              quadrant={group.quadrant}
+              quadrant={getEmotionGroupPalette(group.id, group.quadrant)}
               label={group.label}
               faceId={getEmotionGroupFace(group)}
               index={index}

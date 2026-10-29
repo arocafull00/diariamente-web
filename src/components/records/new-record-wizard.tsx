@@ -19,6 +19,7 @@ import { useVisualViewportFrame } from "@/components/records/use-visual-viewport
 import type { GrammaticalGender } from "@/db/schema";
 import type { NewRecordStep } from "@/stores/new-record-store";
 import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
+import { getEmotionGroupPalette } from "@/lib/emotion-tree";
 import { getEmotionLabel, getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +64,10 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
   const emotion = getEmotionLabel(store.emotion ?? "", gender);
   const labelTags = (tags: string[]) =>
     tags.map((tag) => getContextTagLabel(tag, gender));
-  const activeQuadrant = savedRecord?.quadrant ?? store.quadrant;
+  const palette = store.quadrant
+    ? getEmotionGroupPalette(store.group, store.quadrant)
+    : null;
+  const activePalette = savedRecord?.palette ?? palette;
   const showWash = Boolean(savedRecord) || step !== "quadrant";
   const reflectionStep = isReflectionStep(step) ? step : null;
   const contentKey = savedRecord ? "success" : step;
@@ -75,7 +79,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
       <div
         className={cn(
           "pointer-events-none absolute inset-0 transition-[background-color,opacity] duration-700",
-          getMoodStyles(activeQuadrant).soft,
+          getMoodStyles(activePalette).soft,
           showWash ? "opacity-100" : "opacity-0",
         )}
         aria-hidden="true"
@@ -102,7 +106,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             {savedRecord ? (
               <NewRecordSuccess
                 emotion={getEmotionLabel(savedRecord.emotion, gender)}
-                quadrant={savedRecord.quadrant}
+                quadrant={savedRecord.palette}
                 tags={labelTags(savedRecord.tags)}
                 note={savedRecord.note}
                 occurredAt={savedRecord.occurredAt}
@@ -135,7 +139,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             {!savedRecord && step === "intensity" ? (
               <NewRecordIntensityStep
                 emotion={emotion}
-                quadrant={store.quadrant}
+                quadrant={palette}
                 intensity={store.intensity}
                 onChange={(value) => store.setField("intensity", value)}
                 onContinue={store.nextStep}
@@ -145,7 +149,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             {!savedRecord && step === "context" ? (
               <NewRecordContextStep
                 emotion={emotion}
-                quadrant={store.quadrant}
+                quadrant={palette}
                 context={store.context}
                 gender={gender}
                 onToggle={store.toggleContextTag}
@@ -168,7 +172,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
                 eyebrow={REFLECTION_STEPS[reflectionStep].eyebrow}
                 title={REFLECTION_STEPS[reflectionStep].title}
                 placeholder={REFLECTION_STEPS[reflectionStep].placeholder}
-                quadrant={store.quadrant}
+                quadrant={palette}
                 value={store[reflectionStep]}
                 onChange={(value) => store.setField(reflectionStep, value)}
                 onContinue={store.nextStep}
@@ -178,7 +182,7 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             {!savedRecord && step === "when" ? (
               <NewRecordWhenStep
                 emotion={emotion}
-                quadrant={store.quadrant}
+                quadrant={palette}
                 tags={labelTags(getContextTags(store.context))}
                 note={store.situation}
                 occurredAt={store.occurredAt}

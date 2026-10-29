@@ -65,7 +65,7 @@ export function EmotionTreePicker({
       <h3
         className={cn(
           "font-display text-2xl font-medium",
-          MOOD_STYLES[root.quadrant].strong,
+          MOOD_STYLES[root.palette].strong,
         )}
       >
         {root.label}

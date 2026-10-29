@@ -98,7 +98,7 @@ export function NewRecordEmotionStep({
       <EmotionSelectionBar
         emotion={emotion ? getEmotionLabel(emotion, gender) : null}
         definition={definition}
-        styles={getMoodStyles(selectedQuadrant)}
+        styles={getMoodStyles(treeRoot?.palette ?? selectedQuadrant)}
         onContinue={onContinue}
       />
     </div>

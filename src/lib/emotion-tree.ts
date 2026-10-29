@@ -14,6 +14,7 @@ export type EmotionTreeRoot = {
   id: string;
   label: string;
   quadrant: MoodQuadrant;
+  palette: MoodQuadrant;
   branches: EmotionTreeBranch[];
 };
 
@@ -22,6 +23,7 @@ export const EMOTION_TREE: EmotionTreeRoot[] = [
     id: "rabia",
     label: "Rabia",
     quadrant: "HIGH_UNPLEASANT",
+    palette: "HIGH_UNPLEASANT",
     branches: [
       { name: "Enfadado", children: ["Furioso", "Molesto"] },
       { name: "Impotente", children: ["Bloqueado", "Abatido"] },
@@ -34,6 +36,7 @@ export const EMOTION_TREE: EmotionTreeRoot[] = [
     id: "tristeza",
     label: "Tristeza",
     quadrant: "LOW_UNPLEASANT",
+    palette: "LOW_UNPLEASANT",
     branches: [
       { name: "Solo", children: ["Abandonado", "Incomprendido"] },
       { name: "Deprimido", children: ["Apático", "Vacío"] },
@@ -46,6 +49,7 @@ export const EMOTION_TREE: EmotionTreeRoot[] = [
     id: "ansiedad",
     label: "Ansiedad",
     quadrant: "HIGH_UNPLEASANT",
+    palette: "LOW_PLEASANT",
     branches: [
       { name: "Nervioso", children: ["Preocupado", "Agobiado"] },
       { name: "Inseguro", children: ["Insuficiente", "Indeciso"] },
@@ -58,6 +62,7 @@ export const EMOTION_TREE: EmotionTreeRoot[] = [
     id: "alegria",
     label: "Alegría",
     quadrant: "HIGH_PLEASANT",
+    palette: "HIGH_PLEASANT",
     branches: [
       { name: "Ilusionado", children: ["Esperanzado", "Motivado"] },
       { name: "Tranquilo", children: ["Relajado", "A gusto"] },
@@ -70,6 +75,10 @@ export const EMOTION_TREE: EmotionTreeRoot[] = [
 
 export function getTreeEmotionQuadrant(name: string, root: EmotionTreeRoot) {
   return findEmotion(name)?.quadrant ?? root.quadrant;
+}
+
+export function getEmotionGroupPalette(group: string | null, quadrant: MoodQuadrant) {
+  return EMOTION_TREE.find((root) => root.id === group)?.palette ?? quadrant;
 }
 
 export function findTreeBranch(root: EmotionTreeRoot, name: string | null) {

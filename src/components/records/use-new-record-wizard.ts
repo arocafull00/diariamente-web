@@ -11,6 +11,7 @@ import type {
   RecordContext,
 } from "@/db/schema";
 import { EMPTY_RECORD_CONTEXT, getContextTags } from "@/lib/context-tags";
+import { getEmotionGroupPalette } from "@/lib/emotion-tree";
 import {
   EMOTIONS,
   findEmotion,
@@ -42,6 +43,7 @@ export const NEW_RECORD_PHASE_COUNT = 4;
 type RecordDraft = {
   emotion: string;
   quadrant: MoodQuadrant;
+  group: string | null;
   intensity: number;
   context: RecordContext;
   bodySensations: BodySensation[];
@@ -55,6 +57,7 @@ type SavedRecord = {
   id: string;
   emotion: string;
   quadrant: MoodQuadrant;
+  palette: MoodQuadrant;
   tags: string[];
   note: string;
   occurredAt: Date;
@@ -106,6 +109,7 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
         id: result.recordId,
         emotion: draft.emotion,
         quadrant: draft.quadrant,
+        palette: getEmotionGroupPalette(draft.group, draft.quadrant),
         tags: getContextTags(draft.context),
         note: draft.situation,
         occurredAt: draft.occurredAt,
@@ -123,6 +127,7 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
     save({
       emotion: store.emotion,
       quadrant: store.quadrant,
+      group: store.group,
       intensity: store.intensity,
       context: store.context,
       bodySensations: store.bodySensations,
@@ -142,6 +147,7 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
     save({
       emotion,
       quadrant,
+      group,
       intensity: 5,
       context: EMPTY_RECORD_CONTEXT,
       bodySensations: [],

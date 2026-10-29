@@ -25,6 +25,7 @@ export type EmotionTreeLayoutNode = {
   name: string;
   label: string;
   quadrant: MoodQuadrant;
+  palette: MoodQuadrant;
   kind: EmotionTreeNodeKind;
   tone: MoodTone;
   selected: boolean;
@@ -156,6 +157,7 @@ export function getEmotionTreeLayout(
       name: branch.name,
       label: getEmotionLabel(branch.name, gender),
       quadrant: getTreeEmotionQuadrant(branch.name, root),
+      palette: root.palette,
       kind: "branch",
       tone: getTone(branch.name, index === openIndex ? 3 : 2),
       selected: emotion === branch.name,
@@ -174,6 +176,7 @@ export function getEmotionTreeLayout(
         name: child,
         label: getEmotionLabel(child, gender),
         quadrant: getTreeEmotionQuadrant(child, root),
+        palette: root.palette,
         kind: "child",
         tone: getTone(child, 1),
         selected: emotion === child,

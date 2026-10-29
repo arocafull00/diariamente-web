@@ -51,7 +51,7 @@ export function EmotionTreeDrop({ node, positions }: EmotionTreeDropProps) {
         }}
         className={cn(
           "size-full rounded-full transition-colors duration-300",
-          MOOD_STYLES[node.quadrant].tones[node.tone],
+          MOOD_STYLES[node.palette].tones[node.tone],
         )}
       />
     </motion.div>
