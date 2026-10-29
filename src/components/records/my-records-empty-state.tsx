@@ -19,6 +19,8 @@ export function MyRecordsEmptyState() {
       </p>
       <Link
         href="/nuevo-registro"
+        data-cuelume-tap=""
+        data-cuelume-theme="press"
         className={cn(buttonVariants({ size: "lg" }), "mt-6")}
       >
         <Plus data-icon="inline-start" aria-hidden="true" />

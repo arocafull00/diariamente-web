@@ -14,6 +14,7 @@ import { WelcomeMascot } from "@/components/onboarding/welcome-mascot";
 import { WelcomeNotificationsStep } from "@/components/onboarding/welcome-notifications-step";
 import { WelcomeTrustCircle } from "@/components/onboarding/welcome-trust-circle";
 import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
+import { playAccountCreatedSound } from "@/lib/account-created-sound";
 
 type WelcomeWizardProps = {
   role: "patient" | "psychologist";
@@ -53,13 +54,17 @@ export function WelcomeWizard({
     !["goal", "safe-space", "notifications", "invite", "install"].includes(step.id);
 
   useEffect(() => {
+    playAccountCreatedSound();
+  }, []);
+
+  useEffect(() => {
     if (stepIndex > 0) {
       headingRef.current?.focus();
     }
   }, [stepIndex]);
 
   return (
-    <div className="flex w-full flex-1 flex-col lg:mx-auto lg:my-auto lg:max-w-xl lg:flex-none">
+    <div className="flex w-full flex-1 flex-col lg:mx-auto lg:max-w-xl">
       <WelcomeTopBar
         progress={progress}
         showBack={stepIndex > 0}

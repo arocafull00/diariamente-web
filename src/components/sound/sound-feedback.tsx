@@ -34,7 +34,10 @@ export function SoundFeedback() {
       const sound = toast.type ? TOAST_SOUNDS[toast.type] : undefined;
 
       if (sound) {
-        play(sound, { emphasis: "subtle" });
+        play(sound, {
+          emphasis: "subtle",
+          theme: sound === "success" ? "press" : undefined,
+        });
       }
     }
   }, [toasts]);

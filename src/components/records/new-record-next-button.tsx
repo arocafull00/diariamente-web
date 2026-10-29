@@ -21,6 +21,8 @@ export function NewRecordNextButton({
   return (
     <motion.button
       type="button"
+      data-cuelume-tap=""
+      data-cuelume-theme="press"
       onClick={onClick}
       disabled={disabled}
       aria-label={label}

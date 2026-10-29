@@ -58,6 +58,7 @@ export function HomeMoodRing({ todayRecords }: HomeMoodRingProps) {
       <Link
         href="/nuevo-registro"
         aria-label="Nuevo registro"
+        data-cuelume-toggle=""
         className="group absolute inset-0 m-auto flex size-20 items-center justify-center rounded-full bg-card text-foreground shadow-xl ring-1 ring-border/60 outline-none transition-transform duration-300 hover:scale-110 active:scale-95 focus-visible:ring-4 focus-visible:ring-ring/50"
       >
         <Plus

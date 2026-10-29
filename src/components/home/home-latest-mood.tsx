@@ -23,6 +23,8 @@ export function HomeLatestMood({ record, gender }: HomeLatestMoodProps) {
       <h2 className="px-1 font-semibold">Tu último registro</h2>
       <Link
         href={`/registro/${record.id}`}
+        data-cuelume-tap="type"
+        data-cuelume-theme="mech"
         className="group relative block rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <MoodSummaryCard

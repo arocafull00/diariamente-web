@@ -29,6 +29,7 @@ export function WelcomeTopBar({
         variant="ghost"
         size="icon-lg"
         aria-label="Atrás"
+        data-cuelume-tap={undefined}
         className={showBack ? "text-foreground/65" : "invisible"}
         disabled={disabled || !showBack}
         onClick={onBack}

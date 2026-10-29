@@ -18,6 +18,10 @@ import type {
   OnboardingStep,
 } from "@/components/onboarding/onboarding-types";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
+import {
+  clearAccountCreated,
+  markAccountCreated,
+} from "@/lib/account-created-sound";
 import { logger } from "@/lib/logger";
 import { completeOnboarding } from "@/server/actions/onboarding";
 import { onboardingSchema } from "@/validation/schemas";
@@ -103,6 +107,7 @@ export function useOnboardingWizard() {
 
   useEffect(() => {
     if (state.error) {
+      clearAccountCreated();
       toast.error(state.error);
     }
   }, [state.error]);
@@ -119,6 +124,7 @@ export function useOnboardingWizard() {
       if (draft) {
         sessionStorage.removeItem(DRAFT_KEY);
         form.reset(draft);
+        markAccountCreated();
         startTransition(() => formAction(toFormData(draft)));
         return;
       }
@@ -292,6 +298,7 @@ export function useOnboardingWizard() {
     }
 
     const formData = new FormData(formElement);
+    markAccountCreated();
     startTransition(() => formAction(formData));
   }
 

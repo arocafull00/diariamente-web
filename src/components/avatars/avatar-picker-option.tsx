@@ -21,6 +21,7 @@ export function AvatarPickerOption({
     <button
       type="button"
       role="radio"
+      data-cuelume-select=""
       aria-checked={selected}
       aria-label={avatar.label}
       onClick={() => onSelect(avatar.url)}

@@ -25,6 +25,7 @@ export function GrammaticalGenderOption({
       <input
         ref={inputRef}
         type="radio"
+        data-cuelume-select=""
         name={name}
         value={value}
         checked={selected}

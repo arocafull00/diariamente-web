@@ -68,6 +68,7 @@ export function WizardFooter({
 
       <Button
         type={primaryType}
+        data-cuelume-theme="press"
         size="lg"
         className="flex-1"
         disabled={primaryDisabled || primaryPending}

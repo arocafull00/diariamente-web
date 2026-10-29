@@ -24,6 +24,8 @@ export function NewRecordFab() {
       <div className="mx-auto flex max-w-lg justify-end px-4">
         <MotionLink
           href="/nuevo-registro"
+          data-cuelume-tap=""
+          data-cuelume-theme="press"
           initial={{ opacity: 0, scale: 0.6, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           whileHover={{ scale: 1.04 }}

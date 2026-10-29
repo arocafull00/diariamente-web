@@ -7,6 +7,7 @@ import { useWelcomeNotifications } from "@/components/onboarding/use-welcome-not
 import { WELCOME_FLOWS } from "@/components/onboarding/welcome-content";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
+import { playCompletionSound } from "@/lib/completion-sound";
 import { acknowledgeScreen } from "@/server/actions/required-screens";
 
 export function useWelcomeWizard(
@@ -51,6 +52,7 @@ export function useWelcomeWizard(
     }
 
     if (isLastStep) {
+      playCompletionSound();
       finish();
       return;
     }

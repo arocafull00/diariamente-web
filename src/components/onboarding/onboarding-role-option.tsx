@@ -27,6 +27,8 @@ export function OnboardingRoleOption({
       <input
         ref={inputRef}
         type="radio"
+        data-cuelume-select=""
+        data-cuelume-theme="press"
         name={name}
         value={value}
         checked={selected}

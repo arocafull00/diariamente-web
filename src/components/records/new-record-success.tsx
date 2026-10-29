@@ -1,6 +1,5 @@
 "use client";
 
-import { play } from "cuelume";
 import { ArrowRight, House } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
@@ -9,6 +8,7 @@ import { Face } from "@/components/faces/face";
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
 import { Button } from "@/components/ui/button";
 import type { MoodQuadrant } from "@/db/schema";
+import { playCompletionSound } from "@/lib/completion-sound";
 import type { FaceId } from "@/lib/faces";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ export function NewRecordSuccess({
   onGoHome,
 }: NewRecordSuccessProps) {
   useEffect(() => {
-    play("success", { emphasis: "strong" });
+    playCompletionSound();
   }, []);
 
   return (

@@ -61,6 +61,8 @@ export function QuadrantBlob({
         />
         <motion.button
           type="button"
+          data-cuelume-open=""
+          data-cuelume-theme="bubble"
           onClick={onSelect}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.92 }}

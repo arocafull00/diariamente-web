@@ -1,6 +1,5 @@
 "use client";
 
-import { play } from "cuelume";
 import { motion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 
@@ -60,7 +59,6 @@ export function EmotionFieldPicker({
       const { emotion: name, quadrant, group } = element.dataset;
 
       if (name && group && isMoodQuadrant(quadrant)) {
-        play("type", { theme: "bubble" });
         onSelect(name, quadrant, group);
       }
     },

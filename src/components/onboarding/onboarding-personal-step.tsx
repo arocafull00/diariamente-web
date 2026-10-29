@@ -22,7 +22,7 @@ export function OnboardingPersonalStep({
 }: OnboardingPersonalStepProps) {
   return (
     <div className="grid gap-5">
-      <div className="space-y-2.5">
+      <div className="space-y-2.5" data-cuelume-theme="press">
         <Label className="font-semibold">Elige tu foto de perfil</Label>
         <Controller
           control={control}
@@ -81,7 +81,7 @@ export function OnboardingPersonalStep({
           </p>
         ) : null}
       </div>
-      <div className="space-y-2.5">
+      <div className="space-y-2.5" data-cuelume-theme="press">
         <Controller
           control={control}
           name="grammaticalGender"

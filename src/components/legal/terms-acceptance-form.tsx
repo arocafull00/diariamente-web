@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { OnboardingLegalAcceptance } from "@/components/onboarding/onboarding-legal-acceptance";
 import { WelcomeContinueButton } from "@/components/onboarding/welcome-continue-button";
+import { playCompletionSound } from "@/lib/completion-sound";
 import { acknowledgeScreen } from "@/server/actions/required-screens";
 
 export function TermsAcceptanceForm() {
@@ -22,6 +23,7 @@ export function TermsAcceptanceForm() {
         return;
       }
 
+      playCompletionSound();
       router.replace("/");
     });
   }

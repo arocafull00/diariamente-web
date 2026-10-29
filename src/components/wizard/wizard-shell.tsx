@@ -38,7 +38,7 @@ export function WizardShell({
   return (
     <div
       className={cn(
-        "flex w-full flex-1 flex-col lg:mx-auto lg:my-auto lg:max-w-xl! lg:flex-none!",
+        "flex w-full flex-1 flex-col lg:mx-auto lg:max-w-xl!",
         className,
       )}
     >
