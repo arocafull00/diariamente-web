@@ -20,6 +20,8 @@ export function EmotionSearchResult({
     <li>
       <button
         type="button"
+        data-cuelume-select="ready"
+        data-cuelume-theme="bubble"
         onClick={onSelect}
         className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
       >

@@ -7,6 +7,7 @@ import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
 import { Slider } from "@/components/ui/slider";
 import type { MoodQuadrant } from "@/db/schema";
 import { getMoodStyles, type MoodTone } from "@/lib/emotions";
+import { playStepSound } from "@/lib/step-sound";
 import { cn } from "@/lib/utils";
 
 type NewRecordIntensityStepProps = {
@@ -95,8 +96,9 @@ export function NewRecordIntensityStep({
             value={[intensity]}
             aria-label="Intensidad"
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value;
-              onChange(next ?? intensity);
+              const next = (Array.isArray(value) ? value[0] : value) ?? intensity;
+              playStepSound(intensity, next);
+              onChange(next);
             }}
             className="[&_[data-slot=slider-range]]:bg-foreground [&_[data-slot=slider-thumb]]:size-7 [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:shadow-md [&_[data-slot=slider-track]]:h-2"
           />

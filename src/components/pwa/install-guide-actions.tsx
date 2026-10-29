@@ -29,7 +29,7 @@ export function InstallGuideActions({ action }: InstallGuideActionsProps) {
   return (
     <div className="flex flex-col gap-2">
       {action === "open-chrome" && (
-        <a href={getOpenInChromeUrl(location.href)} className={buttonVariants()}>
+        <a href={getOpenInChromeUrl(location.href)} data-cuelume-tap="" className={buttonVariants()}>
           <ExternalLink data-icon="inline-start" />
           Abrir en Chrome
         </a>

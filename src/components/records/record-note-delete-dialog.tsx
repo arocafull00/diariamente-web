@@ -70,7 +70,12 @@ export function RecordNoteDeleteDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction disabled={pending} onClick={handleDelete}>
+          <AlertDialogAction
+            data-cuelume-tap="close"
+            data-cuelume-emphasis="strong"
+            disabled={pending}
+            onClick={handleDelete}
+          >
             {pending ? (
               <LoaderCircle
                 className="animate-spin"

@@ -79,6 +79,8 @@ export function ContextTagGroup({
         ) : (
           <button
             type="button"
+            data-cuelume-open=""
+            data-cuelume-emphasis="subtle"
             onClick={() => setAdding(true)}
             aria-label={`Añadir a ${label.toLowerCase()}`}
             className="flex size-11 items-center justify-center rounded-full bg-card ring-1 ring-border outline-none transition-colors hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/50"

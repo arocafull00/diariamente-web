@@ -40,7 +40,7 @@ export function RecordAccessNotice({ views }: RecordAccessNoticeProps) {
           ? ` (y ${otherViews} ${otherViews === 1 ? "vez" : "veces"} más)`
           : ""}
         .{" "}
-        <Link href={ACCESS_LOG_PATH} className="font-medium text-primary underline">
+        <Link href={ACCESS_LOG_PATH} data-cuelume-tap="type" className="font-medium text-primary underline">
           Ver historial
         </Link>
       </span>

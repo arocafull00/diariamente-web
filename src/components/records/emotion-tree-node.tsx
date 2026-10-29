@@ -29,6 +29,8 @@ export function EmotionTreeNode({
   return (
     <motion.button
       type="button"
+      data-cuelume-select="ready"
+      data-cuelume-theme="bubble"
       {...handlers}
       onClick={() => {
         if (consumeTrigger()) {

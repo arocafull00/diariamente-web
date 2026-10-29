@@ -76,7 +76,12 @@ export function PatientUnlinkButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction disabled={pending} onClick={handleUnlink}>
+          <AlertDialogAction
+            data-cuelume-tap="close"
+            data-cuelume-emphasis="strong"
+            disabled={pending}
+            onClick={handleUnlink}
+          >
             {pending ? (
               <LoaderCircle
                 className="animate-spin"

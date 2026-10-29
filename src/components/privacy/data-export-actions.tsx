@@ -10,7 +10,12 @@ export function DataExportActions() {
 
   return (
     <div className="flex flex-wrap gap-3 print:hidden">
-      <Button variant="outline" size="lg" onClick={() => router.back()}>
+      <Button
+        variant="outline"
+        size="lg"
+        data-cuelume-tap="type"
+        onClick={() => router.back()}
+      >
         <ArrowLeft data-icon="inline-start" aria-hidden="true" />
         Volver
       </Button>

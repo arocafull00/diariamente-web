@@ -14,6 +14,7 @@ export function AppHeaderBackButton() {
       variant="ghost"
       size="icon"
       aria-label="Volver"
+      data-cuelume-tap="type"
       className="size-10 text-primary"
       onClick={() => router.back()}
     >

@@ -1,6 +1,6 @@
 "use client";
 
-import { bind, play, setEnabled, type SoundName } from "cuelume";
+import { bind, play, setEnabled, setTheme, type SoundName } from "cuelume";
 import { useEffect, useRef } from "react";
 import { useSonner } from "sonner";
 
@@ -18,7 +18,10 @@ export function SoundFeedback() {
   const playedToasts = useRef(new Set<string | number>());
   const enabled = useSoundStore((state) => state.enabled);
 
-  useEffect(() => bind(), []);
+  useEffect(() => {
+    setTheme("press");
+    return bind();
+  }, []);
 
   useEffect(() => {
     setEnabled(enabled);
@@ -34,10 +37,7 @@ export function SoundFeedback() {
       const sound = toast.type ? TOAST_SOUNDS[toast.type] : undefined;
 
       if (sound) {
-        play(sound, {
-          emphasis: "subtle",
-          theme: sound === "success" ? "press" : undefined,
-        });
+        play(sound, { emphasis: "subtle" });
       }
     }
   }, [toasts]);

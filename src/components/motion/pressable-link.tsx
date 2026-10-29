@@ -21,6 +21,7 @@ export function PressableLink({
     <MotionLink
       href={href}
       className={className}
+      data-cuelume-tap="type"
       {...dataAttributes}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.97, y: 0 }}

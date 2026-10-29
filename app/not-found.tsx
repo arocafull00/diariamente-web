@@ -26,7 +26,7 @@ export default function NotFound() {
       <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
         La página que buscas no existe o se ha movido.
       </p>
-      <Link href="/" className={cn(buttonVariants({ size: "lg" }), "mt-8")}>
+      <Link href="/" data-cuelume-tap="" className={cn(buttonVariants({ size: "lg" }), "mt-8")}>
         <House data-icon="inline-start" aria-hidden="true" />
         Volver al inicio
       </Link>

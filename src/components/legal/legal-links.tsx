@@ -10,12 +10,14 @@ export function LegalLinks() {
     >
       <Link
         href="/terminos"
+        data-cuelume-tap="type"
         className="inline-flex min-h-11 items-center underline underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
       >
         Términos de servicio
       </Link>
       <Link
         href={PRIVACY_POLICY_PATH}
+        data-cuelume-tap="type"
         className="inline-flex min-h-11 items-center underline underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
       >
         Política de privacidad

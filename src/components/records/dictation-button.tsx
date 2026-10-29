@@ -11,6 +11,7 @@ export function DictationButton({ isListening, onClick }: DictationButtonProps) 
   return (
     <button
       type="button"
+      data-cuelume-toggle=""
       onClick={onClick}
       aria-pressed={isListening}
       aria-label={isListening ? "Detener dictado" : "Dictar por voz"}

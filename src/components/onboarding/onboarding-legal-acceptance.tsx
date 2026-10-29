@@ -22,6 +22,7 @@ export function OnboardingLegalAcceptance({
         <input
           id="legalAccepted"
           type="checkbox"
+          data-cuelume-toggle=""
           checked={checked}
           required
           aria-invalid={Boolean(error)}
@@ -33,6 +34,7 @@ export function OnboardingLegalAcceptance({
           Acepto los{" "}
           <Link
             href="/terminos"
+            data-cuelume-tap="type"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary underline underline-offset-4"
@@ -42,6 +44,7 @@ export function OnboardingLegalAcceptance({
           y la{" "}
           <Link
             href={PRIVACY_POLICY_PATH}
+            data-cuelume-tap="type"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary underline underline-offset-4"

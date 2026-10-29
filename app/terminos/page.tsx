@@ -21,6 +21,7 @@ export default function TermsOfServicePage() {
       <header className="space-y-4 border-b border-border pb-8">
         <Link
           href="/"
+          data-cuelume-tap="type"
           className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />

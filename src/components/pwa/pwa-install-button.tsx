@@ -18,6 +18,8 @@ export function PwaInstallButton() {
     <SettingsGroup title="Aplicación">
       <button
         type="button"
+        data-cuelume-tap=""
+        data-cuelume-emphasis="subtle"
         data-slot="settings-row"
         className={settingsRowClassName}
         aria-disabled={installed || loading}

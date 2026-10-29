@@ -12,7 +12,11 @@ function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
 
 function AlertDialogTrigger({ ...props }: AlertDialogPrimitive.Trigger.Props) {
   return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
+    <AlertDialogPrimitive.Trigger
+      data-slot="alert-dialog-trigger"
+      data-cuelume-tap="open"
+      {...props}
+    />
   )
 }
 
@@ -164,6 +168,7 @@ function AlertDialogCancel({
   return (
     <AlertDialogPrimitive.Close
       data-slot="alert-dialog-cancel"
+      data-cuelume-tap="close"
       className={cn(className)}
       render={<Button variant={variant} size={size} />}
       {...props}

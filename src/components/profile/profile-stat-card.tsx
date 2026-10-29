@@ -22,6 +22,7 @@ export function ProfileStatCard({
     <ProfileSectionCard title={title}>
       <Link
         href={href}
+        data-cuelume-tap="type"
         className="group -m-4 flex flex-1 items-center gap-4 rounded-3xl p-4 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted lg:-m-5 lg:p-5"
       >
         <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">

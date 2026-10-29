@@ -59,6 +59,7 @@ export function WizardFooter({
           variant="outline"
           size="lg"
           disabled={backDisabled || primaryPending}
+          data-cuelume-tap="type"
           onClick={onBack}
         >
           <ArrowLeft data-icon="inline-start" aria-hidden="true" />
@@ -68,7 +69,6 @@ export function WizardFooter({
 
       <Button
         type={primaryType}
-        data-cuelume-theme="press"
         size="lg"
         className="flex-1"
         disabled={primaryDisabled || primaryPending}

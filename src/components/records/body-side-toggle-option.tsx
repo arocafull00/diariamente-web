@@ -14,6 +14,7 @@ export function BodySideToggleOption({ side, selected, onSelect }: BodySideToggl
   return (
     <button
       type="button"
+      data-cuelume-select=""
       onClick={() => onSelect(side)}
       aria-pressed={selected}
       className={cn(

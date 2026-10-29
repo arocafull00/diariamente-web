@@ -42,6 +42,14 @@ const buttonVariants = cva(
   }
 )
 
+function getSoundEmphasis(variant: VariantProps<typeof buttonVariants>["variant"]) {
+  if (variant === "default") {
+    return undefined
+  }
+
+  return variant === "destructive" ? "strong" : "subtle"
+}
+
 function Button({
   className,
   variant = "default",
@@ -51,8 +59,8 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
-      data-cuelume-tap=""
-      data-cuelume-emphasis={variant === "default" ? undefined : "subtle"}
+      data-cuelume-tap={variant === "destructive" ? "close" : ""}
+      data-cuelume-emphasis={getSoundEmphasis(variant)}
       render={<TapButton />}
       className={cn(
         buttonVariants({ variant, size }),

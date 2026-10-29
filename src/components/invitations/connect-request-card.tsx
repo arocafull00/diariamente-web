@@ -79,7 +79,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
         <p className="text-xs text-muted-foreground">
           Podrás ver cuándo consulta cada registro y retirar el consentimiento
           en cualquier momento desvinculándote desde tu perfil.{" "}
-          <Link href={PRIVACY_POLICY_PATH} className="font-medium text-primary underline">
+          <Link href={PRIVACY_POLICY_PATH} data-cuelume-tap="type" className="font-medium text-primary underline">
             Política de privacidad
           </Link>
         </p>
@@ -87,6 +87,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
       <label className="flex w-full items-start gap-3 text-left text-sm text-foreground">
         <input
           type="checkbox"
+          data-cuelume-toggle=""
           checked={consent}
           onChange={(event) => setConsent(event.target.checked)}
           className="mt-0.5 size-4 shrink-0 accent-primary"

@@ -62,6 +62,8 @@ export function SensationTagPicker({
       ) : (
         <button
           type="button"
+          data-cuelume-open=""
+          data-cuelume-emphasis="subtle"
           onClick={() => setAdding(true)}
           className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-card px-4 text-sm font-semibold ring-1 ring-border outline-none transition-colors hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/50"
         >

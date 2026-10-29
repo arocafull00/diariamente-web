@@ -53,6 +53,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
       {role === "patient" ? (
         <Link
           href={ACCESS_LOG_PATH}
+          data-cuelume-tap="type"
           data-slot="settings-row"
           className={settingsRowClassName}
         >
@@ -70,6 +71,8 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
         className={settingsRowClassName}
         disabled={exportPending}
         onClick={handleExportJson}
+        data-cuelume-tap=""
+        data-cuelume-emphasis="subtle"
       >
         <SettingsRowContent
           icon={FileBraces}
@@ -81,6 +84,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
       </button>
       <Link
         href={DATA_EXPORT_PDF_PATH}
+        data-cuelume-tap="type"
         prefetch={false}
         data-slot="settings-row"
         className={settingsRowClassName}
@@ -94,6 +98,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
       </Link>
       <Link
         href={PRIVACY_POLICY_PATH}
+        data-cuelume-tap="type"
         data-slot="settings-row"
         className={settingsRowClassName}
       >
@@ -106,6 +111,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
       </Link>
       <Link
         href="/terminos"
+        data-cuelume-tap="type"
         data-slot="settings-row"
         className={settingsRowClassName}
       >

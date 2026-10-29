@@ -9,7 +9,6 @@ export function NewRecordHeaderButton() {
     <Link
       href="/nuevo-registro"
       data-cuelume-tap=""
-      data-cuelume-theme="press"
       className={cn(buttonVariants(), "hidden lg:inline-flex")}
     >
       <Plus data-icon="inline-start" aria-hidden="true" />

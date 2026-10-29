@@ -28,6 +28,7 @@ function BottomNav({ items }: { items: NavItem[] }) {
             <Link
               key={item.href}
               href={item.href}
+              data-cuelume-tap="type"
               className={cn(
                 "flex min-w-0 flex-1 flex-col items-center gap-1 px-2 py-2 text-xs font-medium transition-colors",
                 active ? "text-primary" : "text-muted-foreground",

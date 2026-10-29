@@ -68,7 +68,12 @@ export function SettingsSignOutDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction disabled={pending} onClick={handleSignOut}>
+          <AlertDialogAction
+            data-cuelume-tap="close"
+            data-cuelume-emphasis="strong"
+            disabled={pending}
+            onClick={handleSignOut}
+          >
             {pending ? (
               <LoaderCircle
                 className="animate-spin"

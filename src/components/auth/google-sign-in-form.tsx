@@ -87,7 +87,6 @@ export function GoogleSignInForm({
       <Button
         type="button"
         variant="outline"
-        data-cuelume-theme="press"
         data-cuelume-emphasis={undefined}
         disabled={isLoading}
         onClick={handleGoogleSignIn}

@@ -42,7 +42,6 @@ export function HomeWeekDay({
         <Link
           href="/nuevo-registro"
           data-cuelume-tap=""
-          data-cuelume-theme="press"
           aria-label="Registrar hoy"
           className="flex size-9 items-center justify-center rounded-full border-2 border-dashed border-foreground/40 text-foreground outline-none transition-transform hover:scale-110 focus-visible:ring-3 focus-visible:ring-ring/50"
         >

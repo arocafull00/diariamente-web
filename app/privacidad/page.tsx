@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="relative z-10 mx-auto w-full max-w-2xl space-y-8 px-4 py-10">
       <header className="space-y-2">
-        <Link href="/" className="text-sm font-medium text-primary">
+        <Link href="/" data-cuelume-tap="type" className="text-sm font-medium text-primary">
           Diariamente
         </Link>
         <h1 className="font-display text-3xl font-medium">Política de privacidad</h1>

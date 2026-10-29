@@ -16,6 +16,8 @@ export function BodySensationsHeaderAction({
   return (
     <button
       type="button"
+      data-cuelume-close=""
+      data-cuelume-emphasis="subtle"
       onClick={onClick}
       aria-label={label}
       className="flex size-11 shrink-0 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"

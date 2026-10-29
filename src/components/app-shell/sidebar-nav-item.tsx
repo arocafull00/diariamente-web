@@ -16,6 +16,7 @@ export function SidebarNavItem({ href, label, icon }: NavItem) {
   return (
     <Link
       href={href}
+      data-cuelume-tap="type"
       className={cn(
         "relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
         active

@@ -22,6 +22,7 @@ export function PatientSessionPeakItem({
     <li>
       <Link
         href={`/registro/${recordId}`}
+        data-cuelume-tap="type"
         className="-mx-2 flex items-center gap-3 rounded-2xl p-2 outline-none transition-colors hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted"
       >
         <MoodBubble

@@ -29,7 +29,7 @@ export function ConnectStatusCard({
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
       {href && hrefLabel ? (
-        <Link href={href} className={cn(buttonVariants({ size: "lg" }), "w-full")}>
+        <Link href={href} data-cuelume-tap="" className={cn(buttonVariants({ size: "lg" }), "w-full")}>
           {hrefLabel}
         </Link>
       ) : null}

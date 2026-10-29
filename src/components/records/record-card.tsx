@@ -47,8 +47,6 @@ export function RecordCard({
   return (
     <PressableLink
       href={href}
-      data-cuelume-tap="type"
-      data-cuelume-theme="mech"
       className="group block h-full rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <article

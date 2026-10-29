@@ -24,6 +24,7 @@ export function WelcomeGoalOption({
       <motion.button
         type="button"
         role="radio"
+        data-cuelume-select=""
         aria-checked={selected}
         whileTap={{ scale: 0.97 }}
         transition={{ type: "spring", stiffness: 500, damping: 22 }}
