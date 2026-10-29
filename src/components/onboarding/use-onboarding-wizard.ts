@@ -3,7 +3,13 @@
 import { useSignUp, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -113,7 +119,7 @@ export function useOnboardingWizard() {
       if (draft) {
         sessionStorage.removeItem(DRAFT_KEY);
         form.reset(draft);
-        formAction(toFormData(draft));
+        startTransition(() => formAction(toFormData(draft)));
         return;
       }
 
@@ -274,15 +280,19 @@ export function useOnboardingWizard() {
         return;
       }
 
-      if (outcome !== "ready") {
-        if (outcome === "failed") {
-          setIsCompletingSignUp(false);
-        }
+      if (outcome === "redirecting") {
+        return;
+      }
+
+      setIsCompletingSignUp(false);
+
+      if (outcome === "failed") {
         return;
       }
     }
 
-    formAction(new FormData(formElement));
+    const formData = new FormData(formElement);
+    startTransition(() => formAction(formData));
   }
 
   return {

@@ -129,7 +129,8 @@ export const EmotionBubble = memo(function EmotionBubble({
       >
         <motion.button
           type="button"
-          data-cuelume-select=""
+          data-cuelume-select="type"
+          data-cuelume-theme="bubble"
           {...handlers}
           onClick={() => {
             if (consumeTrigger()) {
