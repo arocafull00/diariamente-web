@@ -10,6 +10,7 @@ import {
   getStreak,
 } from "@/lib/dates";
 import { getRecordQuadrant } from "@/lib/emotions";
+import { shouldShowFeedbackPrompt } from "@/lib/feedback";
 import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import {
@@ -59,14 +60,24 @@ export async function getHomeScreenData() {
     .reverse()
     .map((record) => ({ id: record.id, quadrant: getRecordQuadrant(record) }));
 
+  const streak = getStreak(windowRecords.map((record) => record.occurredAt), now);
+  const latestRecord = recentRecords[0];
+
   return {
     firstName: profile.firstName,
     grammaticalGender: profile.grammaticalGender,
     period: getDayPeriod(now),
-    streak: getStreak(windowRecords.map((record) => record.occurredAt), now),
+    streak,
     week,
     todayRecords,
     recentRecords,
+    showFeedbackPrompt: shouldShowFeedbackPrompt({
+      streak,
+      promptedAt: profile.feedbackPromptedAt,
+      latestQuadrant: latestRecord ? getRecordQuadrant(latestRecord) : null,
+      latestIntensity: latestRecord?.emotionIntensity ?? null,
+      now,
+    }),
   };
 }
 

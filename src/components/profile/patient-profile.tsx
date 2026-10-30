@@ -1,3 +1,5 @@
+import { FeedbackProfileCard } from "@/components/feedback/feedback-profile-card";
+
 import { ProfileAssignedPsychologistCard } from "./profile-assigned-psychologist-card";
 import { ProfileHeader } from "./profile-header";
 import { ProfileLayout } from "./profile-layout";
@@ -62,6 +64,7 @@ export function PatientProfile({
         <ProfileLinkPsychologistCard pendingRequest={pendingRequest} />
       )}
       <ProfileRecordsSummaryCard recordCount={recordCount} />
+      <FeedbackProfileCard role="patient" />
     </ProfileLayout>
   );
 }

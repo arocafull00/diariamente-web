@@ -46,6 +46,28 @@ export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "rejected",
 ]);
 
+export const feedbackKindEnum = pgEnum("feedback_kind", ["idea", "bug", "other"]);
+
+export const feedbackEaseEnum = pgEnum("feedback_ease", ["easy", "neutral", "hard"]);
+
+export const feedbackTriggerEnum = pgEnum("feedback_trigger", [
+  "profile",
+  "sidebar",
+  "streak",
+]);
+
+export const feedbackStatusEnum = pgEnum("feedback_status", [
+  "new",
+  "reviewed",
+  "done",
+]);
+
+export type FeedbackClientContext = {
+  path: string;
+  standalone: boolean;
+  userAgent: string;
+};
+
 export type RecordEmotion = {
   emotion: string;
   intensity: number;
@@ -90,6 +112,7 @@ export const profiles = pgTable("profiles", {
   onboardingCompleted: boolean("onboarding_completed")
     .default(false)
     .notNull(),
+  feedbackPromptedAt: timestamp("feedback_prompted_at", { withTimezone: true }),
   lastActiveAt: timestamp("last_active_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -313,6 +336,28 @@ export const auditEvents = pgTable(
   ],
 );
 
+export const feedback = pgTable(
+  "feedback",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    profileId: text("profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    role: userRoleEnum("role").notNull(),
+    trigger: feedbackTriggerEnum("trigger").notNull(),
+    kind: feedbackKindEnum("kind"),
+    ease: feedbackEaseEnum("ease"),
+    message: text("message").default("").notNull(),
+    wantsCall: boolean("wants_call").default(false).notNull(),
+    clientContext: jsonb("client_context").$type<FeedbackClientContext>(),
+    status: feedbackStatusEnum("status").default("new").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("feedback_status_created_at_idx").on(table.status, table.createdAt)],
+);
+
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;
 export type RecordNote = typeof recordNotes.$inferSelect;
@@ -326,3 +371,6 @@ export type RequiredScreen = (typeof requiredScreenEnum.enumValues)[number];
 export type BodyFigure = (typeof bodyFigureEnum.enumValues)[number];
 export type GrammaticalGender =
   (typeof grammaticalGenderEnum.enumValues)[number];
+export type FeedbackKind = (typeof feedbackKindEnum.enumValues)[number];
+export type FeedbackEase = (typeof feedbackEaseEnum.enumValues)[number];
+export type FeedbackTrigger = (typeof feedbackTriggerEnum.enumValues)[number];

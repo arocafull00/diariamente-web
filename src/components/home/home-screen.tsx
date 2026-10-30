@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { AppLoading } from "@/components/app-shell/app-loading";
+import { FeedbackPromptCard } from "@/components/feedback/feedback-prompt-card";
 import { HomeCheckIn } from "@/components/home/home-check-in";
 import { HomeLatestMood } from "@/components/home/home-latest-mood";
 import { StaggerItem } from "@/components/motion/stagger-item";
@@ -44,7 +45,7 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
             : "lg:mx-auto lg:w-full lg:max-w-3xl",
         )}
       >
-        <div className="lg:sticky lg:top-8">
+        <div className="space-y-4 lg:sticky lg:top-8">
           <HomeCheckIn
             firstName={data.firstName}
             period={data.period}
@@ -52,6 +53,7 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
             week={data.week}
             todayRecords={data.todayRecords}
           />
+          {data.showFeedbackPrompt ? <FeedbackPromptCard /> : null}
         </div>
 
         {latestRecord ? (

@@ -85,6 +85,13 @@
       "when": 1793231664858,
       "tag": "0011_magical_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793371967171,
+      "tag": "0012_ancient_toro",
+      "breakpoints": true
     }
   ]
 }

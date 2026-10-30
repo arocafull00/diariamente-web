@@ -139,3 +139,29 @@ export const connectionConsentSchema = z.object({
 });
 
 export const requiredScreenSchema = z.enum(["welcome", "terms"]);
+
+const feedbackClientContextSchema = z.object({
+  path: z.string().max(200),
+  standalone: z.boolean(),
+  userAgent: z.string().max(500),
+});
+
+export const feedbackFormSchema = z.object({
+  kind: z.enum(["idea", "bug", "other"], { error: "Elige un tipo" }),
+  message: z
+    .string()
+    .trim()
+    .min(1, "Cuéntanos algo antes de enviar")
+    .max(2000, "Máximo 2000 caracteres"),
+  wantsCall: z.boolean(),
+});
+
+export const submitFeedbackSchema = feedbackFormSchema.extend({
+  trigger: z.enum(["profile", "sidebar", "streak"]),
+  clientContext: feedbackClientContextSchema,
+});
+
+export const feedbackEaseSchema = z.object({
+  ease: z.enum(["easy", "neutral", "hard"]),
+  clientContext: feedbackClientContextSchema,
+});

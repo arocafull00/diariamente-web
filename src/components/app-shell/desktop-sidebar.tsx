@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import appIcon from "../../../app/icon.png";
+import { FeedbackSidebarButton } from "@/components/feedback/feedback-sidebar-button";
 import type { UserRole } from "@/db/schema";
 
 import { DesktopSidebarNav } from "./desktop-sidebar-nav";
@@ -45,6 +46,10 @@ export function DesktopSidebar({
       </div>
 
       <DesktopSidebarNav role={role} />
+
+      <div className="px-3 pb-2">
+        <FeedbackSidebarButton role={role} />
+      </div>
 
       <div className="border-t border-border p-4">
         <SidebarUserCard
