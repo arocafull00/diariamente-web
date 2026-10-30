@@ -6,6 +6,7 @@ import { after } from "next/server";
 
 import { db } from "@/db";
 import { auditEvents, patientRecords } from "@/db/schema";
+import { getLegacySensations } from "@/lib/body-sensations";
 import { getRecordIntensity } from "@/lib/intensity";
 import { logger } from "@/lib/logger";
 import {
@@ -119,6 +120,13 @@ export async function updatePatientRecord(
   await db
     .update(patientRecords)
     .set({
+      quadrant: parsed.data.quadrant,
+      emotions: parsed.data.emotions,
+      emotionIntensity: getRecordIntensity(parsed.data.emotions),
+      bodySensations: [
+        ...parsed.data.bodySensations,
+        ...getLegacySensations(record.bodySensations),
+      ],
       situation: parsed.data.situation,
       thoughts: parsed.data.thoughts,
       behaviours: parsed.data.behaviours,

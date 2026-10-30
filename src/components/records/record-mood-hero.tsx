@@ -24,6 +24,7 @@ type RecordMoodHeroProps = {
   quadrant: MoodQuadrant | null;
   occurredAt: Date;
   gender: GrammaticalGender;
+  action?: React.ReactNode;
 };
 
 export function RecordMoodHero({
@@ -31,6 +32,7 @@ export function RecordMoodHero({
   quadrant,
   occurredAt,
   gender,
+  action,
 }: RecordMoodHeroProps) {
   const styles = getMoodStyles(quadrant);
   const definedEmotion = emotion ? findEmotion(emotion.emotion) : null;
@@ -97,6 +99,7 @@ export function RecordMoodHero({
           <time dateTime={occurredAt.toISOString()}>{formatRecordDate(occurredAt)}</time>
         </p>
       </div>
+      {action ? <div className="relative mt-5 flex justify-end">{action}</div> : null}
     </section>
   );
 }

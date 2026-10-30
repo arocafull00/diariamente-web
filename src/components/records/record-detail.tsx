@@ -8,17 +8,19 @@ import {
   Save,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 import { RecordAccessNotice } from "@/components/records/record-access-notice";
+import { RecordBodyEditor } from "@/components/records/record-body-editor";
 import { RecordBodySection } from "@/components/records/record-body-section";
 import { RecordContextSection } from "@/components/records/record-context-section";
 import { RecordDetailField } from "@/components/records/record-detail-field";
+import { RecordEditButton } from "@/components/records/record-edit-button";
+import { RecordEmotionEditor } from "@/components/records/record-emotion-editor";
 import { RecordEmotionsSection } from "@/components/records/record-emotions-section";
 import { RecordMoodHero } from "@/components/records/record-mood-hero";
 import { RecordNotePanel } from "@/components/records/record-note-panel";
+import { useRecordEdit } from "@/components/records/use-record-edit";
 import { Button } from "@/components/ui/button";
 import type {
   GrammaticalGender,
@@ -26,11 +28,9 @@ import type {
   Profile,
   RecordNote,
 } from "@/db/schema";
+import { getEditableSensations } from "@/lib/body-sensations";
 import { getDominantEmotion, getRecordQuadrant } from "@/lib/emotions";
-import {
-  markRecordAsSeen,
-  updatePatientRecord,
-} from "@/server/actions/records";
+import { markRecordAsSeen } from "@/server/actions/records";
 
 type RecordDetailProps = {
   profile: Profile;
@@ -47,17 +47,11 @@ export function RecordDetail({
   gender,
   views,
 }: RecordDetailProps) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [situation, setSituation] = useState(record.situation);
-  const [thoughts, setThoughts] = useState(record.thoughts);
-  const [behaviours, setBehaviours] = useState(record.behaviours);
+  const edit = useRecordEdit(record);
+  const [openEditor, setOpenEditor] = useState<"emotion" | "body" | null>(null);
+  const { situation, thoughts, behaviours, pending, hasChanges } = edit;
   const isPatient = profile.role === "patient";
   const isPsychologist = profile.role === "psychologist";
-  const hasChanges =
-    situation !== record.situation ||
-    thoughts !== record.thoughts ||
-    behaviours !== record.behaviours;
 
   useEffect(() => {
     if (!isPsychologist) {
@@ -67,26 +61,9 @@ export function RecordDetail({
     void markRecordAsSeen(record.id);
   }, [isPsychologist, record.id]);
 
-  function handleSave() {
-    startTransition(async () => {
-      const result = await updatePatientRecord(record.id, {
-        situation,
-        thoughts,
-        behaviours,
-      });
-
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-
-      toast.success("Registro actualizado");
-      router.refresh();
-    });
-  }
-
   const showNotePanel = isPsychologist && note;
-  const quadrant = getRecordQuadrant(record);
+  const quadrant = getRecordQuadrant(edit);
+  const dominantEmotion = getDominantEmotion(edit.emotions);
   const pendingFields = [situation, thoughts, behaviours].filter(
     (value) => value.trim().length === 0,
   ).length;
@@ -94,10 +71,18 @@ export function RecordDetail({
   const recordContent = (
     <>
       <RecordMoodHero
-        emotion={getDominantEmotion(record.emotions)}
+        emotion={dominantEmotion}
         quadrant={quadrant}
         occurredAt={record.occurredAt}
         gender={gender}
+        action={
+          isPatient ? (
+            <RecordEditButton
+              label="Editar emoción"
+              onClick={() => setOpenEditor("emotion")}
+            />
+          ) : null
+        }
       />
 
       {isPatient ? <RecordAccessNotice views={views} /> : null}
@@ -108,7 +93,14 @@ export function RecordDetail({
         gender={gender}
       />
 
-      <RecordBodySection sensations={record.bodySensations} />
+      <RecordBodySection
+        sensations={edit.bodySensations}
+        action={
+          isPatient ? (
+            <RecordEditButton label="Editar" onClick={() => setOpenEditor("body")} />
+          ) : null
+        }
+      />
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3 px-1">
@@ -127,7 +119,7 @@ export function RecordDetail({
             placeholder="¿Qué ha pasado?"
             value={situation}
             editable={isPatient}
-            onChange={setSituation}
+            onChange={edit.setSituation}
           />
           <RecordDetailField
             id="thoughts"
@@ -136,7 +128,7 @@ export function RecordDetail({
             placeholder="¿Qué pasó por tu cabeza?"
             value={thoughts}
             editable={isPatient}
-            onChange={setThoughts}
+            onChange={edit.setThoughts}
           />
           <RecordDetailField
             id="behaviours"
@@ -145,13 +137,37 @@ export function RecordDetail({
             placeholder="¿Qué hiciste?"
             value={behaviours}
             editable={isPatient}
-            onChange={setBehaviours}
+            onChange={edit.setBehaviours}
           />
         </div>
       </section>
 
-      {record.emotions.length > 1 ? (
-        <RecordEmotionsSection emotions={record.emotions} gender={gender} />
+      {edit.emotions.length > 1 ? (
+        <RecordEmotionsSection emotions={edit.emotions} gender={gender} />
+      ) : null}
+
+      {openEditor === "emotion" ? (
+        <RecordEmotionEditor
+          emotion={dominantEmotion}
+          quadrant={quadrant}
+          gender={gender}
+          onApply={(emotion) => {
+            edit.updateEmotion(emotion);
+            setOpenEditor(null);
+          }}
+          onClose={() => setOpenEditor(null)}
+        />
+      ) : null}
+
+      {openEditor === "body" ? (
+        <RecordBodyEditor
+          sensations={getEditableSensations(edit.bodySensations)}
+          onApply={(sensations) => {
+            edit.updateBodySensations(sensations);
+            setOpenEditor(null);
+          }}
+          onClose={() => setOpenEditor(null)}
+        />
       ) : null}
 
       <AnimatePresence>
@@ -168,7 +184,7 @@ export function RecordDetail({
               size="lg"
               className="w-full"
               disabled={pending}
-              onClick={handleSave}
+              onClick={edit.save}
             >
           {pending ? (
             <LoaderCircle

@@ -82,32 +82,39 @@ export const bodySensationSchema = z.object({
   tags: contextTagsSchema,
 });
 
+const recordEmotionsSchema = z
+  .array(recordEmotionSchema)
+  .min(1, "Selecciona al menos una emoción");
+
+const bodySensationsSchema = z
+  .array(bodySensationSchema)
+  .max(MAX_BODY_SENSATIONS)
+  .refine(
+    (sensations) =>
+      new Set(sensations.map((sensation) => sensation.id)).size ===
+      sensations.length,
+    "Cada punto del cuerpo solo puede registrarse una vez",
+  );
+
 export const createRecordSchema = z.object({
   occurredAt: z.coerce.date(),
   quadrant: moodQuadrantSchema,
-  emotions: z
-    .array(recordEmotionSchema)
-    .min(1, "Selecciona al menos una emoción"),
+  emotions: recordEmotionsSchema,
   context: z.object({
     topics: contextTagsSchema,
     people: contextTagsSchema,
     places: contextTagsSchema,
   }),
-  bodySensations: z
-    .array(bodySensationSchema)
-    .max(MAX_BODY_SENSATIONS)
-    .refine(
-      (sensations) =>
-        new Set(sensations.map((sensation) => sensation.id)).size ===
-        sensations.length,
-      "Cada punto del cuerpo solo puede registrarse una vez",
-    ),
+  bodySensations: bodySensationsSchema,
   situation: reflectionSchema,
   thoughts: reflectionSchema,
   behaviours: reflectionSchema,
 });
 
 export const updateRecordSchema = z.object({
+  quadrant: moodQuadrantSchema.nullable(),
+  emotions: recordEmotionsSchema,
+  bodySensations: bodySensationsSchema,
   situation: reflectionSchema,
   thoughts: reflectionSchema,
   behaviours: reflectionSchema,

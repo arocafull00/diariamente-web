@@ -191,3 +191,13 @@ export function getSensationGlowRadius(sensation: SensationValue) {
 export function getSensationKey(sensation: StoredBodySensation, index: number) {
   return "id" in sensation ? sensation.id : `${sensation.region}-${index}`;
 }
+
+export function getEditableSensations(sensations: StoredBodySensation[]): BodySensation[] {
+  return sensations.flatMap((sensation) =>
+    "region" in sensation ? [] : [{ ...sensation, side: getSensationSide(sensation) }],
+  );
+}
+
+export function getLegacySensations(sensations: StoredBodySensation[]) {
+  return sensations.filter((sensation) => "region" in sensation);
+}
