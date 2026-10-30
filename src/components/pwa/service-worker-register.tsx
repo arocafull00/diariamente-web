@@ -18,7 +18,7 @@ export function ServiceWorkerRegister() {
       return;
     }
 
-    void navigator.serviceWorker.register("/sw.js");
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
 
     function handleMessage(event: MessageEvent) {
       if (event.data?.type !== "app-updated") {
