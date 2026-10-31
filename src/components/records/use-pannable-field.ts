@@ -1,5 +1,6 @@
 "use client";
 
+import { play } from "cuelume";
 import {
   animate,
   useMotionValue,
@@ -140,6 +141,7 @@ export function usePannableField({
     if (nearest && nearest !== focusedElement.current) {
       focusedElement.current = nearest;
       navigator.vibrate?.(6);
+      play("select", { theme: "bubble", emphasis: "subtle" });
       onFocusChange(nearest);
     }
   }
