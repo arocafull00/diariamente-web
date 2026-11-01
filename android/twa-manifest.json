@@ -1,0 +1,49 @@
+{
+  "packageId": "com.arocafull.apppsicologia",
+  "host": "diariamente.es",
+  "name": "Diariamente",
+  "launcherName": "Diariamente",
+  "display": "standalone",
+  "themeColor": "#FAFAFA",
+  "themeColorDark": "#FAFAFA",
+  "navigationColor": "#FAFAFA",
+  "navigationColorDark": "#FAFAFA",
+  "navigationDividerColor": "#FAFAFA",
+  "navigationDividerColorDark": "#FAFAFA",
+  "backgroundColor": "#FAFAFA",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://diariamente.es/icon-512x512.png?v=5",
+  "maskableIconUrl": "https://diariamente.es/icon-maskable-512x512.png?v=5",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./eas/upload.jks",
+    "alias": "25fce8669eb1eca9d78b7fd86bdd7be0"
+  },
+  "appVersionName": "2.0.0",
+  "appVersionCode": 41,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://diariamente.es/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://diariamente.es/",
+  "minSdkVersion": 24,
+  "orientation": "default",
+  "fingerprints": [
+    {
+      "name": "Play App Signing",
+      "value": "C3:6C:28:C3:DA:EB:FD:52:15:26:CC:2D:E5:5F:09:37:05:0F:9F:F2:2B:4E:8C:2D:B3:9D:B2:1A:4D:FA:2F:98"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "2.0.0"
+}

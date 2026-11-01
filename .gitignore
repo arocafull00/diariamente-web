@@ -45,3 +45,10 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# android twa
+/android/*
+!/android/twa-manifest.json
+*.keystore
+*.apk
+*.aab

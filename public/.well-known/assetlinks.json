@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.arocafull.apppsicologia",
+      "sha256_cert_fingerprints": [
+        "C3:6C:28:C3:DA:EB:FD:52:15:26:CC:2D:E5:5F:09:37:05:0F:9F:F2:2B:4E:8C:2D:B3:9D:B2:1A:4D:FA:2F:98",
+        "E1:50:36:A1:E1:FC:EA:F9:E7:13:92:CA:E5:FA:65:E1:A2:90:A3:7D:9E:E1:9E:58:65:18:24:79:37:B9:59:5C"
+      ]
+    }
+  }
+]
