@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: "Fraunces"; font-weight: 600; src: url("../../launch-video/assets/fonts/fraunces-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-weight: 600; font-style: italic; src: url("../../launch-video/assets/fonts/fraunces-latin-600-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Quicksand"; font-weight: 500; src: url("../../launch-video/assets/fonts/Quicksand-Medium.ttf"); }
+  @font-face { font-family: "Quicksand"; font-weight: 700; src: url("../../launch-video/assets/fonts/Quicksand-Bold.ttf"); }
+  :root {
+    --hu-soft: #fff0ec; --hu-2: #ff8f80; --hu-strong: #c42a3a;
+    --hp-soft: #fff8dc; --hp-2: #ffd84a; --hp-strong: #9a5b00;
+    --lu-soft: #ecf3ff; --lu-2: #8fb8ff; --lu-strong: #2953b8;
+    --lp-soft: #eafbef; --lp-2: #86e3a6; --lp-strong: #157a43;
+    --ink: #1a1a1a; --muted: #64625f;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  body { position: relative; background: var(--bg); font-family: "Quicksand", sans-serif; color: var(--ink); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(2px); opacity: .55; background: var(--accent); }
+  .blob.a { width: 760px; height: 760px; right: -300px; top: -260px; }
+  .blob.b { width: 620px; height: 620px; left: -320px; bottom: 120px; opacity: .35; }
+  header { position: absolute; top: 120px; left: 90px; right: 90px; text-align: center; z-index: 2; }
+  h1 { font-family: "Fraunces", serif; font-weight: 600; font-size: 92px; line-height: 1.04; letter-spacing: -1.5px; }
+  h1 em { font-style: italic; color: var(--strong); }
+  p { margin-top: 26px; font-size: 40px; font-weight: 500; line-height: 1.3; color: var(--muted); }
+  .phone { position: absolute; left: 50%; top: 560px; transform: translateX(-50%); width: 636px; height: 1395px; padding: 18px; border-radius: 86px; background: #1f2124; box-shadow: 0 40px 80px -20px rgba(30, 30, 40, .35), 0 8px 24px rgba(30, 30, 40, .18); z-index: 2; }
+  .screen { width: 600px; height: 1299px; border-radius: 70px; overflow: hidden; position: relative; background: #fafafa; }
+  [hidden] { display: none !important; }
+  .screen #img { width: 100%; height: 100%; display: block; image-rendering: high-quality; }
+  .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 190px; background: linear-gradient(to bottom, rgba(250,250,250,0), #fafafa 55%); }
+  .avatar { position: absolute; left: 118px; top: 28px; width: 84px; height: 84px; border-radius: 50%; background: #fff8dc; padding: 8px; }
+  .face { position: absolute; z-index: 3; filter: drop-shadow(0 12px 18px rgba(0,0,0,.12)); }
+</style>
+</head>
+<body>
+  <div class="blob a"></div>
+  <div class="blob b"></div>
+  <header><h1 id="t"></h1><p id="s"></p></header>
+  <div class="phone"><div class="screen"><img id="img" /><div class="fade" id="fade" hidden></div><img class="avatar" id="avatar" hidden /></div></div>
+  <img class="face" id="f1" />
+  <img class="face" id="f2" />
+<script>
+  const slides = {
+    1: { bg: "hp", t: "Tu diario <em>emocional</em> para la terapia", s: "Registra cómo te sientes y compártelo con tu psicólogo o psicóloga", img: "10-inicio-anillo", nav: true, f: ["alegria", "02_azul_rosa"] },
+    2: { bg: "lu", t: "Ponle <em>nombre</em> a lo que sientes", s: "Elige tu emoción de forma visual, en pocos pasos", img: "13-registro-emociones", f: ["tristeza", "05_rosa_verde"] },
+    3: { bg: "hu", t: "¿Con qué <em>intensidad</em>?", s: "Mide cada emoción del 1 al 10", img: "16-registro-intensidad-9", f: ["rabia", "04_naranja_amarillo"] },
+    4: { bg: "hp", t: "Escucha a tu <em>cuerpo</em>", s: "Marca dónde notas cada sensación física", img: "20-registro-cuerpo-marcado", f: ["01_gradiente", "alegria"] },
+    5: { bg: "lp", t: "Mira tu <em>evolución</em>", s: "Tu historial y tu balance emocional de un vistazo", img: "22-mis-registros-balance", nav: true, f: ["03_verde_morado", "alegria"] },
+    6: { bg: "lu", t: "Un <em>recordatorio</em> cada día", s: "Sin mostrar nunca el contenido de tus registros", img: "07-bienvenida-notificaciones", nav: true, f: ["02_azul_rosa", "ansiedad"] },
+    7: { bg: "hu", t: "Para <em>psicólogos</em> y psicólogas", s: "Revisa los registros de tus pacientes antes de cada sesión", img: "26-psico-ficha-resumen", nav: true, avatar: "alegria", f: ["05_rosa_verde", "04_naranja_amarillo"] },
+    8: { bg: "lp", t: "Tu espacio <em>privado</em>", s: "Solo lo ves tú y el profesional con quien te vinculas", img: "06-bienvenida-espacio-seguro", nav: true, f: ["03_verde_morado", "01_gradiente"] },
+  };
+  const n = new URLSearchParams(location.search).get("n") ?? "1";
+  const d = slides[n];
+  const root = document.documentElement.style;
+  root.setProperty("--bg", `var(--${d.bg}-soft)`);
+  root.setProperty("--accent", `var(--${d.bg}-2)`);
+  root.setProperty("--strong", `var(--${d.bg}-strong)`);
+  document.getElementById("t").innerHTML = d.t;
+  document.getElementById("s").textContent = d.s;
+  document.getElementById("img").src = `../../screenshots/${d.img}.jpg`;
+  document.getElementById("fade").hidden = !d.nav;
+  if (d.avatar) {
+    const a = document.getElementById("avatar");
+    a.src = `../../launch-video/assets/caras/${d.avatar}.svg`;
+    a.hidden = false;
+  }
+  const f1 = document.getElementById("f1");
+  const f2 = document.getElementById("f2");
+  f1.src = `../../launch-video/assets/caras/${d.f[0]}.svg`;
+  f2.src = `../../launch-video/assets/caras/${d.f[1]}.svg`;
+  Object.assign(f1.style, { width: "190px", left: "40px", top: "720px", transform: "rotate(-12deg)" });
+  Object.assign(f2.style, { width: "160px", right: "44px", top: "1340px", transform: "rotate(10deg)" });
+</script>
+</body>
+</html>

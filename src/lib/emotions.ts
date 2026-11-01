@@ -283,7 +283,7 @@ export const EMOTIONS: EmotionDefinition[] = [
       "Relajada",
       "sentirte relajada y despreocupada",
     ],
-    ["Tranquilo", "sin prisas ni preocupaciones", "Tranquila"],
+    ["Respetado", "sentir que otros te valoran y te tienen en cuenta", "Respetada"],
     ["Comprendido", "sentir que otros entienden cómo estás", "Comprendida"],
     [
       "Conectado",
@@ -303,7 +303,7 @@ export const EMOTIONS: EmotionDefinition[] = [
     ],
     ["Compasivo", "sentir ternura y comprensión por alguien", "Compasiva"],
     ["A gusto", "bien con lo que está pasando"],
-    ["Bien", "estar bien, sin más"],
+    ["Tranquilo", "sin prisas ni preocupaciones", "Tranquila"],
   ]),
 ];
 
