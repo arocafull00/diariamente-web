@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: "Fraunces"; font-weight: 600; src: url("../../launch-video/assets/fonts/fraunces-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-weight: 600; font-style: italic; src: url("../../launch-video/assets/fonts/fraunces-latin-600-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Quicksand"; font-weight: 500; src: url("../../launch-video/assets/fonts/Quicksand-Medium.ttf"); }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1024px; height: 500px; overflow: hidden; }
+  body { position: relative; background: #fff8dc; font-family: "Quicksand", sans-serif; color: #1a1a1a; }
+  .blob { position: absolute; border-radius: 50%; }
+  .a { width: 520px; height: 520px; right: -120px; top: -200px; background: #ffd84a; opacity: .5; }
+  .b { width: 380px; height: 380px; right: 160px; bottom: -240px; background: #8fb8ff; opacity: .35; }
+  .c { width: 300px; height: 300px; left: -150px; bottom: -160px; background: #ff8f80; opacity: .3; }
+  .text { position: absolute; left: 64px; top: 0; bottom: 0; width: 560px; display: flex; flex-direction: column; justify-content: center; }
+  .brand { display: flex; align-items: center; gap: 14px; font-size: 30px; font-weight: 500; margin-bottom: 26px; }
+  .brand img { width: 56px; height: 56px; border-radius: 14px; }
+  h1 { font-family: "Fraunces", serif; font-weight: 600; font-size: 64px; line-height: 1.04; letter-spacing: -1px; }
+  h1 em { font-style: italic; color: #9a5b00; }
+  p { margin-top: 18px; font-size: 26px; color: #64625f; }
+  .face { position: absolute; filter: drop-shadow(0 10px 16px rgba(0,0,0,.12)); }
+</style>
+</head>
+<body>
+  <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
+  <div class="text">
+    <div class="brand"><img src="../../../public/icon-512x512.png" />Diariamente</div>
+    <h1>Tu diario <em>emocional</em> para la terapia</h1>
+    <p>Registra cómo te sientes y compártelo con tu profesional</p>
+  </div>
+  <img class="face" src="../../launch-video/assets/caras/alegria.svg" style="width:190px; left:720px; top:70px; transform:rotate(-10deg)" />
+  <img class="face" src="../../launch-video/assets/caras/02_azul_rosa.svg" style="width:140px; left:880px; top:230px; transform:rotate(12deg)" />
+  <img class="face" src="../../launch-video/assets/caras/03_verde_morado.svg" style="width:120px; left:690px; top:300px; transform:rotate(8deg)" />
+  <img class="face" src="../../launch-video/assets/caras/04_naranja_amarillo.svg" style="width:96px; left:880px; top:60px; transform:rotate(-6deg)" />
+</body>
+</html>
