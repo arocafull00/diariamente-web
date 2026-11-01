@@ -1,4 +1,4 @@
-const SHELL_CACHE = "diariamente-shell-v6";
+const SHELL_CACHE = "diariamente-shell-v7";
 const STATIC_CACHE = "diariamente-static-v1";
 const OFFLINE_URL = "/offline";
 const HOME_KEY = "/__app-home";
@@ -16,7 +16,7 @@ const SHELL_ASSETS = [
   "/caras/rabia.svg",
   "/caras/tristeza.svg",
 ];
-const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil"];
+const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil", "/clinica"];
 const MAX_STATIC_ENTRIES = 300;
 const STATIC_URL_PATTERN = /\/_next\/static\/[^"'\\s)]+/g;
 

@@ -2,7 +2,7 @@
 
 import type { UserRole } from "@/db/schema";
 
-import { patientItems, psychologistItems } from "./nav-items";
+import { getNavItems } from "./nav-items";
 import { SidebarNavItem } from "./sidebar-nav-item";
 
 type DesktopSidebarNavProps = {
@@ -10,7 +10,7 @@ type DesktopSidebarNavProps = {
 };
 
 export function DesktopSidebarNav({ role }: DesktopSidebarNavProps) {
-  const items = role === "psychologist" ? psychologistItems : patientItems;
+  const items = getNavItems(role);
 
   return (
     <nav className="flex-1 space-y-1 px-3">

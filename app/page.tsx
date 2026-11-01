@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { CLINIC_INVITE_COOKIE_NAME } from "@/lib/clinic-invitations";
 import { INVITE_COOKIE_NAME } from "@/lib/invitations";
 import { getCurrentProfile } from "@/server/auth/get-current-profile";
 
@@ -18,9 +19,9 @@ export default async function HomePage() {
     redirect("/onboarding");
   }
 
-  if (profile.role === "patient") {
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
+  if (profile.role === "patient") {
     if (cookieStore.get(INVITE_COOKIE_NAME)?.value) {
       redirect("/conectar");
     }
@@ -29,7 +30,15 @@ export default async function HomePage() {
   }
 
   if (profile.role === "psychologist") {
+    if (cookieStore.get(CLINIC_INVITE_COOKIE_NAME)?.value) {
+      redirect("/unirse-clinica");
+    }
+
     redirect("/pacientes");
+  }
+
+  if (profile.role === "clinic") {
+    redirect("/clinica");
   }
 
   redirect("/onboarding");

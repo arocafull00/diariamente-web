@@ -1,4 +1,4 @@
-import { HeartHandshake, Stethoscope, UserRound } from "lucide-react";
+import { Building2, HeartHandshake, Stethoscope, UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { OnboardingFormValues } from "@/components/onboarding/onboarding-types";
@@ -8,9 +8,14 @@ type OnboardingReviewStepProps = {
   values: OnboardingFormValues;
 };
 
+const ROLE_DETAILS = {
+  patient: { icon: HeartHandshake, label: "Paciente" },
+  psychologist: { icon: Stethoscope, label: "Profesional de la psicología" },
+  clinic: { icon: Building2, label: "Clínica" },
+} as const;
+
 export function OnboardingReviewStep({ values }: OnboardingReviewStepProps) {
-  const isPatient = values.role === "patient";
-  const RoleIcon = isPatient ? HeartHandshake : Stethoscope;
+  const { icon: RoleIcon, label: roleLabel } = ROLE_DETAILS[values.role];
 
   return (
     <dl className="divide-y divide-border overflow-hidden rounded-xl bg-secondary/65 px-4 sm:px-5">
@@ -41,10 +46,21 @@ export function OnboardingReviewStep({ values }: OnboardingReviewStepProps) {
         <div>
           <dt className="text-sm font-medium text-foreground/65">Tipo de perfil</dt>
           <dd className="mt-0.5 font-semibold">
-            {isPatient ? "Paciente" : "Profesional de la psicología"}
+            {roleLabel}
           </dd>
         </div>
       </div>
+      {values.role === "clinic" ? (
+        <div className="flex items-center gap-4 py-4">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-primary">
+            <Building2 aria-hidden="true" className="size-5" />
+          </span>
+          <div>
+            <dt className="text-sm font-medium text-foreground/65">Clínica</dt>
+            <dd className="mt-0.5 font-semibold">{values.clinicName}</dd>
+          </div>
+        </div>
+      ) : null}
     </dl>
   );
 }

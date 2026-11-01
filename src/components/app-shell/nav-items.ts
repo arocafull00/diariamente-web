@@ -1,4 +1,6 @@
-export type NavIconName = "home" | "book-open" | "user" | "users";
+import type { UserRole } from "@/db/schema";
+
+export type NavIconName = "home" | "book-open" | "user" | "users" | "building";
 
 export type NavItem = {
   href: string;
@@ -16,3 +18,20 @@ export const psychologistItems: NavItem[] = [
   { href: "/pacientes", label: "Pacientes", icon: "users" },
   { href: "/perfil", label: "Perfil", icon: "user" },
 ];
+
+export const clinicItems: NavItem[] = [
+  { href: "/clinica", label: "Equipo", icon: "building" },
+  { href: "/perfil", label: "Perfil", icon: "user" },
+];
+
+export function getNavItems(role: UserRole) {
+  if (role === "patient") {
+    return patientItems;
+  }
+
+  if (role === "clinic") {
+    return clinicItems;
+  }
+
+  return psychologistItems;
+}

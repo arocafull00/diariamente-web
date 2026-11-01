@@ -13,12 +13,17 @@ import { getRecordQuadrant } from "@/lib/emotions";
 import { shouldShowFeedbackPrompt } from "@/lib/feedback";
 import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
+import { requireClinic } from "@/server/auth/require-clinic";
 import {
+  getClinicByOwner,
+  getClinicInviteLink,
+  getClinicPsychologistStats,
   getPatientPendingRequest,
   getPatientPsychologist,
   getPatientRecordCount,
   getPatientRecords,
   getPatientRecordsSince,
+  getPsychologistClinic,
   getPsychologistPatients,
   getRecentPatientRecords,
   getReminderSettings,
@@ -125,11 +130,59 @@ export async function getProfileScreenData() {
     };
   }
 
-  const patients = await getPsychologistPatients(profile.id);
+  if (profile.role === "clinic") {
+    const clinic = await getClinicByOwner(profile.id);
+    const psychologists = clinic
+      ? await getClinicPsychologistStats(clinic.id)
+      : [];
+
+    return {
+      ...identity,
+      role: profile.role,
+      clinicName: clinic?.name ?? "",
+      psychologistCount: psychologists.length,
+    };
+  }
+
+  const [patients, clinic] = await Promise.all([
+    getPsychologistPatients(profile.id),
+    getPsychologistClinic(profile.id),
+  ]);
 
   return {
     ...identity,
     role: profile.role!,
     patientCount: patients.length,
+    clinic,
+  };
+}
+
+export async function getClinicScreenData() {
+  const { clinic } = await requireClinic();
+  const [psychologists, inviteLink] = await Promise.all([
+    getClinicPsychologistStats(clinic.id),
+    getClinicInviteLink(clinic.id),
+  ]).catch((error: unknown) => {
+    logger.error("clinics.fetch_dashboard_failed", error, {
+      clinicId: clinic.id,
+    });
+    throw error;
+  });
+
+  const totals = psychologists.reduce(
+    (sum, psychologist) => ({
+      patients: sum.patients + psychologist.patients,
+      newPatients: sum.newPatients + psychologist.newPatients,
+      records30d: sum.records30d + psychologist.records30d,
+      inactivePatients: sum.inactivePatients + psychologist.inactivePatients,
+    }),
+    { patients: 0, newPatients: 0, records30d: 0, inactivePatients: 0 },
+  );
+
+  return {
+    clinicName: clinic.name,
+    inviteToken: inviteLink?.token ?? null,
+    totals,
+    psychologists,
   };
 }

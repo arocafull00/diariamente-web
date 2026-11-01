@@ -28,6 +28,10 @@ export async function requireRecordAccess(recordId: string) {
     return { profile, record };
   }
 
+  if (profile.role !== "psychologist") {
+    notFound();
+  }
+
   const [record] = await db
     .select({
       id: patientRecords.id,

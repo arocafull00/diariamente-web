@@ -1,5 +1,6 @@
 import { FeedbackProfileCard } from "@/components/feedback/feedback-profile-card";
 
+import { ProfileClinicCard } from "./profile-clinic-card";
 import { ProfileHeader } from "./profile-header";
 import { ProfileLayout } from "./profile-layout";
 import { ProfilePatientsSummaryCard } from "./profile-patients-summary-card";
@@ -11,6 +12,7 @@ type PsychologistProfileProps = {
   imageUrl: string | null;
   memberSince: Date;
   patientCount: number;
+  clinic: { name: string } | null;
 };
 
 export function PsychologistProfile({
@@ -20,6 +22,7 @@ export function PsychologistProfile({
   imageUrl,
   memberSince,
   patientCount,
+  clinic,
 }: PsychologistProfileProps) {
   return (
     <ProfileLayout
@@ -35,6 +38,7 @@ export function PsychologistProfile({
       }
     >
       <ProfilePatientsSummaryCard patientCount={patientCount} />
+      {clinic ? <ProfileClinicCard name={clinic.name} /> : null}
       <FeedbackProfileCard role="psychologist" />
     </ProfileLayout>
   );

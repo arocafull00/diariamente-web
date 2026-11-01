@@ -25,7 +25,8 @@ const grammaticalGenderSchema = z.enum(["feminine", "masculine", "unspecified"],
 export const onboardingSchema = z.object({
   firstName: z.string().trim().min(1, "El nombre es obligatorio"),
   lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
-  role: z.enum(["patient", "psychologist"]),
+  role: z.enum(["patient", "psychologist", "clinic"]),
+  clinicName: z.string().trim().max(120, "El nombre es demasiado largo"),
   grammaticalGender: grammaticalGenderSchema,
   avatarUrl: z
     .string()
@@ -35,6 +36,14 @@ export const onboardingSchema = z.object({
       (value) => value === null || isPredefinedAvatarUrl(value),
       "Avatar no válido",
     ),
+}).superRefine((value, ctx) => {
+  if (value.role === "clinic" && !value.clinicName) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["clinicName"],
+      message: "El nombre de la clínica es obligatorio",
+    });
+  }
 });
 
 export const updateProfileSchema = z.object({
@@ -137,6 +146,14 @@ export const connectionConsentSchema = z.object({
     error: "Debes dar tu consentimiento para conectar con tu profesional",
   }),
 });
+
+export const clinicJoinConsentSchema = z.object({
+  consent: z.literal(true, {
+    error: "Debes dar tu consentimiento para unirte a la clínica",
+  }),
+});
+
+export const clinicPsychologistIdSchema = z.string().trim().min(1);
 
 export const requiredScreenSchema = z.enum(["welcome", "terms"]);
 

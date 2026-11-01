@@ -1,10 +1,26 @@
-import { and, count, desc, eq, gte, inArray, isNull, or, sql } from "drizzle-orm";
+import { subDays } from "date-fns";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  lt,
+  notExists,
+  or,
+  sql,
+} from "drizzle-orm";
 
 import { db } from "@/db";
 import { RECORD_VIEW_ACTION } from "@/lib/privacy";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 import {
   auditEvents,
+  clinicInviteLinks,
+  clinicPsychologists,
+  clinics,
   connectionRequests,
   customEmotions,
   inviteLinks,
@@ -563,4 +579,199 @@ export async function getScreenAcknowledgements(profileId: string) {
     })
     .from(screenAcknowledgements)
     .where(eq(screenAcknowledgements.profileId, profileId));
+}
+
+export async function getClinicByOwner(ownerId: string) {
+  const [clinic] = await db
+    .select()
+    .from(clinics)
+    .where(eq(clinics.ownerId, ownerId))
+    .limit(1);
+
+  return clinic ?? null;
+}
+
+export async function getClinicInviteLink(clinicId: string) {
+  const [link] = await db
+    .select()
+    .from(clinicInviteLinks)
+    .where(eq(clinicInviteLinks.clinicId, clinicId))
+    .limit(1);
+
+  return link ?? null;
+}
+
+export async function getClinicInviteLinkByToken(token: string) {
+  const [link] = await db
+    .select({
+      clinicId: clinicInviteLinks.clinicId,
+      clinicName: clinics.name,
+    })
+    .from(clinicInviteLinks)
+    .innerJoin(clinics, eq(clinics.id, clinicInviteLinks.clinicId))
+    .where(eq(clinicInviteLinks.token, token))
+    .limit(1);
+
+  return link ?? null;
+}
+
+export async function getPsychologistClinic(psychologistId: string) {
+  const [membership] = await db
+    .select({
+      clinicId: clinicPsychologists.clinicId,
+      name: clinics.name,
+      joinedAt: clinicPsychologists.joinedAt,
+    })
+    .from(clinicPsychologists)
+    .innerJoin(clinics, eq(clinics.id, clinicPsychologists.clinicId))
+    .where(eq(clinicPsychologists.psychologistId, psychologistId))
+    .limit(1);
+
+  return membership ?? null;
+}
+
+const INACTIVE_PATIENT_DAYS = 14;
+
+export async function getClinicPsychologistStats(
+  clinicId: string,
+  psychologistId?: string,
+) {
+  const now = new Date();
+  const since7 = subDays(now, 7).toISOString();
+  const since30 = subDays(now, 30);
+  const inactiveSince = subDays(now, INACTIVE_PATIENT_DAYS);
+
+  const members = await db
+    .select({
+      id: profiles.id,
+      firstName: profiles.firstName,
+      lastName: profiles.lastName,
+      avatarUrl: profiles.avatarUrl,
+      grammaticalGender: profiles.grammaticalGender,
+      lastActiveAt: profiles.lastActiveAt,
+      joinedAt: clinicPsychologists.joinedAt,
+    })
+    .from(clinicPsychologists)
+    .innerJoin(profiles, eq(profiles.id, clinicPsychologists.psychologistId))
+    .where(
+      and(
+        eq(clinicPsychologists.clinicId, clinicId),
+        psychologistId
+          ? eq(clinicPsychologists.psychologistId, psychologistId)
+          : undefined,
+      ),
+    )
+    .orderBy(desc(clinicPsychologists.joinedAt));
+
+  if (members.length === 0) {
+    return [];
+  }
+
+  const ids = members.map((member) => member.id);
+
+  const [patientCounts, recordCounts, sessionCounts, inactiveCounts] =
+    await Promise.all([
+      db
+        .select({
+          psychologistId: psychologistPatient.psychologistId,
+          patients: count(),
+          newPatients: sql<number>`count(*) filter (where ${psychologistPatient.linkedAt} >= ${since30.toISOString()})`.mapWith(
+            Number,
+          ),
+        })
+        .from(psychologistPatient)
+        .where(inArray(psychologistPatient.psychologistId, ids))
+        .groupBy(psychologistPatient.psychologistId),
+      db
+        .select({
+          psychologistId: psychologistPatient.psychologistId,
+          records7d: sql<number>`count(*) filter (where ${patientRecords.createdAt} >= ${since7})`.mapWith(
+            Number,
+          ),
+          records30d: sql<number>`count(*) filter (where ${patientRecords.createdAt} >= ${since30.toISOString()})`.mapWith(
+            Number,
+          ),
+          reviewed30d: sql<number>`count(*) filter (where ${patientRecords.seenAt} >= ${since30.toISOString()})`.mapWith(
+            Number,
+          ),
+        })
+        .from(patientRecords)
+        .innerJoin(
+          psychologistPatient,
+          eq(patientRecords.patientId, psychologistPatient.patientId),
+        )
+        .where(
+          and(
+            inArray(psychologistPatient.psychologistId, ids),
+            or(
+              gte(patientRecords.createdAt, since30),
+              gte(patientRecords.seenAt, since30),
+            ),
+          ),
+        )
+        .groupBy(psychologistPatient.psychologistId),
+      db
+        .select({
+          psychologistId: therapySessions.psychologistId,
+          sessions30d: count(),
+        })
+        .from(therapySessions)
+        .where(
+          and(
+            inArray(therapySessions.psychologistId, ids),
+            gte(therapySessions.heldAt, since30),
+          ),
+        )
+        .groupBy(therapySessions.psychologistId),
+      db
+        .select({
+          psychologistId: psychologistPatient.psychologistId,
+          inactivePatients: count(),
+        })
+        .from(psychologistPatient)
+        .where(
+          and(
+            inArray(psychologistPatient.psychologistId, ids),
+            lt(psychologistPatient.linkedAt, inactiveSince),
+            notExists(
+              db
+                .select({ id: patientRecords.id })
+                .from(patientRecords)
+                .where(
+                  and(
+                    eq(patientRecords.patientId, psychologistPatient.patientId),
+                    gte(patientRecords.createdAt, inactiveSince),
+                  ),
+                ),
+            ),
+          ),
+        )
+        .groupBy(psychologistPatient.psychologistId),
+    ]);
+
+  const patientMap = new Map(
+    patientCounts.map((item) => [item.psychologistId, item]),
+  );
+  const recordMap = new Map(
+    recordCounts.map((item) => [item.psychologistId, item]),
+  );
+  const sessionMap = new Map(
+    sessionCounts.map((item) => [item.psychologistId, item.sessions30d]),
+  );
+  const inactiveMap = new Map(
+    inactiveCounts.map((item) => [item.psychologistId, item.inactivePatients]),
+  );
+
+  return resolveAvatarUrls(
+    members.map((member) => ({
+      ...member,
+      patients: Number(patientMap.get(member.id)?.patients ?? 0),
+      newPatients: patientMap.get(member.id)?.newPatients ?? 0,
+      records7d: recordMap.get(member.id)?.records7d ?? 0,
+      records30d: recordMap.get(member.id)?.records30d ?? 0,
+      reviewed30d: recordMap.get(member.id)?.reviewed30d ?? 0,
+      sessions30d: Number(sessionMap.get(member.id) ?? 0),
+      inactivePatients: Number(inactiveMap.get(member.id) ?? 0),
+    })),
+  );
 }

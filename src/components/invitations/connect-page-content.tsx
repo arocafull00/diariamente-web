@@ -2,6 +2,7 @@ import { AlertTriangle, Link2Off, UserCheck, UserRoundCheck } from "lucide-react
 
 import { ConnectRequestCard } from "@/components/invitations/connect-request-card";
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
+import type { UserRole } from "@/db/schema";
 import {
   getConnectionRequestForPair,
   getInviteLinkByToken,
@@ -11,7 +12,7 @@ import {
 
 type ConnectPageContentProps = {
   profileId: string;
-  role: "patient" | "psychologist" | "admin" | null;
+  role: UserRole | null;
   token: string | undefined;
 };
 

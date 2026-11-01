@@ -2,6 +2,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { WelcomeWizard } from "@/components/onboarding/welcome-wizard";
+import { CLINIC_INVITE_COOKIE_NAME } from "@/lib/clinic-invitations";
 import { INVITE_COOKIE_NAME } from "@/lib/invitations";
 import { requireProfile } from "@/server/auth/get-current-profile";
 import { getInviteLink } from "@/server/queries";
@@ -25,11 +26,16 @@ export default async function WelcomePage() {
   const protocol = headersList.get("x-forwarded-proto") ?? "https";
   const origin = `${protocol}://${host}`;
   const hasInvite = Boolean(cookieStore.get(INVITE_COOKIE_NAME)?.value);
+  const hasClinicInvite = Boolean(
+    cookieStore.get(CLINIC_INVITE_COOKIE_NAME)?.value,
+  );
   const finishHref = isPatient
     ? hasInvite
       ? "/conectar"
       : "/inicio"
-    : "/pacientes";
+    : hasClinicInvite
+      ? "/unirse-clinica"
+      : "/pacientes";
 
   return (
     <div className="relative flex min-h-svh flex-1 flex-col overflow-x-clip">

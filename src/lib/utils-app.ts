@@ -92,13 +92,19 @@ export function formatLastActivityLabel(date: Date | string) {
   return format(value, "d MMM yyyy", { locale: es });
 }
 
-export function getRoleLabel(role: "patient" | "psychologist" | "admin") {
+export function getRoleLabel(
+  role: "patient" | "psychologist" | "clinic" | "admin",
+) {
   if (role === "patient") {
     return "Paciente";
   }
 
   if (role === "psychologist") {
     return "Psicólogo/a";
+  }
+
+  if (role === "clinic") {
+    return "Clínica";
   }
 
   return "Administrador";

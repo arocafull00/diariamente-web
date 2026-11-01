@@ -17,7 +17,7 @@ export const REQUIRED_SCREENS: Record<RequiredScreen, RequiredScreenConfig> = {
     id: "terms",
     version: 1,
     href: "/aceptar-terminos",
-    roles: ["patient", "psychologist"],
+    roles: ["patient", "psychologist", "clinic"],
   },
   welcome: {
     id: "welcome",

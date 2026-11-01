@@ -17,6 +17,7 @@ type DesktopSidebarProps = {
 const ROLE_SUBTITLE: Record<UserRole, string> = {
   patient: "Área del paciente",
   psychologist: "Área profesional",
+  clinic: "Área de clínica",
   admin: "Administración",
 };
 

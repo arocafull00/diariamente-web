@@ -19,6 +19,18 @@ export const PSYCHOLOGIST_HIDDEN_DATA = [
   "Dejará de ver tus datos en cuanto te desvincules.",
 ];
 
+export const CLINIC_VISIBLE_DATA = [
+  "Tu nombre, tu foto de perfil y tu última conexión.",
+  "Cuántos pacientes tienes y cuántos se han vinculado recientemente.",
+  "Recuentos de registros creados y revisados, sesiones marcadas y pacientes inactivos.",
+];
+
+export const CLINIC_HIDDEN_DATA = [
+  "Nunca verá los registros, las notas ni los nombres de tus pacientes.",
+  "No podrá vincular ni desvincular pacientes.",
+  "Dejará de ver tus métricas en cuanto salgas de la clínica.",
+];
+
 export const RECORD_VIEW_ACTION = "record.viewed_by_psychologist";
 export const RECORD_VIEW_DEDUPE_MINUTES = 30;
 
@@ -29,5 +41,6 @@ export const AUDIT_RETENTION_MONTHS = 24;
 export const IDLE_SIGN_OUT_MINUTES: Record<UserRole, number> = {
   patient: 14 * 24 * 60,
   psychologist: 30,
+  clinic: 30,
   admin: 30,
 };

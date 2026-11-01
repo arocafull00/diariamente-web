@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
-import { profiles, screenAcknowledgements } from "@/db/schema";
+import { clinics, profiles, screenAcknowledgements } from "@/db/schema";
 import { logger } from "@/lib/logger";
 import { REQUIRED_SCREENS } from "@/lib/required-screens";
 import { logAuditEvent } from "@/server/audit";
@@ -30,6 +30,7 @@ export async function completeOnboarding(
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     role: formData.get("role"),
+    clinicName: formData.get("clinicName") ?? "",
     grammaticalGender: formData.get("grammaticalGender"),
     avatarUrl:
       typeof rawAvatarUrl === "string" && rawAvatarUrl.length > 0
@@ -45,7 +46,7 @@ export async function completeOnboarding(
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { firstName, lastName, role, grammaticalGender, avatarUrl } =
+  const { firstName, lastName, role, clinicName, grammaticalGender, avatarUrl } =
     parsed.data;
 
   try {
@@ -77,6 +78,24 @@ export async function completeOnboarding(
         },
       });
 
+    if (role === "clinic") {
+      const [clinic] = await db
+        .insert(clinics)
+        .values({ ownerId: userId, name: clinicName })
+        .onConflictDoUpdate({
+          target: clinics.ownerId,
+          set: { name: clinicName, updatedAt: new Date() },
+        })
+        .returning({ id: clinics.id });
+
+      await logAuditEvent({
+        actorId: userId,
+        action: "clinic.created",
+        entityType: "clinic",
+        entityId: clinic.id,
+      });
+    }
+
     if (clerkUser.legalAcceptedAt) {
       await db
         .insert(screenAcknowledgements)
@@ -98,7 +117,7 @@ export async function completeOnboarding(
 
   logger.info("auth.signup.completed", { userId, role });
 
-  redirect("/bienvenida");
+  redirect(role === "clinic" ? "/" : "/bienvenida");
 }
 
 export async function deleteAccount(): Promise<ActionResult> {

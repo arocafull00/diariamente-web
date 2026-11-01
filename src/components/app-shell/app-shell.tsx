@@ -2,6 +2,7 @@ import { PageTransition } from "@/components/motion/page-transition";
 import type { Profile } from "@/db/schema";
 
 import { AppHeader } from "./app-header";
+import { ClinicNavigation } from "./bottom-navigation";
 import { PatientNavigation } from "./bottom-navigation";
 import { PsychologistNavigation } from "./bottom-navigation";
 import { DesktopSidebar } from "./desktop-sidebar";
@@ -37,9 +38,9 @@ export function AppShell({
           <NewRecordFab />
           <PatientNavigation />
         </>
-      ) : (
-        <PsychologistNavigation />
-      )}
+      ) : null}
+      {profile.role === "psychologist" ? <PsychologistNavigation /> : null}
+      {profile.role === "clinic" ? <ClinicNavigation /> : null}
     </div>
   );
 }

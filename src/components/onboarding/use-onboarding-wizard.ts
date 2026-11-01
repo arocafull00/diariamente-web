@@ -23,6 +23,7 @@ import {
   markAccountCreated,
 } from "@/lib/account-created-sound";
 import { logger } from "@/lib/logger";
+import { consumeClinicSignupIntent } from "@/lib/onboarding-intent";
 import { completeOnboarding } from "@/server/actions/onboarding";
 import { onboardingSchema } from "@/validation/schemas";
 
@@ -72,6 +73,7 @@ function toFormData(values: OnboardingFormValues) {
   formData.set("firstName", values.firstName);
   formData.set("lastName", values.lastName);
   formData.set("role", values.role);
+  formData.set("clinicName", values.clinicName);
   formData.set("grammaticalGender", values.grammaticalGender);
   formData.set("avatarUrl", values.avatarUrl ?? "");
   return formData;
@@ -97,6 +99,7 @@ export function useOnboardingWizard() {
       firstName: "",
       lastName: "",
       role: undefined,
+      clinicName: "",
       grammaticalGender: undefined,
       avatarUrl: null,
     },
@@ -115,6 +118,10 @@ export function useOnboardingWizard() {
   useEffect(() => {
     if (!isLoaded || fetchStatus === "fetching" || didInit.current) {
       return;
+    }
+
+    if (consumeClinicSignupIntent()) {
+      form.setValue("role", "clinic");
     }
 
     if (isSignedIn) {
@@ -179,7 +186,7 @@ export function useOnboardingWizard() {
     const fields: (keyof OnboardingFormValues)[] =
       step === 0
         ? ["firstName", "lastName", "grammaticalGender"]
-        : ["role"];
+        : ["role", "clinicName"];
     const valid = await form.trigger(fields, { shouldFocus: true });
 
     if (!valid) {

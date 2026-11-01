@@ -125,6 +125,8 @@ export function OnboardingWizard() {
                 inputRef={field.ref}
                 name={field.name}
                 onChange={field.onChange}
+                register={form.register}
+                clinicNameError={form.formState.errors.clinicName?.message}
               />
             )}
           />
@@ -148,6 +150,7 @@ export function OnboardingWizard() {
             <input type="hidden" name="firstName" value={values.firstName} />
             <input type="hidden" name="lastName" value={values.lastName} />
             <input type="hidden" name="role" value={values.role} />
+            <input type="hidden" name="clinicName" value={values.clinicName} />
             <input
               type="hidden"
               name="grammaticalGender"

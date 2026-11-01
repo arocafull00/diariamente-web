@@ -6,10 +6,7 @@ import { useEffect } from "react";
 
 import { AppLoading } from "@/components/app-shell/app-loading";
 import { AppShell } from "@/components/app-shell/app-shell";
-import {
-  patientItems,
-  psychologistItems,
-} from "@/components/app-shell/nav-items";
+import { getNavItems } from "@/components/app-shell/nav-items";
 import { useIdleSignOut } from "@/hooks/use-idle-sign-out";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { cacheAppShell, clearAppShell } from "@/lib/app-shell-cache";
@@ -69,8 +66,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
       .then(() => getSessionProfile())
       .then((result) => {
         if (result.status === "signed-in") {
-          const items =
-            result.profile.role === "patient" ? patientItems : psychologistItems;
+          const items = getNavItems(result.profile.role);
 
           setProfile(result.profile);
           logger.identify(result.profile.id);

@@ -18,6 +18,10 @@ export async function requirePatientRelationship(patientId: string) {
     return profile;
   }
 
+  if (profile.role !== "psychologist") {
+    notFound();
+  }
+
   const [relationship] = await db
     .select({
       patientId: psychologistPatient.patientId,

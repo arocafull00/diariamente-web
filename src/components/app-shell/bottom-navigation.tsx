@@ -7,7 +7,12 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 import { NavIcon } from "./nav-icon";
-import { patientItems, psychologistItems, type NavItem } from "./nav-items";
+import {
+  clinicItems,
+  patientItems,
+  psychologistItems,
+  type NavItem,
+} from "./nav-items";
 
 const HIDDEN_ROUTES = new Set(["/nuevo-registro"]);
 
@@ -69,4 +74,8 @@ export function PatientNavigation() {
 
 export function PsychologistNavigation() {
   return <BottomNav items={psychologistItems} />;
+}
+
+export function ClinicNavigation() {
+  return <BottomNav items={clinicItems} />;
 }

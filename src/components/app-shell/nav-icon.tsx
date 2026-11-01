@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, User, Users } from "lucide-react";
+import { BookOpen, Building2, Home, User, Users } from "lucide-react";
 
 import type { NavIconName } from "./nav-items";
 
@@ -12,6 +12,7 @@ const ICONS: Record<
   "book-open": BookOpen,
   user: User,
   users: Users,
+  building: Building2,
 };
 
 type NavIconProps = {

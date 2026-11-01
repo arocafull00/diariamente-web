@@ -2,6 +2,7 @@
 
 import { AppHeader } from "@/components/app-shell/app-header";
 import { AppLoading } from "@/components/app-shell/app-loading";
+import { ClinicProfile } from "@/components/profile/clinic-profile";
 import { PatientProfile } from "@/components/profile/patient-profile";
 import { PsychologistProfile } from "@/components/profile/psychologist-profile";
 import { SettingsSheet } from "@/components/profile/settings-sheet";
@@ -59,6 +60,32 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
     );
   }
 
+  if (data.role === "clinic") {
+    return (
+      <>
+        <AppHeader
+          title="Perfil"
+          action={
+            <SettingsSheet
+              role={data.role}
+              remindersEnabled={false}
+              grammaticalGender={data.grammaticalGender}
+            />
+          }
+        />
+        <ClinicProfile
+          firstName={data.firstName}
+          lastName={data.lastName}
+          avatarUrl={data.avatarUrl}
+          imageUrl={data.imageUrl}
+          memberSince={data.memberSince}
+          clinicName={data.clinicName}
+          psychologistCount={data.psychologistCount}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <AppHeader
@@ -78,6 +105,7 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
         imageUrl={data.imageUrl}
         memberSince={data.memberSince}
         patientCount={data.patientCount}
+        clinic={data.clinic}
       />
     </>
   );

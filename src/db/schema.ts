@@ -14,6 +14,7 @@ import {
 export const userRoleEnum = pgEnum("user_role", [
   "patient",
   "psychologist",
+  "clinic",
   "admin",
 ]);
 
@@ -168,6 +169,52 @@ export const psychologistPatient = pgTable(
       .notNull(),
   },
   (table) => [unique("psychologist_patient_patient_id_unique").on(table.patientId)],
+);
+
+export const clinics = pgTable("clinics", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  ownerId: text("owner_id")
+    .notNull()
+    .unique()
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const clinicInviteLinks = pgTable("clinic_invite_links", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  token: text("token").notNull().unique(),
+  clinicId: uuid("clinic_id")
+    .notNull()
+    .unique()
+    .references(() => clinics.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const clinicPsychologists = pgTable(
+  "clinic_psychologists",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    clinicId: uuid("clinic_id")
+      .notNull()
+      .references(() => clinics.id, { onDelete: "cascade" }),
+    psychologistId: text("psychologist_id")
+      .notNull()
+      .unique()
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    joinedAt: timestamp("joined_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    consentedAt: timestamp("consented_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [index("clinic_psychologists_clinic_id_idx").on(table.clinicId)],
 );
 
 export const therapySessions = pgTable(
@@ -364,6 +411,7 @@ export type RecordNote = typeof recordNotes.$inferSelect;
 export type CustomEmotion = typeof customEmotions.$inferSelect;
 export type InviteLink = typeof inviteLinks.$inferSelect;
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;
+export type Clinic = typeof clinics.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
 export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];

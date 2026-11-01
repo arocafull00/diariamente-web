@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import type {
+  getClinicScreenData,
   getHomeScreenData,
   getMyRecordsScreenData,
   getProfileScreenData,
@@ -11,6 +12,7 @@ export type ScreenData = {
   home: Awaited<ReturnType<typeof getHomeScreenData>>;
   records: Awaited<ReturnType<typeof getMyRecordsScreenData>>;
   profile: Awaited<ReturnType<typeof getProfileScreenData>>;
+  clinic: Awaited<ReturnType<typeof getClinicScreenData>>;
 };
 
 export type ScreenKey = keyof ScreenData;
