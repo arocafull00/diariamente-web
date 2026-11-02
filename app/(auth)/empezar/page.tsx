@@ -29,15 +29,15 @@ export default async function WelcomePage() {
           Diariamente
         </span>
       </header>
-      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10">
-        <FaceCluster />
+      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10 lg:mt-auto lg:flex-none">
+        <FaceCluster className="lg:hidden" />
         <h1 className="text-center font-heading text-[2rem] font-black leading-[1.08] tracking-[-0.05em] text-foreground sm:text-[2.35rem]">
           Entiende cómo te sientes,
           <br />
           <span className="text-mood-lp-strong">día a día</span>
         </h1>
       </div>
-      <div className="flex w-full max-w-sm flex-col gap-3 pt-8">
+      <div className="flex w-full max-w-sm flex-col gap-3 pt-8 lg:mb-auto">
         <Link
           href="/registro"
           className="btn-raised-joy flex h-14 w-full items-center justify-center rounded-2xl text-base font-extrabold tracking-wide text-mood-foreground uppercase outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
