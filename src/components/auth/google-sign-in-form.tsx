@@ -96,6 +96,7 @@ export function GoogleSignInForm({
         </span>
         {isLoading ? "Redirigiendo..." : "Continuar con Google"}
       </Button>
+      <div id="clerk-captcha" />
     </div>
   );
 }
