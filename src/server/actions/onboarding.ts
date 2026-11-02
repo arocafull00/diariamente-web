@@ -1,11 +1,13 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
+import { sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { clinics, profiles, screenAcknowledgements } from "@/db/schema";
+import { getTrialEnd } from "@/lib/billing";
 import { logger } from "@/lib/logger";
 import { REQUIRED_SCREENS } from "@/lib/required-screens";
 import { logAuditEvent } from "@/server/audit";
@@ -53,6 +55,7 @@ export async function completeOnboarding(
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(userId);
     const resolvedAvatarUrl = avatarUrl ?? clerkUser.imageUrl ?? null;
+    const trialEndsAt = role === "patient" ? null : getTrialEnd(new Date());
 
     await db
       .insert(profiles)
@@ -64,6 +67,7 @@ export async function completeOnboarding(
         grammaticalGender,
         avatarUrl: resolvedAvatarUrl,
         onboardingCompleted: true,
+        trialEndsAt,
       })
       .onConflictDoUpdate({
         target: profiles.id,
@@ -74,6 +78,7 @@ export async function completeOnboarding(
           grammaticalGender,
           avatarUrl: resolvedAvatarUrl,
           onboardingCompleted: true,
+          trialEndsAt: sql`coalesce(${profiles.trialEndsAt}, ${trialEndsAt?.toISOString() ?? null}::timestamptz)`,
           updatedAt: new Date(),
         },
       });

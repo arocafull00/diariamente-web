@@ -29,6 +29,7 @@ import {
   psychologistPatient,
   recordNotes,
   screenAcknowledgements,
+  subscriptions,
   therapySessions,
   userReminders,
 } from "@/db/schema";
@@ -628,6 +629,71 @@ export async function getPsychologistClinic(psychologistId: string) {
     .limit(1);
 
   return membership ?? null;
+}
+
+export async function getBillingSnapshot(profileId: string) {
+  const [[account], [ownClinic], [memberClinic]] = await Promise.all([
+    db
+      .select({
+        id: profiles.id,
+        role: profiles.role,
+        lifetimeAccess: profiles.lifetimeAccess,
+        trialEndsAt: profiles.trialEndsAt,
+        stripeCustomerId: profiles.stripeCustomerId,
+        subscriptionId: subscriptions.stripeSubscriptionId,
+        subscriptionStatus: subscriptions.status,
+        currentPeriodEnd: subscriptions.currentPeriodEnd,
+        cancelAtPeriodEnd: subscriptions.cancelAtPeriodEnd,
+      })
+      .from(profiles)
+      .leftJoin(subscriptions, eq(subscriptions.profileId, profiles.id))
+      .where(eq(profiles.id, profileId))
+      .limit(1),
+    db
+      .select({
+        id: clinics.id,
+        name: clinics.name,
+        stripePriceId: clinics.stripePriceId,
+        monthlyPriceCents: clinics.monthlyPriceCents,
+      })
+      .from(clinics)
+      .where(eq(clinics.ownerId, profileId))
+      .limit(1),
+    db
+      .select({
+        name: clinics.name,
+        stripePriceId: clinics.stripePriceId,
+        ownerRole: profiles.role,
+        ownerLifetimeAccess: profiles.lifetimeAccess,
+        ownerTrialEndsAt: profiles.trialEndsAt,
+        ownerSubscriptionStatus: subscriptions.status,
+      })
+      .from(clinicPsychologists)
+      .innerJoin(clinics, eq(clinics.id, clinicPsychologists.clinicId))
+      .innerJoin(profiles, eq(profiles.id, clinics.ownerId))
+      .leftJoin(subscriptions, eq(subscriptions.profileId, clinics.ownerId))
+      .where(eq(clinicPsychologists.psychologistId, profileId))
+      .limit(1),
+  ]);
+
+  if (!account) {
+    return null;
+  }
+
+  return {
+    account,
+    ownClinic: ownClinic ?? null,
+    memberClinic: memberClinic ?? null,
+  };
+}
+
+export async function getClinicPsychologistCount(clinicId: string) {
+  const [result] = await db
+    .select({ value: count() })
+    .from(clinicPsychologists)
+    .where(eq(clinicPsychologists.clinicId, clinicId));
+
+  return result?.value ?? 0;
 }
 
 const INACTIVE_PATIENT_DAYS = 14;

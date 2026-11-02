@@ -5,6 +5,7 @@ import { after } from "next/server";
 
 import { getPendingRequiredScreen } from "@/lib/required-screens";
 import { getCurrentProfile } from "@/server/auth/get-current-profile";
+import { getBillingState } from "@/server/billing/get-billing-state";
 import { touchProfileActivity } from "@/server/profiles/touch-profile-activity";
 import { getScreenAcknowledgements } from "@/server/queries";
 
@@ -15,9 +16,10 @@ export async function getSessionProfile() {
     return { status: "signed-out" as const };
   }
 
-  const [profile, acknowledgements] = await Promise.all([
+  const [profile, acknowledgements, billing] = await Promise.all([
     getCurrentProfile(),
     getScreenAcknowledgements(userId),
+    getBillingState(userId),
   ]);
 
   if (!profile || !profile.onboardingCompleted || !profile.role) {
@@ -37,5 +39,6 @@ export async function getSessionProfile() {
     },
     pendingScreenHref:
       getPendingRequiredScreen(profile.role, acknowledgements)?.href ?? null,
+    billingBlocked: billing?.access === "expired",
   };
 }

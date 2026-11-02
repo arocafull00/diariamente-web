@@ -182,3 +182,16 @@ export const feedbackEaseSchema = z.object({
   ease: z.enum(["easy", "neutral", "hard"]),
   clientContext: feedbackClientContextSchema,
 });
+
+export const adminBillingIdsSchema = z
+  .array(z.string().trim().min(1).max(64))
+  .min(1)
+  .max(50);
+
+export const adminBillingUpdateSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("lifetime"), enabled: z.boolean() }),
+  z.object({
+    action: z.literal("clinic-price"),
+    monthlyPriceCents: z.number().int().min(100).max(10_000_000),
+  }),
+]);

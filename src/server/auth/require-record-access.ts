@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { patientRecords, psychologistPatient } from "@/db/schema";
 
 import { requireProfile } from "./get-current-profile";
+import { requireBillingAccess } from "./require-billing-access";
 
 export async function requireRecordAccess(recordId: string) {
   const profile = await requireProfile();
@@ -31,6 +32,8 @@ export async function requireRecordAccess(recordId: string) {
   if (profile.role !== "psychologist") {
     notFound();
   }
+
+  await requireBillingAccess(profile.id);
 
   const [record] = await db
     .select({

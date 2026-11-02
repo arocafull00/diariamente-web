@@ -3,8 +3,10 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { cancelSubscriptionNow } from "@/server/billing/cancel-subscription";
 
 export async function deleteProfileAndIdentity(userId: string) {
+  await cancelSubscriptionNow(userId);
   await db.delete(profiles).where(eq(profiles.id, userId));
 
   const client = await clerkClient();

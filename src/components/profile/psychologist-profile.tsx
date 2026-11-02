@@ -1,3 +1,5 @@
+import { ProfileSubscriptionCard } from "@/components/billing/profile-subscription-card";
+import type { BillingSummary } from "@/components/billing/billing-status-copy";
 import { FeedbackProfileCard } from "@/components/feedback/feedback-profile-card";
 
 import { ProfileClinicCard } from "./profile-clinic-card";
@@ -11,6 +13,7 @@ type PsychologistProfileProps = {
   avatarUrl: string | null;
   imageUrl: string | null;
   memberSince: Date;
+  billing: BillingSummary;
   patientCount: number;
   clinic: { name: string } | null;
 };
@@ -21,6 +24,7 @@ export function PsychologistProfile({
   avatarUrl,
   imageUrl,
   memberSince,
+  billing,
   patientCount,
   clinic,
 }: PsychologistProfileProps) {
@@ -38,6 +42,7 @@ export function PsychologistProfile({
       }
     >
       <ProfilePatientsSummaryCard patientCount={patientCount} />
+      <ProfileSubscriptionCard billing={billing} />
       {clinic ? <ProfileClinicCard name={clinic.name} /> : null}
       <FeedbackProfileCard role="psychologist" />
     </ProfileLayout>

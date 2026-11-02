@@ -28,7 +28,11 @@ export function ClinicJoinCard({ clinicName }: ClinicJoinCardProps) {
         return;
       }
 
-      toast.success(`Te has unido a ${clinicName}`);
+      toast.success(`Te has unido a ${clinicName}`, {
+        description: result.subscriptionCanceled
+          ? "Tu suscripción individual se cancelará al final del periodo actual"
+          : undefined,
+      });
       router.replace("/perfil");
       router.refresh();
     });

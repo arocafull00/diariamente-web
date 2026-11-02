@@ -8,10 +8,13 @@ import { db } from "@/db";
 import { clinicInviteLinks, clinicPsychologists } from "@/db/schema";
 import { CLINIC_INVITE_COOKIE_NAME } from "@/lib/clinic-invitations";
 import { generateInviteToken } from "@/lib/invitations";
+import { TRIAL_DAYS } from "@/lib/billing";
 import { logger } from "@/lib/logger";
 import { logAuditEvent } from "@/server/audit";
-import { requireRole } from "@/server/auth/get-current-profile";
+import { requireRoleProfile } from "@/server/auth/get-current-profile";
 import { requireClinic } from "@/server/auth/require-clinic";
+import { cancelSubscriptionAtPeriodEnd } from "@/server/billing/cancel-subscription";
+import { extendTrial } from "@/server/billing/extend-trial";
 import {
   getClinicInviteLinkByToken,
   getPsychologistClinic,
@@ -48,8 +51,10 @@ export async function generateClinicInviteLink(): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function joinClinic(input: unknown): Promise<ActionResult> {
-  const profile = await requireRole("psychologist");
+export async function joinClinic(
+  input: unknown,
+): Promise<ActionResult & { subscriptionCanceled?: boolean }> {
+  const profile = await requireRoleProfile("psychologist");
 
   const parsed = clinicJoinConsentSchema.safeParse(input);
 
@@ -94,14 +99,23 @@ export async function joinClinic(input: unknown): Promise<ActionResult> {
 
   cookieStore.delete(CLINIC_INVITE_COOKIE_NAME);
 
+  const subscriptionCanceled = await cancelSubscriptionAtPeriodEnd(
+    profile.id,
+  ).catch((error: unknown) => {
+    logger.error("billing.cancel_on_clinic_join_failed", error, {
+      psychologistId: profile.id,
+    });
+    return false;
+  });
+
   revalidatePath("/perfil");
   revalidatePath("/clinica");
 
-  return { success: true };
+  return { success: true, subscriptionCanceled };
 }
 
 export async function leaveClinic(): Promise<ActionResult> {
-  const profile = await requireRole("psychologist");
+  const profile = await requireRoleProfile("psychologist");
 
   const [membership] = await db
     .delete(clinicPsychologists)
@@ -111,6 +125,8 @@ export async function leaveClinic(): Promise<ActionResult> {
   if (!membership) {
     return { error: "No perteneces a ninguna clínica" };
   }
+
+  await extendTrial(profile.id, TRIAL_DAYS);
 
   await logAuditEvent({
     actorId: profile.id,
@@ -149,6 +165,8 @@ export async function removeClinicPsychologist(
   if (!membership) {
     return { error: "Este psicólogo no pertenece a tu clínica" };
   }
+
+  await extendTrial(membership.psychologistId, TRIAL_DAYS);
 
   await logAuditEvent({
     actorId: profile.id,

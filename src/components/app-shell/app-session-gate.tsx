@@ -16,6 +16,8 @@ import { getSessionProfile } from "@/server/actions/session";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
 
+const BILLING_ALLOWED_PATHS = ["/suscripcion", "/perfil"];
+
 type AppSessionGateProps = {
   refreshedAt: number;
   children: React.ReactNode;
@@ -77,6 +79,14 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
 
           if (result.pendingScreenHref) {
             router.replace(result.pendingScreenHref);
+            return;
+          }
+
+          if (
+            result.billingBlocked &&
+            !BILLING_ALLOWED_PATHS.includes(window.location.pathname)
+          ) {
+            router.replace("/suscripcion");
           }
           return;
         }

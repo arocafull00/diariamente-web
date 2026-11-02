@@ -6,6 +6,7 @@ import { profiles, psychologistPatient } from "@/db/schema";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 
 import { requireProfile } from "./get-current-profile";
+import { requireBillingAccess } from "./require-billing-access";
 
 export async function requirePatientRelationship(patientId: string) {
   const profile = await requireProfile();
@@ -21,6 +22,8 @@ export async function requirePatientRelationship(patientId: string) {
   if (profile.role !== "psychologist") {
     notFound();
   }
+
+  await requireBillingAccess(profile.id);
 
   const [relationship] = await db
     .select({

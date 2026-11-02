@@ -14,6 +14,7 @@ import { shouldShowFeedbackPrompt } from "@/lib/feedback";
 import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import { requireClinic } from "@/server/auth/require-clinic";
+import { getBillingSummary } from "@/server/billing/get-billing-summary";
 import {
   getClinicByOwner,
   getClinicInviteLink,
@@ -131,7 +132,10 @@ export async function getProfileScreenData() {
   }
 
   if (profile.role === "clinic") {
-    const clinic = await getClinicByOwner(profile.id);
+    const [clinic, billing] = await Promise.all([
+      getClinicByOwner(profile.id),
+      getBillingSummary(profile.id),
+    ]);
     const psychologists = clinic
       ? await getClinicPsychologistStats(clinic.id)
       : [];
@@ -141,12 +145,14 @@ export async function getProfileScreenData() {
       role: profile.role,
       clinicName: clinic?.name ?? "",
       psychologistCount: psychologists.length,
+      billing,
     };
   }
 
-  const [patients, clinic] = await Promise.all([
+  const [patients, clinic, billing] = await Promise.all([
     getPsychologistPatients(profile.id),
     getPsychologistClinic(profile.id),
+    getBillingSummary(profile.id),
   ]);
 
   return {
@@ -154,6 +160,7 @@ export async function getProfileScreenData() {
     role: profile.role!,
     patientCount: patients.length,
     clinic,
+    billing,
   };
 }
 

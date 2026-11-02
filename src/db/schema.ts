@@ -114,6 +114,9 @@ export const profiles = pgTable("profiles", {
     .default(false)
     .notNull(),
   feedbackPromptedAt: timestamp("feedback_prompted_at", { withTimezone: true }),
+  trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
+  lifetimeAccess: boolean("lifetime_access").default(false).notNull(),
+  stripeCustomerId: text("stripe_customer_id").unique(),
   lastActiveAt: timestamp("last_active_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -178,6 +181,27 @@ export const clinics = pgTable("clinics", {
     .unique()
     .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
   name: text("name").notNull(),
+  stripePriceId: text("stripe_price_id"),
+  monthlyPriceCents: integer("monthly_price_cents"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const subscriptions = pgTable("subscriptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  profileId: text("profile_id")
+    .notNull()
+    .unique()
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+  stripePriceId: text("stripe_price_id").notNull(),
+  status: text("status").notNull(),
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -412,6 +436,7 @@ export type CustomEmotion = typeof customEmotions.$inferSelect;
 export type InviteLink = typeof inviteLinks.$inferSelect;
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;
 export type Clinic = typeof clinics.$inferSelect;
+export type Subscription = typeof subscriptions.$inferSelect;
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type EmotionIntensity = (typeof emotionIntensityEnum.enumValues)[number];
 export type MoodQuadrant = (typeof moodQuadrantEnum.enumValues)[number];

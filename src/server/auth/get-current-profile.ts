@@ -6,6 +6,8 @@ import { db } from "@/db";
 import { profiles, type Profile } from "@/db/schema";
 import { logger } from "@/lib/logger";
 
+import { requireBillingAccess } from "./require-billing-access";
+
 export async function getCurrentProfile(): Promise<Profile | null> {
   const { userId } = await auth();
 
@@ -49,11 +51,21 @@ export async function requireProfile() {
   return profile;
 }
 
-export async function requireRole(role: Profile["role"]) {
+export async function requireRoleProfile(role: Profile["role"]) {
   const profile = await requireProfile();
 
   if (profile.role !== role) {
     redirect("/");
+  }
+
+  return profile;
+}
+
+export async function requireRole(role: Profile["role"]) {
+  const profile = await requireRoleProfile(role);
+
+  if (role === "psychologist" || role === "clinic") {
+    await requireBillingAccess(profile.id);
   }
 
   return profile;
