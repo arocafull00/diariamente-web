@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 export default async function SubscriptionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string; inicio?: string }>;
 }) {
-  const [profile, { session_id: sessionId }] = await Promise.all([
+  const [profile, { session_id: sessionId, inicio }] = await Promise.all([
     requireProfile(),
     searchParams,
   ]);
@@ -34,7 +34,11 @@ export default async function SubscriptionPage({
         profileId: profile.id,
       });
     });
-    redirect("/perfil?suscripcion=ok");
+    if (!inicio) {
+      redirect("/perfil?suscripcion=ok");
+    }
+
+    redirect(profile.role === "psychologist" ? "/bienvenida" : "/");
   }
 
   const billing = await getBillingSummary(profile.id);

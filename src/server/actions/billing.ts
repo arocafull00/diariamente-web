@@ -88,7 +88,7 @@ export async function startCheckout(): Promise<RedirectResult> {
           : undefined,
       },
       locale: "es",
-      success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}${trialPeriodDays ? "&inicio=1" : ""}`,
       cancel_url: `${origin}/perfil`,
     });
 

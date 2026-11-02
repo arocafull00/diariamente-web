@@ -48,6 +48,8 @@ export function OnboardingWizard() {
   } = useOnboardingWizard();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const values = form.getValues();
+  const createLabel =
+    values.role === "patient" ? "Crear mi perfil" : "Empezar mes gratuito";
 
   useEffect(() => {
     if (step > 0) {
@@ -97,7 +99,7 @@ export function OnboardingWizard() {
             onBack={goBack}
             backDisabled={pending}
             primaryLabel={
-              step < 2 ? "Continuar" : pending ? "Creando perfil..." : "Crear mi perfil"
+              step < 2 ? "Continuar" : pending ? "Creando perfil..." : createLabel
             }
             primaryType="submit"
             primaryDisabled={step === 2 && pending}

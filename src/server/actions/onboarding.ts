@@ -117,7 +117,7 @@ export async function completeOnboarding(
 
   logger.info("auth.signup.completed", { userId, role });
 
-  redirect(role === "clinic" ? "/" : "/bienvenida");
+  redirect(role === "patient" ? "/bienvenida" : "/suscripcion");
 }
 
 export async function deleteAccount(): Promise<ActionResult> {
