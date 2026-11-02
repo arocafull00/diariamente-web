@@ -4,7 +4,6 @@ import { buttonVariants } from "@/components/ui/button";
 
 import { BillingRedirectButton } from "./billing-redirect-button";
 import { getBillingStatusCopy, type BillingSummary } from "./billing-status-copy";
-import { TrialPlanSummary } from "./trial-plan-summary";
 
 const CONTACT_EMAIL = "adrianrocafull1@gmail.com";
 
@@ -27,12 +26,6 @@ export function SubscriptionPaywall({ billing }: SubscriptionPaywallProps) {
         <h2 className="text-xl font-semibold">{title}</h2>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-      {isTrialAvailable && billing.role && billing.monthlyPriceCents !== null ? (
-        <TrialPlanSummary
-          role={billing.role}
-          monthlyPriceCents={billing.monthlyPriceCents}
-        />
-      ) : null}
       <div className="flex w-full flex-col gap-2">
         {canSubscribe ? (
           <BillingRedirectButton action={isTrialAvailable ? "trial" : "checkout"} />

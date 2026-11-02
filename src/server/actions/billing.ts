@@ -21,7 +21,18 @@ const PAID_ACCESS = ["lifetime", "clinic", "subscribed"];
 async function getOrigin() {
   const headerList = await headers();
 
-  return headerList.get("origin") ?? "https://diariamente.es";
+  const origin = headerList.get("origin");
+  const host = headerList.get("host");
+
+  if (origin) {
+    return origin;
+  }
+
+  if (!host) {
+    return "https://diariamente.es";
+  }
+
+  return `${headerList.get("x-forwarded-proto") ?? "https"}://${host}`;
 }
 
 export async function startCheckout(): Promise<RedirectResult> {

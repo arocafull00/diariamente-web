@@ -1,5 +1,3 @@
-import { addDays } from "date-fns";
-
 import type { UserRole } from "@/db/schema";
 
 export const TRIAL_DAYS = 30;
@@ -64,10 +62,6 @@ export function resolveBillingAccess(
   }
 
   return "expired";
-}
-
-export function getTrialEnd(from: Date) {
-  return addDays(from, TRIAL_DAYS);
 }
 
 export function formatMonthlyPrice(cents: number) {
