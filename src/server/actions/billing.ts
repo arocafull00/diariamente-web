@@ -2,6 +2,7 @@
 
 import { addHours } from "date-fns";
 import { headers } from "next/headers";
+import type Stripe from "stripe";
 
 import { TRIAL_DAYS } from "@/lib/billing";
 import { logger } from "@/lib/logger";
@@ -17,6 +18,14 @@ type RedirectResult = ActionResult & { url?: string };
 
 const CHECKOUT_MIN_TRIAL_HOURS = 49;
 const PAID_ACCESS = ["lifetime", "clinic", "subscribed"];
+const CHECKOUT_BRANDING = {
+  display_name: "DiariaMente",
+  background_color: "#f3f1ee",
+  button_color: "#25282c",
+  border_style: "rounded",
+  font_family: "nunito",
+  icon: { type: "url", url: "https://diariamente.es/icon-512x512.png" },
+} satisfies Stripe.Checkout.SessionCreateParams.BrandingSettings;
 
 async function getOrigin() {
   const headerList = await headers();
@@ -88,6 +97,7 @@ export async function startCheckout(): Promise<RedirectResult> {
           : undefined,
       },
       locale: "es",
+      branding_settings: CHECKOUT_BRANDING,
       success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}${trialPeriodDays ? "&inicio=1" : ""}`,
       cancel_url: `${origin}/perfil`,
     });
