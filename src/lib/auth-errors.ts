@@ -12,6 +12,8 @@ const AUTH_ERROR_MESSAGES: Record<string, string> = {
     "Esa contraseña es muy fácil de adivinar. Prueba con una más larga o variada.",
   form_password_validation_failed: "Esa contraseña no es la buena",
   form_param_format_invalid: "Ese correo no parece válido. ¿Lo revisas?",
+  not_allowed_access:
+    "Con ese correo no podemos crear la cuenta. Prueba con otro que uses de verdad.",
   form_code_incorrect: "Ese código no es el bueno. Revísalo",
   verification_expired: "Este código ya ha caducado. Pide uno nuevo.",
   verification_failed: "Has probado muchas veces este código. Pide uno nuevo.",
