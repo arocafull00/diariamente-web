@@ -23,7 +23,7 @@ export function useEmailSignUp() {
 
   const submitCredentials = credentialsForm.handleSubmit(
     async ({ email, password }) => {
-      const { error } = await signUp.password({ emailAddress: email, password });
+      const { error } = await signUp.create({ emailAddress: email, password });
 
       if (error) {
         toast.error(getAuthErrorMessage(error, SIGN_UP_ERROR));
