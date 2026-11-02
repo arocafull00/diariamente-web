@@ -30,6 +30,11 @@ export function useEmailSignUp() {
         return;
       }
 
+      if (signUp.status === "missing_requirements") {
+        router.push("/onboarding");
+        return;
+      }
+
       if (signUp.status !== "complete") {
         logger.error(
           "auth.signup.password_unresolved",

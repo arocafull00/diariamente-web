@@ -3,6 +3,7 @@
 import type { UseFormReturn } from "react-hook-form";
 
 import type { EmailPasswordValues } from "@/components/auth/auth-types";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,9 +45,8 @@ export function EmailPasswordForm({
       </div>
       <div className="space-y-2">
         <Label htmlFor="auth-password">Contraseña</Label>
-        <Input
+        <PasswordInput
           id="auth-password"
-          type="password"
           autoComplete={passwordAutoComplete}
           aria-invalid={Boolean(errors.password)}
           className="h-12 rounded-xl bg-card"
