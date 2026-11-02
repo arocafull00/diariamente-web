@@ -23,12 +23,12 @@ export function InstallGuideToolbarItem({
   return (
     <span className="relative flex size-8 shrink-0 items-center justify-center">
       {target && (
-        <span className="absolute inset-0 animate-ping rounded-full bg-primary/40" />
+        <span className="absolute inset-0 animate-ping rounded-full bg-mood-lp-3/40" />
       )}
       <span
         className={cn(
           "relative flex size-8 items-center justify-center rounded-full",
-          target ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+          target ? "bg-mood-lp-3 text-mood-foreground" : "text-muted-foreground",
         )}
       >
         <Icon className="size-4" />

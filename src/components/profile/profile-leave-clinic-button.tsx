@@ -52,7 +52,7 @@ export function ProfileLeaveClinicButton() {
         <AlertDialogHeader>
           <AlertDialogTitle>¿Salir de la clínica?</AlertDialogTitle>
           <AlertDialogDescription>
-            La clínica dejará de ver tus métricas. Tus pacientes seguirán
+            La clínica dejará de ver tu actividad. Tus pacientes seguirán
             vinculados contigo.
           </AlertDialogDescription>
         </AlertDialogHeader>

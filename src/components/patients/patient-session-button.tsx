@@ -40,7 +40,7 @@ export function PatientSessionButton({
         return;
       }
 
-      toast.success("Sesión registrada");
+      toast.success("¡Sesión anotada!");
       setOpen(false);
     });
   }
@@ -62,8 +62,7 @@ export function PatientSessionButton({
             ¿Has tenido sesión hoy con {patientName}?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            El resumen empezará de cero y mostrará solo los registros que haga
-            a partir de ahora.
+            El resumen empezará de cero y te mostrará lo que registre a partir de ahora.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

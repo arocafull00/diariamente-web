@@ -22,9 +22,9 @@ export default function GlobalError({ error, unstable_retry }: GlobalErrorProps)
     <html lang="es">
       <body className="flex min-h-svh flex-col items-center justify-center bg-background px-6 text-center text-foreground">
         <title>Algo ha fallado · Diariamente</title>
-        <h1 className="text-2xl font-medium">Algo ha fallado</h1>
+        <h1 className="text-2xl font-medium">¡Ups! Algo ha fallado</h1>
         <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
-          Ha ocurrido un error inesperado. Inténtalo de nuevo.
+          No sabemos muy bien qué ha pasado. ¿Lo intentamos otra vez?
         </p>
         <Button size="lg" className="mt-8" onClick={() => unstable_retry()}>
           <RotateCcw data-icon="inline-start" aria-hidden="true" />

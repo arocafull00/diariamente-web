@@ -60,7 +60,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
     }
 
     if (!isSignedIn) {
-      signOutLocally("/login");
+      signOutLocally("/empezar");
       return;
     }
 
@@ -91,7 +91,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
           return;
         }
 
-        signOutLocally(result.status === "signed-out" ? "/login" : "/onboarding");
+        signOutLocally(result.status === "signed-out" ? "/empezar" : "/onboarding");
       })
       .catch((error: unknown) => {
         logger.error("auth.session_check_failed", error);

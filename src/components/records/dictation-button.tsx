@@ -15,7 +15,7 @@ export function DictationButton({ isListening, onClick }: DictationButtonProps) 
       onClick={onClick}
       aria-pressed={isListening}
       aria-label={isListening ? "Detener dictado" : "Dictar por voz"}
-      className="btn-raised relative flex size-11 shrink-0 items-center justify-center rounded-full text-primary-foreground outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
+      className="btn-raised-joy relative flex size-11 shrink-0 items-center justify-center rounded-full text-mood-foreground outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
     >
       {isListening ? (
         <span

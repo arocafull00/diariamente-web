@@ -81,7 +81,7 @@ export function useRecordEdit(record: PatientRecord) {
         return;
       }
 
-      toast.success("Registro actualizado");
+      toast.success("¡Registro actualizado!");
       router.refresh();
     });
   }

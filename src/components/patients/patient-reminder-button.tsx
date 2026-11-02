@@ -42,7 +42,7 @@ export function PatientReminderButton({
         return;
       }
 
-      toast.success(`Recordatorio enviado a ${patientName}`);
+      toast.success(`¡Recordatorio enviado a ${patientName}!`);
       setOpen(false);
     });
   }
@@ -63,8 +63,7 @@ export function PatientReminderButton({
         <AlertDialogHeader>
           <AlertDialogTitle>¿Enviar recordatorio a {patientName}?</AlertDialogTitle>
           <AlertDialogDescription>
-            Recibirá una notificación: «Hola, hace tiempo que no te conectas.
-            ¿Quieres registrar alguna emoción del día?»
+            Recibirá una notificación: «¡Hola! ¿Qué tal te va? ¿Te apetece registrar cómo te sientes hoy?»
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -1,6 +1,5 @@
 "use client";
 
-import { MessageCircleHeart } from "lucide-react";
 import { useState } from "react";
 
 import { FEEDBACK_COPY } from "@/components/feedback/feedback-content";
@@ -28,7 +27,7 @@ export function FeedbackProfileCard({ role }: FeedbackProfileCardProps) {
           onClick={() => setOpen(true)}
         >
           <SettingsRowContent
-            icon={MessageCircleHeart}
+            icon="sugerencias"
             tone="yellow"
             title={FEEDBACK_COPY.entryTitle}
             description={FEEDBACK_COPY.entryDescription}

@@ -41,7 +41,7 @@ export function ClinicRemovePsychologistButton({
         return;
       }
 
-      toast.success("Psicólogo/a eliminado de la clínica");
+      toast.success("Hecho, ya no forma parte de la clínica");
       router.replace("/clinica");
       router.refresh();
     });
@@ -62,7 +62,7 @@ export function ClinicRemovePsychologistButton({
         <AlertDialogHeader>
           <AlertDialogTitle>¿Quitar a {psychologistName}?</AlertDialogTitle>
           <AlertDialogDescription>
-            Dejarás de ver sus métricas. Sus pacientes seguirán vinculados con
+            Dejarás de ver su actividad. Sus pacientes seguirán vinculados con
             este profesional y podrás invitarle de nuevo más adelante.
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -14,7 +14,7 @@ export function BillingSuccessToast() {
       return;
     }
 
-    toast.success("Suscripción activada. Gracias por confiar en DiariaMente.");
+    toast.success("¡Suscripción activada! Gracias por confiar en DiariaMente.");
     router.replace(window.location.pathname);
   }, [router]);
 

@@ -34,7 +34,7 @@ export async function createPatientRecord(
       patientId: profile.id,
       field: parsed.error.issues[0]?.path.join(".") ?? null,
     });
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const emotionIntensity = getRecordIntensity(parsed.data.emotions);
@@ -68,7 +68,7 @@ export async function createPatientRecord(
     });
   } catch (error) {
     logger.error("records.create_failed", error, { patientId: profile.id });
-    return { error: "No se pudo guardar el registro" };
+    return { error: "Uy, no hemos podido guardar tu registro" };
   }
 
   logger.info("records.created", { patientId: profile.id, recordId });
@@ -108,13 +108,13 @@ export async function updatePatientRecord(
   const { profile, record } = await requireRecordAccess(recordId);
 
   if (profile.role !== "patient") {
-    return { error: "No tienes permiso para editar este registro" };
+    return { error: "Este registro no lo puedes editar" };
   }
 
   const parsed = updateRecordSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   await db
@@ -152,7 +152,7 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
   const { profile, record } = await requireRecordAccess(recordId);
 
   if (profile.role !== "psychologist") {
-    return { error: "No autorizado" };
+    return { error: "No tienes acceso a esto" };
   }
 
   const [recentView] = await db

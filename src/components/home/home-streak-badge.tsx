@@ -9,7 +9,7 @@ type HomeStreakBadgeProps = {
 export function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
   const label =
     streak === 0
-      ? "Empieza tu racha hoy"
+      ? "¡Empieza tu racha hoy!"
       : `${streak} ${streak === 1 ? "día" : "días"} de racha`;
 
   return (

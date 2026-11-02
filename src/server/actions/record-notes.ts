@@ -19,13 +19,13 @@ export async function upsertRecordNote(
   const { profile, record } = await requireRecordAccess(recordId);
 
   if (profile.role !== "psychologist") {
-    return { error: "No autorizado" };
+    return { error: "No tienes acceso a esto" };
   }
 
   const parsed = recordNoteSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const existingNote = await getRecordNote(recordId);
@@ -63,7 +63,7 @@ export async function deleteRecordNote(recordId: string): Promise<ActionResult> 
   const { profile, record } = await requireRecordAccess(recordId);
 
   if (profile.role !== "psychologist") {
-    return { error: "No autorizado" };
+    return { error: "No tienes acceso a esto" };
   }
 
   const [deleted] = await db
@@ -77,7 +77,7 @@ export async function deleteRecordNote(recordId: string): Promise<ActionResult> 
     .returning({ id: recordNotes.id });
 
   if (!deleted) {
-    return { error: "La nota no existe" };
+    return { error: "Esta nota ya no existe" };
   }
 
   await logAuditEvent({

@@ -94,8 +94,8 @@ export function NewRecordSuccess({
       >
         <p className="text-center text-sm text-muted-foreground">
           {needsDeepen
-            ? "Registro guardado. Puedes profundizar cuando quieras."
-            : "Registro guardado."}
+            ? "¡Guardado! Puedes profundizar cuando quieras."
+            : "¡Registro guardado!"}
         </p>
         <Button type="button" size="lg" className="w-full" onClick={onOpenRecord}>
           {needsDeepen ? "Profundizar" : "Ver registro"}

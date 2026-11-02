@@ -33,7 +33,7 @@ export async function acknowledgeScreen(input: unknown): Promise<ActionResult> {
       await client.users.updateUser(profile.id, { legalAcceptedAt: new Date() });
     } catch (error) {
       logger.error("legal.terms_accept_failed", error, { userId: profile.id });
-      return { error: "No se pudo guardar la aceptación. Inténtalo de nuevo." };
+      return { error: "Uy, no hemos podido guardarlo. Inténtalo de nuevo." };
     }
   }
 

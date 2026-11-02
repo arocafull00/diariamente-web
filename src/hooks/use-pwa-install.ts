@@ -107,11 +107,11 @@ export function usePwaInstall() {
 
         if (outcome === "accepted") {
           setInstalled(true);
-          toast.success("App instalada");
+          toast.success("¡App instalada!");
         }
       } catch (error) {
         logger.error("pwa.install_failed", error);
-        toast.error("No se pudo instalar la app");
+        toast.error("Uy, no hemos podido instalar la app");
       } finally {
         setDeferredPrompt(null);
         setLoading(false);

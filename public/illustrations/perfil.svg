@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="profile"><path d="M 13,81 C 12,42 36,16 75,13 C 115,10 144,35 147,75 C 151,115 125,143 86,147 C 45,151 16,125 13,81 Z"/></clipPath></defs>
+  <g clip-path="url(#profile)">
+    <path fill="#9e65c6" d="M 6,6 H 154 V 154 H 6 Z"/>
+    <path fill="#00a651" d="M 4,109 C 36,64 62,67 88,92 C 112,115 133,108 156,89 V 155 H 4 Z"/>
+    <path fill="#ffa1cc" d="M 80,7 C 75,35 99,53 121,55 C 138,57 145,65 155,78 V 7 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 45,67 C 49,57 60,57 65,67 M 88,65 C 92,55 103,55 108,65"/>
+    <path d="M 53,87 C 66,107 93,109 111,87"/>
+  </g>
+</svg>

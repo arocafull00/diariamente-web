@@ -1,5 +1,3 @@
-import { Building2 } from "lucide-react";
-
 import { ProfileStatCard } from "./profile-stat-card";
 
 type ProfileClinicTeamCardProps = {
@@ -21,7 +19,7 @@ export function ProfileClinicTeamCard({
           : "psicólogos/as en el equipo"
       }
       value={psychologistCount}
-      icon={Building2}
+      illustration="equipo"
     />
   );
 }

@@ -97,11 +97,11 @@ export function useNewRecordWizard(gender: GrammaticalGender) {
         behaviours: draft.behaviours,
       }).catch((error: unknown) => {
         logger.error("records.create_request_failed", error);
-        return { error: "No se pudo guardar el registro", recordId: undefined };
+        return { error: "Uy, no hemos podido guardar tu registro", recordId: undefined };
       });
 
       if (result.error || !result.recordId) {
-        toast.error(result.error ?? "No se pudo guardar el registro");
+        toast.error(result.error ?? "Uy, no hemos podido guardar tu registro");
         return;
       }
 

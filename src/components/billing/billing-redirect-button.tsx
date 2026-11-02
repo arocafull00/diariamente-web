@@ -1,16 +1,16 @@
 "use client";
 
-import { LoaderCircle } from "lucide-react";
-import { useTransition } from "react";
-import { toast } from "sonner";
+import { CreditCard, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { openBillingPortal, startCheckout } from "@/server/actions/billing";
 
+import { useBillingRedirect } from "./use-billing-redirect";
+
 const BILLING_ACTIONS = {
   checkout: { run: startCheckout, label: "Suscribirme" },
-  trial: { run: startCheckout, label: "Empezar mes gratuito" },
+  trial: { run: startCheckout, label: "Empezar prueba gratuita" },
   portal: { run: openBillingPortal, label: "Gestionar suscripción" },
 };
 
@@ -23,31 +23,23 @@ export function BillingRedirectButton({
   action,
   className,
 }: BillingRedirectButtonProps) {
-  const [pending, startTransition] = useTransition();
   const { run, label } = BILLING_ACTIONS[action];
-
-  function handleClick() {
-    startTransition(async () => {
-      const result = await run();
-
-      if (result.error || !result.url) {
-        toast.error(result.error ?? "No se pudo continuar");
-        return;
-      }
-
-      window.location.assign(result.url);
-    });
-  }
+  const { pending, redirect } = useBillingRedirect(run);
 
   return (
     <Button
       variant={action === "portal" ? "outline" : "default"}
-      className={cn(action !== "portal" && "btn-raised", className)}
+      className={cn(
+        action === "trial" && "btn-raised-joy text-mood-foreground",
+        className,
+      )}
       disabled={pending}
-      onClick={handleClick}
+      onClick={redirect}
     >
       {pending ? (
         <LoaderCircle className="animate-spin" aria-hidden="true" />
+      ) : action === "trial" ? (
+        <CreditCard aria-hidden="true" />
       ) : null}
       {label}
     </Button>

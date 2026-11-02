@@ -1,5 +1,6 @@
 "use client";
 
+import { SignOutLink } from "@/components/auth/sign-out-link";
 import { WelcomeContinueButton } from "@/components/onboarding/welcome-continue-button";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +41,7 @@ export function WelcomeFooter({
           Por el momento no
         </Button>
       ) : null}
+      <SignOutLink className="py-1" />
     </div>
   );
 }

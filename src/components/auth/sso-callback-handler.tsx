@@ -139,7 +139,7 @@ export function SsoCallbackHandler() {
             new Error("SSO callback ended without a session"),
             { signInStatus: signIn.status, signUpStatus: signUp.status },
           );
-          setError("No se pudo completar el inicio de sesión. Inténtalo de nuevo.");
+          setError("Uy, algo se ha torcido al entrar. ¿Lo intentas otra vez?");
           return;
         }
 
@@ -161,7 +161,7 @@ export function SsoCallbackHandler() {
         const message =
           caughtError instanceof Error
             ? caughtError.message
-            : "No se pudo completar el inicio de sesión";
+            : "Uy, algo se ha torcido al entrar";
 
         setError(message);
       }
@@ -173,7 +173,7 @@ export function SsoCallbackHandler() {
       <div className="space-y-4 text-center">
         <p className="text-sm text-destructive">{error}</p>
         <Button type="button" variant="link" onClick={() => router.push("/login")}>
-          Volver al login
+          Volver a intentarlo
         </Button>
       </div>
     );

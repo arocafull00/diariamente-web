@@ -199,7 +199,7 @@ export const installGuides: Record<InstallPlatform, InstallGuide> = {
   },
   unknown: {
     title: "Instala Diariamente",
-    description: "Tu navegador no muestra el instalador automático.",
+    description: "Tu navegador no ofrece instalarla directamente, pero puedes hacerlo a mano:",
     steps: [
       { icon: EllipsisVertical, text: "Abre el menú del navegador." },
       {

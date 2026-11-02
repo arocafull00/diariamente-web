@@ -25,7 +25,7 @@ export function ServiceWorkerRegister() {
         return;
       }
 
-      toast("Hay una nueva versión disponible", {
+      toast("¡Hay novedades! Actualiza para verlas", {
         id: "app-updated",
         duration: Infinity,
         action: {

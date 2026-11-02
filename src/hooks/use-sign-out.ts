@@ -18,7 +18,7 @@ export function useSignOut() {
     clearAppShell();
     clearLastActivity();
     logger.identify(null);
-    await signOut({ redirectUrl: "/login" });
+    await signOut({ redirectUrl: "/empezar" });
     clearScreenCache();
     clearSession();
   }, [clearScreenCache, clearSession, signOut]);

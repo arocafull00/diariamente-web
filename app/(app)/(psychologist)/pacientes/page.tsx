@@ -45,7 +45,7 @@ export default async function PatientsPage() {
               <FaceRow faceIds={["02_azul_rosa", "alegria", "05_rosa_verde"]} />
             </div>
             <p className="text-sm text-muted-foreground">
-              Aún no tienes pacientes vinculados.
+              Aún no tienes pacientes. ¡Invita al primero!
             </p>
             <div className="mt-4 flex justify-center">
               <InvitationsSheet

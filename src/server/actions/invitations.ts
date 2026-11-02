@@ -56,26 +56,26 @@ export async function requestConnection(input: unknown): Promise<ActionResult> {
   const parsed = connectionConsentSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const cookieStore = await cookies();
   const token = cookieStore.get(INVITE_COOKIE_NAME)?.value;
 
   if (!token) {
-    return { error: "El enlace de invitación no es válido" };
+    return { error: "Este enlace ya no funciona" };
   }
 
   const link = await getInviteLinkByToken(token);
 
   if (!link) {
-    return { error: "El enlace de invitación no es válido" };
+    return { error: "Este enlace ya no funciona" };
   }
 
   const existingLink = await getPatientPsychologist(profile.id);
 
   if (existingLink) {
-    return { error: "Ya estás vinculado con un psicólogo" };
+    return { error: "¡Ya tienes psicólogo/a!" };
   }
 
   const existingRequest = await getConnectionRequestForPair(
@@ -84,7 +84,7 @@ export async function requestConnection(input: unknown): Promise<ActionResult> {
   );
 
   if (existingRequest?.status === "pending") {
-    return { error: "Ya tienes una solicitud de conexión pendiente" };
+    return { error: "Ya tienes una solicitud en camino" };
   }
 
   if (existingRequest) {
@@ -109,7 +109,7 @@ export async function requestConnection(input: unknown): Promise<ActionResult> {
         patientId: profile.id,
         psychologistId: link.psychologistId,
       });
-      return { error: "No se pudo enviar la solicitud" };
+      return { error: "Uy, no hemos podido enviar la solicitud" };
     }
   }
 
@@ -128,8 +128,8 @@ export async function requestConnection(input: unknown): Promise<ActionResult> {
   after(() =>
     sendPushToUser(link.psychologistId, {
       topic: "connection_request",
-      title: "Nueva solicitud de conexión",
-      body: "Tienes una solicitud pendiente de revisar.",
+      title: "¡Nueva solicitud!",
+      body: "Un paciente quiere conectar contigo.",
       url: "/pacientes",
     }),
   );
@@ -233,8 +233,8 @@ export async function acceptConnectionRequest(
   after(() =>
     sendPushToUser(request.patientId, {
       topic: "connection_resolved",
-      title: "Solicitud aceptada",
-      body: "Tu profesional ha aceptado tu solicitud de conexión.",
+      title: "¡Ya estáis conectados!",
+      body: "Tu psicólogo/a ha aceptado tu solicitud.",
       url: "/perfil",
     }),
   );
@@ -276,7 +276,7 @@ export async function rejectConnectionRequest(
     sendPushToUser(request.patientId, {
       topic: "connection_resolved",
       title: "Solicitud rechazada",
-      body: "Tu profesional ha rechazado tu solicitud de conexión.",
+      body: "Tu psicólogo/a no ha aceptado la solicitud.",
       url: "/perfil",
     }),
   );

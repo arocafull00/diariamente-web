@@ -29,7 +29,7 @@ import { onboardingSchema } from "@/validation/schemas";
 const initialState = { error: undefined as string | undefined };
 const DRAFT_KEY = "diariamente.onboarding-draft";
 const LEGAL_ERROR =
-  "Debes aceptar los términos de servicio y la política de privacidad";
+  "Necesitamos que aceptes los términos y la política de privacidad para seguir";
 const SIGN_UP_TIMEOUT_MS = 15000;
 const SIGN_UP_TIMEOUT_ERROR = Symbol("sign-up-timeout");
 
@@ -105,7 +105,8 @@ export function useOnboardingWizard() {
     mode: "onTouched",
   });
   const requiresLegalAcceptance =
-    isLoaded && !isSignedIn && signUp.missingFields.includes("legal_accepted");
+    isLoaded &&
+    (isSignedIn ? !user?.legalAcceptedAt : !signUp.legalAcceptedAt);
 
   useEffect(() => {
     if (state.error) {
@@ -203,7 +204,7 @@ export function useOnboardingWizard() {
         logger.error("auth.signup.update_failed", error, {
           signUpStatus: signUp.status,
         });
-        toast.error(error.message ?? "No se pudo completar el registro");
+        toast.error(error.message ?? "Uy, no hemos podido terminar de crear tu cuenta");
         return "failed" as const;
       }
     }
@@ -217,7 +218,7 @@ export function useOnboardingWizard() {
           missingFields: signUp.missingFields.join(","),
         },
       );
-      toast.error("No se pudo completar el registro. Vuelve a iniciar sesión.");
+      toast.error("Uy, no hemos podido terminar de crear tu cuenta. Vuelve a iniciar sesión.");
       return "failed" as const;
     }
 
@@ -229,7 +230,7 @@ export function useOnboardingWizard() {
             task: session.currentTask.key,
           });
           toast.error(
-            "Tu cuenta requiere un paso adicional. Vuelve a iniciar sesión para continuar.",
+            "Falta un pasito más. Vuelve a iniciar sesión para continuar.",
           );
           return;
         }
@@ -248,7 +249,7 @@ export function useOnboardingWizard() {
 
     if (error) {
       logger.error("auth.signup.finalize_failed", error);
-      toast.error(error.message ?? "No se pudo iniciar sesión");
+      toast.error(error.message ?? "Uy, no hemos podido iniciar sesión");
       return "failed" as const;
     }
 
@@ -258,7 +259,7 @@ export function useOnboardingWizard() {
   async function createProfile(formElement: HTMLFormElement) {
     const parsed = onboardingSchema.safeParse(form.getValues());
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Datos inválidos");
+      toast.error(parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos");
       return;
     }
 
@@ -279,10 +280,10 @@ export function useOnboardingWizard() {
       } catch (error) {
         if (error === SIGN_UP_TIMEOUT_ERROR) {
           toast.error(
-            "La conexión está tardando demasiado. Comprueba tu conexión e inténtalo de nuevo.",
+            "Esto está tardando más de la cuenta. Revisa tu conexión y vuelve a probar.",
           );
         } else {
-          toast.error("No se pudo completar el registro");
+          toast.error("Uy, no hemos podido terminar de crear tu cuenta");
         }
         setIsCompletingSignUp(false);
         return;

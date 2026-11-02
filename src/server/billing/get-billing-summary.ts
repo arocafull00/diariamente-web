@@ -24,6 +24,7 @@ export async function getBillingSummary(profileId: string) {
         ? (ownClinic?.monthlyPriceCents ?? (await getClinicDefaultPriceCents()))
         : PSYCHOLOGIST_MONTHLY_PRICE_CENTS,
     clinicName: memberClinic?.name ?? null,
+    ownClinicName: ownClinic?.name ?? null,
     hasCustomer: account.stripeCustomerId !== null,
   };
 }

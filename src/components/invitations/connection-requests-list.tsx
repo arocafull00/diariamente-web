@@ -17,9 +17,14 @@ export function ConnectionRequestsList({ requests }: ConnectionRequestsListProps
   }
 
   return (
-    <div className="space-y-2">
-      <h3 className="font-medium">Solicitudes de conexión</h3>
-      <div className="space-y-2">
+    <section className="space-y-2">
+      <h3 className="flex items-center gap-2 px-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+        Solicitudes de conexión
+        <span className="rounded-full bg-mood-hp-soft px-2 py-0.5 text-[0.7rem] font-bold text-mood-hp-strong tabular-nums">
+          {requests.length}
+        </span>
+      </h3>
+      <div className="divide-y divide-border/70 overflow-hidden rounded-3xl border border-border/60 bg-card shadow-xs">
         {requests.map((request) => (
           <ConnectionRequestItem
             key={request.id}
@@ -30,6 +35,6 @@ export function ConnectionRequestsList({ requests }: ConnectionRequestsListProps
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

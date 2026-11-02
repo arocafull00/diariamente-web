@@ -1,5 +1,7 @@
 import { ChevronRight, LoaderCircle, type LucideIcon } from "lucide-react";
 
+import { Illustration } from "@/components/faces/illustration";
+import type { IllustrationName } from "@/lib/illustrations";
 import { cn } from "@/lib/utils";
 
 export const settingsRowClassName =
@@ -14,7 +16,7 @@ const toneClassNames = {
 } as const;
 
 type SettingsRowContentProps = {
-  icon: LucideIcon;
+  icon: LucideIcon | IllustrationName;
   tone: keyof typeof toneClassNames;
   title: string;
   description?: string;
@@ -35,11 +37,13 @@ export function SettingsRowContent({
       <span
         className={cn(
           "flex size-10 shrink-0 items-center justify-center rounded-2xl",
-          toneClassNames[tone],
+          typeof Icon !== "string" && toneClassNames[tone],
         )}
       >
         {loading ? (
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
+        ) : typeof Icon === "string" ? (
+          <Illustration name={Icon} className="size-10" />
         ) : (
           <Icon className="size-5" aria-hidden="true" />
         )}

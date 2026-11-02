@@ -16,6 +16,7 @@ export function SidebarNavItem({ href, label, icon }: NavItem) {
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       data-cuelume-tap="type"
       className={cn(
         "relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
@@ -28,7 +29,7 @@ export function SidebarNavItem({ href, label, icon }: NavItem) {
         <motion.span
           layoutId="sidebar-nav-indicator"
           transition={{ type: "spring", stiffness: 380, damping: 32 }}
-          className="absolute inset-0 rounded-xl bg-accent"
+          className="absolute inset-0 rounded-xl bg-mood-lp-soft"
         />
       ) : null}
       <motion.span
@@ -37,7 +38,7 @@ export function SidebarNavItem({ href, label, icon }: NavItem) {
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className="relative flex items-center gap-3"
       >
-        <NavIcon name={icon} className="size-5" />
+        <NavIcon name={icon} className="size-8" />
         {label}
       </motion.span>
     </Link>

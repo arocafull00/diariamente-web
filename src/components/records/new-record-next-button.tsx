@@ -27,7 +27,7 @@ export function NewRecordNextButton({
       aria-label={label}
       whileTap={{ scale: 0.88 }}
       className={cn(
-        "flex size-14 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg outline-none transition-[opacity,background-color] hover:bg-brand-primary-dark focus-visible:ring-4 focus-visible:ring-ring/50 disabled:opacity-30",
+        "flex size-14 shrink-0 items-center justify-center rounded-full btn-raised-joy text-mood-foreground outline-none transition-[opacity,filter] hover:brightness-105 focus-visible:ring-4 focus-visible:ring-ring/50 disabled:opacity-30",
         className,
       )}
     >

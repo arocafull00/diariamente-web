@@ -26,8 +26,8 @@ import { logger } from "@/lib/logger";
 import { updateProfile } from "@/server/actions/profile";
 
 const profileEditFormSchema = z.object({
-  firstName: z.string().trim().min(1, "El nombre es obligatorio"),
-  lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
+  firstName: z.string().trim().min(1, "Dinos tu nombre"),
+  lastName: z.string().trim().min(1, "Dinos tus apellidos"),
 });
 
 type ProfileEditFormValues = z.infer<typeof profileEditFormSchema>;
@@ -89,7 +89,7 @@ export function ProfileEditSheet({
 
   function handleSubmit(values: ProfileEditFormValues) {
     if (!isLoaded || !user) {
-      toast.error("Tu sesión aún no está lista");
+      toast.error("Un segundo, aún estamos cargando tu sesión");
       return;
     }
 
@@ -103,7 +103,7 @@ export function ProfileEditSheet({
           nextAvatarUrl = user.imageUrl;
         } catch (error) {
           logger.error("profile.avatar_upload_failed", error);
-          toast.error("No se pudo actualizar la foto de perfil");
+          toast.error("Uy, no hemos podido cambiar tu foto");
           return;
         }
       } else if (selectedPresetUrl) {
@@ -121,7 +121,7 @@ export function ProfileEditSheet({
         return;
       }
 
-      toast.success("Perfil actualizado");
+      toast.success("¡Perfil actualizado!");
       setOpen(false);
       router.refresh();
     });
@@ -130,7 +130,7 @@ export function ProfileEditSheet({
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger
-        className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background transition-transform hover:scale-105 active:scale-95"
+        className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full bg-mood-lp-3 text-mood-foreground shadow-md ring-4 ring-background transition-transform hover:scale-105 active:scale-95"
         aria-label="Editar perfil"
       >
         <Pencil className="size-4" />

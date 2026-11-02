@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="calendar"><path d="M 37,31 L 118,25 C 133,24 141,32 142,48 L 147,117 C 148,133 140,140 125,141 L 43,146 C 28,147 20,139 19,124 L 15,60 C 14,44 22,32 37,31 Z"/></clipPath></defs>
+  <g clip-path="url(#calendar)">
+    <path fill="#00a651" d="M 10,20 H 152 V 151 H 10 Z"/>
+    <path fill="#9e65c6" d="M 8,21 H 150 V 62 L 10,72 Z"/>
+    <path fill="#ffa1cc" d="M 71,151 C 77,126 104,111 150,120 V 152 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 49,22 L 50,42 M 107,18 L 108,38"/>
+    <path d="M 44,89 C 48,80 57,80 62,89 M 83,86 C 87,77 97,77 102,86"/>
+    <path d="M 55,105 C 67,120 89,120 103,102"/>
+  </g>
+</svg>

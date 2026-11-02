@@ -19,7 +19,7 @@ export function ClinicOverview({
   inactivePatients,
 }: ClinicOverviewProps) {
   const stats: { label: string; value: number; quadrant: MoodQuadrant }[] = [
-    { label: "Altas en 30 días", value: newPatients, quadrant: "LOW_PLEASANT" },
+    { label: "Nuevos en 30 días", value: newPatients, quadrant: "LOW_PLEASANT" },
     { label: "Registros en 30 días", value: records30d, quadrant: "HIGH_PLEASANT" },
     { label: "Pacientes inactivos", value: inactivePatients, quadrant: "LOW_UNPLEASANT" },
   ];

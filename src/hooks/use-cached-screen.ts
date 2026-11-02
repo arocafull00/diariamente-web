@@ -46,7 +46,7 @@ export function useCachedScreen<K extends ScreenKey>(
           return;
         }
 
-        toast.error("No se pudieron actualizar los datos");
+        toast.error("Uy, no hemos podido actualizar la información");
       });
   }, [
     getToken,

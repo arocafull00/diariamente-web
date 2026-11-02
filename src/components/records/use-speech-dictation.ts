@@ -97,7 +97,7 @@ export function useSpeechDictation(
         toast.error("Permite el acceso al micrófono para dictar");
         return;
       }
-      toast.error("No se ha podido usar el dictado por voz");
+      toast.error("Uy, el dictado por voz no ha funcionado");
     };
 
     recognition.onend = () => {

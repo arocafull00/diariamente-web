@@ -19,7 +19,7 @@ export function WizardProgressStep({
       <span
         className={cn(
           "block h-1.5 w-full rounded-full transition-colors duration-200 motion-reduce:transition-none",
-          completed || current ? "bg-primary" : "bg-foreground/10",
+          completed || current ? "bg-mood-lp-3" : "bg-foreground/10",
         )}
         aria-hidden="true"
       />

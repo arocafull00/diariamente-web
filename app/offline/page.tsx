@@ -11,7 +11,7 @@ export default function OfflinePage() {
       />
       <h1 className="text-xl font-semibold">Sin conexión</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        No hay conexión a internet. Vuelve a intentarlo más tarde.
+        Parece que te has quedado sin internet. Vuelve a probar en un ratito.
       </p>
     </div>
   );

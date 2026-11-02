@@ -17,7 +17,7 @@ export const FEEDBACK_COPY = {
   entryDescription: "Cuéntanos qué cambiarías o qué no funciona.",
   sheetTitle: "Te escuchamos",
   sheetDescription:
-    "Tus ideas nos ayudan a hacer Diariamente mejor. Adjuntamos datos técnicos del dispositivo, nunca tus registros.",
+    "Tus ideas nos ayudan a mejorar Diariamente. Con tu mensaje nos llega info de tu dispositivo, nunca tus registros.",
   messagePlaceholder: "¿Qué cambiarías o qué te gustaría encontrar?",
   callLabel: "¿Te apetece una llamada de 15 minutos?",
   callDescription: "Te escribiremos para buscar un hueco.",

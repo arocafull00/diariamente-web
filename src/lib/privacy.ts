@@ -22,13 +22,13 @@ export const PSYCHOLOGIST_HIDDEN_DATA = [
 export const CLINIC_VISIBLE_DATA = [
   "Tu nombre, tu foto de perfil y tu última conexión.",
   "Cuántos pacientes tienes y cuántos se han vinculado recientemente.",
-  "Recuentos de registros creados y revisados, sesiones marcadas y pacientes inactivos.",
+  "Cuántos registros reciben y revisas, cuántas sesiones haces y cuántos pacientes llevan tiempo sin escribir.",
 ];
 
 export const CLINIC_HIDDEN_DATA = [
   "Nunca verá los registros, las notas ni los nombres de tus pacientes.",
   "No podrá vincular ni desvincular pacientes.",
-  "Dejará de ver tus métricas en cuanto salgas de la clínica.",
+  "Dejará de ver tu actividad en cuanto salgas de la clínica.",
 ];
 
 export const RECORD_VIEW_ACTION = "record.viewed_by_psychologist";

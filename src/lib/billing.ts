@@ -44,6 +44,7 @@ export function resolveBillingAccess(
 
   if (
     coveringClinic &&
+    coveringClinic.role === "clinic" &&
     !isBillingBlocked(resolveBillingAccess(coveringClinic, null, now))
   ) {
     return "clinic";

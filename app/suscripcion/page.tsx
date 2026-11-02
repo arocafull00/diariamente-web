@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { AppHeader } from "@/components/app-shell/app-header";
 import { getBillingStatusCopy } from "@/components/billing/billing-status-copy";
 import { SubscriptionPaywall } from "@/components/billing/subscription-paywall";
+import { SubscriptionTrialOffer } from "@/components/billing/subscription-trial-offer";
 import { logger } from "@/lib/logger";
 import { startCheckout } from "@/server/actions/billing";
 import { requireProfile } from "@/server/auth/get-current-profile";
@@ -42,8 +42,27 @@ export default async function SubscriptionPage({
   }
 
   const billing = await getBillingSummary(profile.id);
+  const { canSubscribe } = getBillingStatusCopy(billing);
 
-  if (getBillingStatusCopy(billing).canSubscribe) {
+  if (
+    canSubscribe &&
+    billing.access === "trial_available" &&
+    billing.monthlyPriceCents !== null
+  ) {
+    const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
+
+    return (
+      <div className="flex min-h-svh flex-col bg-background">
+        <SubscriptionTrialOffer
+          eyebrow={(profile.role === "clinic" ? billing.ownClinicName : null) ?? fullName}
+          role={profile.role}
+          monthlyPriceCents={billing.monthlyPriceCents}
+        />
+      </div>
+    );
+  }
+
+  if (canSubscribe) {
     const checkout = await startCheckout();
 
     if (checkout.url) {
@@ -52,9 +71,8 @@ export default async function SubscriptionPage({
   }
 
   return (
-    <>
-      <AppHeader title="Suscripción" />
+    <div className="flex min-h-svh flex-col bg-background">
       <SubscriptionPaywall billing={billing} />
-    </>
+    </div>
   );
 }

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <clipPath id="left"><path d="M 13,84 C 10,57 27,33 52,30 C 78,27 99,45 101,71 C 105,99 88,121 63,124 C 36,128 16,111 13,84 Z"/></clipPath>
+    <clipPath id="right"><path d="M 61,98 C 58,71 74,49 99,47 C 127,44 147,64 148,91 C 151,117 134,139 107,141 C 82,144 64,125 61,98 Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#left)">
+    <path fill="#9e65c6" d="M 7,24 H 106 V 130 H 7 Z"/>
+    <path fill="#00a651" d="M 6,87 C 28,54 50,64 67,85 C 78,100 90,100 108,91 V 133 H 6 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 29,65 C 33,57 41,58 45,66 M 54,64 C 58,56 66,58 69,65"/>
+    <path d="M 37,78 C 45,91 59,94 70,83"/>
+  </g>
+  <g clip-path="url(#right)">
+    <path fill="#ffa1cc" d="M 56,42 H 153 V 147 H 56 Z"/>
+    <path fill="#00a651" d="M 54,111 C 80,76 104,82 120,103 C 131,117 142,112 155,104 V 148 H 54 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 79,85 C 83,94 92,95 96,87 M 109,84 C 113,93 122,93 126,84"/>
+    <path d="M 88,102 C 98,116 115,116 125,102"/>
+  </g>
+</svg>

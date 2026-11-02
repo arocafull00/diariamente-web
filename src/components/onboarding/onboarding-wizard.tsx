@@ -6,6 +6,7 @@ import { Controller } from "react-hook-form";
 
 import logo from "../../../public/logo.png";
 
+import { SignOutLink } from "@/components/auth/sign-out-link";
 import { OnboardingLegalAcceptance } from "@/components/onboarding/onboarding-legal-acceptance";
 import { OnboardingPersonalStep } from "@/components/onboarding/onboarding-personal-step";
 import { OnboardingReviewStep } from "@/components/onboarding/onboarding-review-step";
@@ -23,11 +24,11 @@ const STEP_CONTENT = [
   },
   {
     title: "¿Cómo vas a usar Diariamente?",
-    description: "Tu elección adapta las herramientas y la navegación a tus necesidades.",
+    description: "Así te enseñamos justo lo que necesitas.",
   },
   {
-    title: "Todo listo para empezar",
-    description: "Revisa tus datos antes de crear tu espacio personal.",
+    title: "¡Ya casi está!",
+    description: "Echa un último vistazo a tus datos y creamos tu espacio.",
   },
 ] as const;
 
@@ -48,8 +49,6 @@ export function OnboardingWizard() {
   } = useOnboardingWizard();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const values = form.getValues();
-  const createLabel =
-    values.role === "patient" ? "Crear mi perfil" : "Empezar mes gratuito";
 
   useEffect(() => {
     if (step > 0) {
@@ -94,18 +93,21 @@ export function OnboardingWizard() {
           </header>
         }
         footer={
-          <WizardFooter
-            showBack={step > 0}
-            onBack={goBack}
-            backDisabled={pending}
-            primaryLabel={
-              step < 2 ? "Continuar" : pending ? "Creando perfil..." : createLabel
-            }
-            primaryType="submit"
-            primaryDisabled={step === 2 && pending}
-            primaryPending={step === 2 && pending}
-            primaryIcon={step < 2 ? "continue" : "create"}
-          />
+          <div className="flex flex-col gap-4">
+            <WizardFooter
+              showBack={step > 0}
+              onBack={goBack}
+              backDisabled={pending}
+              primaryLabel={
+                step < 2 ? "Continuar" : pending ? "Creando perfil..." : "Crear perfil"
+              }
+              primaryType="submit"
+              primaryDisabled={step === 2 && pending}
+              primaryPending={step === 2 && pending}
+              primaryIcon={step < 2 ? "continue" : "create"}
+            />
+            <SignOutLink />
+          </div>
         }
       >
         {step === 0 ? (
@@ -163,6 +165,9 @@ export function OnboardingWizard() {
               name="avatarUrl"
               value={values.avatarUrl ?? ""}
             />
+            {requiresLegalAcceptance && legalAccepted ? (
+              <input type="hidden" name="legalAccepted" value="true" />
+            ) : null}
           </>
         ) : null}
       </WizardShell>

@@ -242,6 +242,8 @@ Utiliza siempre Lucide icons, nunca emojis.
 
 ## Colores y tema
 
+**Antes de crear o modificar UI, lee `DESIGN.md`** (lenguaje visual: acentos de cuadrante, Fraunces, superficies, caras, botones). Nada de pantallas en blanco y negro.
+
 Los colores viven en `app/globals.css` como variables CSS en `:root` y se exponen a Tailwind v4 vía `@theme inline`. Modo visual inicial: solo claro.
 
 **Usa clases del tema semántico de shadcn:**

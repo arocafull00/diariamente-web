@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { Illustration } from "@/components/faces/illustration";
 import { ConnectConsentList } from "@/components/invitations/connect-consent-list";
 import { Button } from "@/components/ui/button";
 import { CLINIC_HIDDEN_DATA, CLINIC_VISIBLE_DATA } from "@/lib/privacy";
@@ -28,7 +29,7 @@ export function ClinicJoinCard({ clinicName }: ClinicJoinCardProps) {
         return;
       }
 
-      toast.success(`Te has unido a ${clinicName}`, {
+      toast.success(`¡Ya formas parte de ${clinicName}!`, {
         description: result.subscriptionCanceled
           ? "Tu suscripción individual se cancelará al final del periodo actual"
           : undefined,
@@ -40,13 +41,11 @@ export function ClinicJoinCard({ clinicName }: ClinicJoinCardProps) {
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl bg-secondary p-6 text-center">
-      <div className="flex size-16 items-center justify-center rounded-2xl bg-card text-primary">
-        <Building2 className="size-8" aria-hidden="true" />
-      </div>
+      <Illustration name="equipo" className="size-16" />
       <div>
         <h1 className="text-lg font-semibold text-foreground">{clinicName}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Te invita a unirte a su equipo en Diariamente.
+          ¡Te invita a unirte a su equipo en Diariamente!
         </p>
       </div>
       <div className="w-full space-y-4 rounded-2xl bg-card p-4 text-left">
@@ -70,8 +69,7 @@ export function ClinicJoinCard({ clinicName }: ClinicJoinCardProps) {
           className="mt-0.5 size-4 shrink-0 accent-primary"
         />
         <span>
-          He leído qué información verá la clínica y acepto compartir estas
-          métricas agregadas.
+          He leído qué verá la clínica y acepto compartirlo.
         </span>
       </label>
       <Button

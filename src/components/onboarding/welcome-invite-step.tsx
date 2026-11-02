@@ -12,8 +12,7 @@ export function WelcomeInviteStep({ token, origin }: WelcomeInviteStepProps) {
         <InviteLinkSection token={token} origin={origin} />
       </div>
       <p className="px-1 text-sm text-foreground/65">
-        Encontrarás tu enlace y las solicitudes pendientes en la sección
-        Pacientes.
+        Tu enlace y las solicitudes te esperan siempre en Pacientes.
       </p>
     </div>
   );

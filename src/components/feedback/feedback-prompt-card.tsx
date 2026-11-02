@@ -1,9 +1,10 @@
 "use client";
 
-import { MessageCircleHeart, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { Illustration } from "@/components/faces/illustration";
 import {
   FEEDBACK_COPY,
   FEEDBACK_EASE_OPTIONS,
@@ -71,9 +72,7 @@ export function FeedbackPromptCard() {
         </button>
       ) : null}
       <div className="flex items-start gap-3 pr-8">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-card text-mood-hp-strong">
-          <MessageCircleHeart className="size-5" aria-hidden="true" />
-        </span>
+        <Illustration name="sugerencias" className="size-10" />
         <div className="space-y-0.5">
           <p className="text-xs font-semibold tracking-wide text-mood-hp-strong uppercase">
             {FEEDBACK_COPY.promptTitle}

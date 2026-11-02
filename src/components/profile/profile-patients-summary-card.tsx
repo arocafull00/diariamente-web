@@ -1,5 +1,3 @@
-import { Users } from "lucide-react";
-
 import { ProfileStatCard } from "./profile-stat-card";
 
 type ProfilePatientsSummaryCardProps = {
@@ -15,7 +13,7 @@ export function ProfilePatientsSummaryCard({
       title="Mis pacientes"
       label={patientCount === 1 ? "paciente vinculado" : "pacientes vinculados"}
       value={patientCount}
-      icon={Users}
+      illustration="equipo"
     />
   );
 }

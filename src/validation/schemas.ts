@@ -23,10 +23,12 @@ const grammaticalGenderSchema = z.enum(["feminine", "masculine", "unspecified"],
 });
 
 export const onboardingSchema = z.object({
-  firstName: z.string().trim().min(1, "El nombre es obligatorio"),
-  lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
-  role: z.enum(["patient", "psychologist", "clinic"]),
-  clinicName: z.string().trim().max(120, "El nombre es demasiado largo"),
+  firstName: z.string().trim().min(1, "Dinos tu nombre"),
+  lastName: z.string().trim().min(1, "Dinos tus apellidos"),
+  role: z.enum(["patient", "psychologist", "clinic"], {
+    error: "Elige un tipo de cuenta",
+  }),
+  clinicName: z.string().trim().max(120, "Ese nombre es muy largo"),
   grammaticalGender: grammaticalGenderSchema,
   avatarUrl: z
     .string()
@@ -34,28 +36,28 @@ export const onboardingSchema = z.object({
     .nullable()
     .refine(
       (value) => value === null || isPredefinedAvatarUrl(value),
-      "Avatar no válido",
+      "Elige otro avatar",
     ),
 }).superRefine((value, ctx) => {
   if (value.role === "clinic" && !value.clinicName) {
     ctx.addIssue({
       code: "custom",
       path: ["clinicName"],
-      message: "El nombre de la clínica es obligatorio",
+      message: "¿Cómo se llama tu clínica?",
     });
   }
 });
 
 export const updateProfileSchema = z.object({
-  firstName: z.string().trim().min(1, "El nombre es obligatorio"),
-  lastName: z.string().trim().min(1, "Los apellidos son obligatorios"),
+  firstName: z.string().trim().min(1, "Dinos tu nombre"),
+  lastName: z.string().trim().min(1, "Dinos tus apellidos"),
   avatarUrl: z
     .string()
     .trim()
     .nullable()
     .refine(
       (value) => value === null || isAllowedAvatarUrl(value),
-      "Avatar no válido",
+      "Elige otro avatar",
     ),
 });
 
@@ -93,7 +95,7 @@ export const bodySensationSchema = z.object({
 
 const recordEmotionsSchema = z
   .array(recordEmotionSchema)
-  .min(1, "Selecciona al menos una emoción");
+  .min(1, "Elige al menos una emoción");
 
 const bodySensationsSchema = z
   .array(bodySensationSchema)
@@ -137,7 +139,7 @@ export const recordNoteSchema = z.object({
   content: z
     .string()
     .trim()
-    .min(1, "La nota no puede estar vacía")
+    .min(1, "Escribe algo en la nota")
     .max(2000),
 });
 
@@ -156,6 +158,21 @@ export const clinicJoinConsentSchema = z.object({
 export const clinicPsychologistIdSchema = z.string().trim().min(1);
 
 export const requiredScreenSchema = z.enum(["welcome", "terms"]);
+
+export const emailPasswordSchema = z.object({
+  email: z.string().trim().pipe(z.email("Ese correo no parece válido. ¿Lo revisas?")),
+  password: z
+    .string()
+    .min(8, "Tu contraseña necesita al menos 8 caracteres")
+    .max(72, "Esa contraseña es demasiado larga"),
+});
+
+export const verificationCodeSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, "Introduce el código de 6 dígitos"),
+});
 
 const feedbackClientContextSchema = z.object({
   path: z.string().max(200),

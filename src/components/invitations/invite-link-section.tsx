@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { Illustration } from "@/components/faces/illustration";
 import { Button } from "@/components/ui/button";
 import { buildInviteUrl } from "@/lib/invitations";
 import { logger } from "@/lib/logger";
@@ -31,7 +32,7 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
         return;
       }
 
-      toast.success(token ? "Enlace regenerado" : "Enlace generado");
+      toast.success(token ? "¡Enlace nuevo listo!" : "¡Enlace listo!");
       router.refresh();
     });
   }
@@ -43,7 +44,7 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
 
     await navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
-    toast.success("Enlace copiado");
+    toast.success("¡Enlace copiado!");
     setTimeout(() => setCopied(false), 2000);
   }
 
@@ -74,18 +75,17 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium">Enlace de invitación</h3>
       {inviteUrl ? (
         <>
-          <div className="rounded-xl bg-secondary p-4">
-            <p className="break-all text-sm font-medium text-primary">
+          <div className="flex items-center gap-3 rounded-2xl bg-mood-lp-soft p-3 text-left">
+            <Illustration name="generar-enlace" className="size-10" />
+            <p className="min-w-0 flex-1 text-sm font-semibold break-all text-mood-lp-strong">
               {inviteUrl}
             </p>
           </div>
           <div className="flex gap-2">
             <Button
-              variant="outline"
-              className="flex-1"
+              className="btn-raised-joy flex-1 text-mood-foreground"
               disabled={pending}
               onClick={handleCopy}
             >
@@ -108,28 +108,34 @@ export function InviteLinkSection({ token, origin }: InviteLinkSectionProps) {
           </div>
         </>
       ) : (
-        <p className="text-sm text-muted-foreground">
-          Genera un enlace para que tu paciente se vincule contigo.
+        <p className="text-sm leading-6 text-pretty text-muted-foreground">
+          Crea un enlace y compártelo con tu paciente para empezar a acompañarle.
         </p>
       )}
-      <Button
-        variant={inviteUrl ? "ghost" : "default"}
-        size="lg"
-        className="w-full"
-        disabled={pending}
-        onClick={handleGenerate}
-      >
-        {pending ? (
-          <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-        ) : (
-          <RefreshCw data-icon="inline-start" aria-hidden="true" />
-        )}
-        {pending
-          ? "Generando..."
-          : inviteUrl
-            ? "Regenerar enlace"
-            : "Generar enlace"}
-      </Button>
+      <div className="flex justify-center">
+        <Button
+          variant={inviteUrl ? "ghost" : "default"}
+          size={inviteUrl ? "sm" : "lg"}
+          className={
+            inviteUrl
+              ? "text-muted-foreground"
+              : "btn-raised-joy w-full text-mood-foreground"
+          }
+          disabled={pending}
+          onClick={handleGenerate}
+        >
+          {pending ? (
+            <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
+          ) : (
+            <RefreshCw data-icon="inline-start" aria-hidden="true" />
+          )}
+          {pending
+            ? "Generando..."
+            : inviteUrl
+              ? "Crear uno nuevo"
+              : "Crear enlace"}
+        </Button>
+      </div>
     </div>
   );
 }

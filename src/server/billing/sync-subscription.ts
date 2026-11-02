@@ -6,10 +6,6 @@ import { profiles, subscriptions } from "@/db/schema";
 import { hasActiveSubscription } from "@/lib/billing";
 
 async function resolveProfileId(subscription: Stripe.Subscription) {
-  if (subscription.metadata.profileId) {
-    return subscription.metadata.profileId;
-  }
-
   const customerId =
     typeof subscription.customer === "string"
       ? subscription.customer
@@ -18,7 +14,11 @@ async function resolveProfileId(subscription: Stripe.Subscription) {
   const [profile] = await db
     .select({ id: profiles.id })
     .from(profiles)
-    .where(eq(profiles.stripeCustomerId, customerId))
+    .where(
+      subscription.metadata.profileId
+        ? eq(profiles.id, subscription.metadata.profileId)
+        : eq(profiles.stripeCustomerId, customerId),
+    )
     .limit(1);
 
   return profile?.id ?? null;

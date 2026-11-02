@@ -13,12 +13,12 @@ export function ClinicEmptyState({ token, origin }: ClinicEmptyStateProps) {
       <FaceCluster className="max-w-64" />
       <div className="space-y-3">
         <h2 className="font-display text-3xl leading-tight font-medium text-balance sm:text-4xl">
-          Tu equipo empieza{" "}
-          <span className="text-mood-lp-strong italic">aquí</span>
+          ¡Reúne a tu{" "}
+          <span className="text-mood-lp-strong italic">equipo</span>!
         </h2>
         <p className="mx-auto max-w-md text-sm leading-6 text-pretty text-muted-foreground">
-          Invita a los psicólogos/as de tu clínica con un enlace. Verás su
-          actividad de forma agregada, nunca los datos de sus pacientes.
+          Invita a los psicólogos/as de tu clínica con un enlace y sigue la
+          actividad de todo tu equipo en un solo lugar.
         </p>
       </div>
       <div className="flex justify-center">

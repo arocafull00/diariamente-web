@@ -14,7 +14,7 @@ export function PushSubscribeButton() {
 
   async function handleSubscribe() {
     if (await subscribe()) {
-      toast.success("Notificaciones activadas");
+      toast.success("¡Notificaciones activadas!");
     }
   }
 
@@ -34,8 +34,8 @@ export function PushSubscribeButton() {
       <SettingsRowContent
         icon={BellRing}
         tone="blue"
-        title={loading ? "Activando..." : "Notificaciones push"}
-        description="Permite los avisos en este dispositivo."
+        title={loading ? "Activando..." : "Notificaciones"}
+        description="Recibe avisos en este dispositivo."
         loading={loading}
       />
     </button>

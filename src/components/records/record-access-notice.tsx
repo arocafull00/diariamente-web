@@ -22,7 +22,7 @@ export function RecordAccessNotice({ views }: RecordAccessNoticeProps) {
     return (
       <p className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
         <EyeOff className="size-4 shrink-0" aria-hidden="true" />
-        Ningún profesional ha abierto este registro.
+        Nadie ha abierto este registro todavía.
       </p>
     );
   }

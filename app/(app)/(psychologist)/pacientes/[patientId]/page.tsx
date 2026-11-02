@@ -60,7 +60,7 @@ export default async function PatientDetailPage({
 
         {records.length === 0 ? (
           <div className="rounded-3xl bg-card p-8 text-center text-sm text-muted-foreground shadow-sm ring-1 ring-border/60">
-            Este paciente aún no tiene registros.
+            Aún no hay registros por aquí. Aparecerán en cuanto empiece a escribir.
           </div>
         ) : (
           <>

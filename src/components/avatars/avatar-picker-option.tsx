@@ -27,14 +27,14 @@ export function AvatarPickerOption({
       onClick={() => onSelect(avatar.url)}
       className={cn(
         "relative flex items-center justify-center rounded-full p-0.5 transition-colors",
-        selected ? "ring-2 ring-ring" : "ring-1 ring-transparent",
+        selected ? "ring-2 ring-mood-lp-3" : "ring-1 ring-transparent",
       )}
     >
       <Avatar className="size-14">
         <AvatarImage src={avatar.url} alt="" />
       </Avatar>
       {selected ? (
-        <span className="absolute right-0 bottom-0 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <span className="absolute right-0 bottom-0 flex size-5 items-center justify-center rounded-full bg-mood-lp-3 text-mood-foreground">
           <Check className="size-3" aria-hidden="true" />
         </span>
       ) : null}

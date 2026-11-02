@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { FaceRow } from "@/components/faces/face-row";
+import { Illustration } from "@/components/faces/illustration";
 import { Button } from "@/components/ui/button";
 import { buildClinicInviteUrl } from "@/lib/clinic-invitations";
 import { logger } from "@/lib/logger";
@@ -34,7 +36,7 @@ export function ClinicInviteLinkSection({
         return;
       }
 
-      toast.success(token ? "Enlace regenerado" : "Enlace generado");
+      toast.success(token ? "¡Enlace nuevo listo!" : "¡Enlace listo!");
       router.refresh();
     });
   }
@@ -46,7 +48,7 @@ export function ClinicInviteLinkSection({
 
     await navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
-    toast.success("Enlace copiado");
+    toast.success("¡Enlace copiado!");
     setTimeout(() => setCopied(false), 2000);
   }
 
@@ -62,7 +64,7 @@ export function ClinicInviteLinkSection({
 
     try {
       await navigator.share({
-        title: "Únete a nuestra clínica en Diariamente",
+        title: "¡Únete a nuestro equipo en Diariamente!",
         url: inviteUrl,
       });
     } catch (error) {
@@ -75,19 +77,30 @@ export function ClinicInviteLinkSection({
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="font-medium">Enlace de invitación</h3>
+    <section className="space-y-5 rounded-[2rem] bg-card/80 px-5 py-6 text-center shadow-sm ring-1 ring-border/50 backdrop-blur">
+      <FaceRow faceIds={["03_verde_morado", "alegria", "05_rosa_verde"]} />
+      <div className="space-y-2">
+        <h3 className="font-display text-2xl leading-tight font-medium text-balance">
+          Suma a tu{" "}
+          <span className="text-mood-lp-strong italic">equipo</span>
+        </h3>
+        {inviteUrl ? null : (
+          <p className="mx-auto max-w-xs text-sm leading-6 text-pretty text-muted-foreground">
+            Crea un enlace y compártelo con tus psicólogos/as para que se unan.
+          </p>
+        )}
+      </div>
       {inviteUrl ? (
         <>
-          <div className="rounded-xl bg-secondary p-4">
-            <p className="break-all text-sm font-medium text-primary">
+          <div className="flex items-center gap-3 rounded-2xl bg-mood-lp-soft p-3 text-left">
+            <Illustration name="generar-enlace" className="size-10" />
+            <p className="min-w-0 flex-1 text-sm font-semibold break-all text-mood-lp-strong">
               {inviteUrl}
             </p>
           </div>
           <div className="flex gap-2">
             <Button
-              variant="outline"
-              className="flex-1"
+              className="btn-raised-joy flex-1 text-mood-foreground"
               disabled={pending}
               onClick={handleCopy}
             >
@@ -109,15 +122,15 @@ export function ClinicInviteLinkSection({
             </Button>
           </div>
         </>
-      ) : (
-        <p className="text-sm text-muted-foreground">
-          Genera un enlace para que tus psicólogos/as se unan a la clínica.
-        </p>
-      )}
+      ) : null}
       <Button
         variant={inviteUrl ? "ghost" : "default"}
-        size="lg"
-        className="w-full"
+        size={inviteUrl ? "sm" : "lg"}
+        className={
+          inviteUrl
+            ? "mx-auto text-muted-foreground"
+            : "btn-raised-joy w-full text-mood-foreground"
+        }
         disabled={pending}
         onClick={handleGenerate}
       >
@@ -129,9 +142,9 @@ export function ClinicInviteLinkSection({
         {pending
           ? "Generando..."
           : inviteUrl
-            ? "Regenerar enlace"
-            : "Generar enlace"}
+            ? "Crear uno nuevo"
+            : "Crear enlace"}
       </Button>
-    </div>
+    </section>
   );
 }

@@ -1,4 +1,4 @@
-import { AlertTriangle, Building2, Link2Off } from "lucide-react";
+import { AlertTriangle, Link2Off } from "lucide-react";
 
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
 import type { UserRole } from "@/db/schema";
@@ -24,8 +24,8 @@ export async function ClinicJoinContent({
     return (
       <ConnectStatusCard
         icon={Link2Off}
-        title="Enlace no encontrado"
-        description="Pide a tu clínica que te comparta de nuevo su enlace de invitación."
+        title="Este enlace no existe"
+        description="Pide a tu clínica que te lo vuelva a enviar."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -38,8 +38,8 @@ export async function ClinicJoinContent({
     return (
       <ConnectStatusCard
         icon={AlertTriangle}
-        title="Enlace inválido"
-        description="Este enlace de invitación ya no es válido. Pide a tu clínica que te comparta uno nuevo."
+        title="Este enlace ya no funciona"
+        description="Pide a tu clínica que te mande uno nuevo."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -51,7 +51,7 @@ export async function ClinicJoinContent({
       <ConnectStatusCard
         icon={AlertTriangle}
         title="Enlace solo para profesionales"
-        description="Este enlace solo puede usarlo una cuenta de psicólogo/a."
+        description="Este enlace es para cuentas de psicólogo/a."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -63,9 +63,9 @@ export async function ClinicJoinContent({
   if (currentClinic) {
     return (
       <ConnectStatusCard
-        icon={Building2}
-        title="Ya perteneces a una clínica"
-        description={`Formas parte de ${currentClinic.name}. Sal de ella desde tu perfil si quieres unirte a otra.`}
+        icon="equipo"
+        title="¡Ya tienes clínica!"
+        description={`Formas parte de ${currentClinic.name}. Si quieres unirte a otra, sal antes desde tu perfil.`}
         href="/perfil"
         hrefLabel="Ir a mi perfil"
       />

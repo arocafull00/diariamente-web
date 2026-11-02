@@ -33,6 +33,7 @@ function BottomNav({ items }: { items: NavItem[] }) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? "page" : undefined}
               data-cuelume-tap="type"
               className={cn(
                 "flex min-w-0 flex-1 flex-col items-center gap-1 px-2 py-2 text-xs font-medium transition-colors",
@@ -48,7 +49,7 @@ function BottomNav({ items }: { items: NavItem[] }) {
                   <motion.span
                     layoutId="bottom-nav-indicator"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 rounded-full bg-accent"
+                    className="absolute inset-0 rounded-full bg-mood-lp-soft"
                   />
                 ) : null}
                 <motion.span
@@ -56,7 +57,7 @@ function BottomNav({ items }: { items: NavItem[] }) {
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   className="relative"
                 >
-                  <NavIcon name={item.icon} className="size-5" />
+                  <NavIcon name={item.icon} className="size-7" />
                 </motion.span>
               </motion.span>
               <span>{item.label}</span>

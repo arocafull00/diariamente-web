@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="journal"><path d="M 43,22 L 116,17 C 131,16 138,24 139,39 L 145,120 C 146,136 139,143 124,144 L 45,149 C 31,150 24,141 23,127 L 18,47 C 17,32 27,23 43,22 Z"/></clipPath></defs>
+  <g clip-path="url(#journal)">
+    <path fill="#ffc9e6" d="M 12,11 H 151 V 155 H 12 Z"/>
+    <path fill="#00a4ff" d="M 16,99 C 44,48 73,48 96,73 C 116,94 134,88 151,80 V 155 H 16 Z"/>
+    <path fill="#9e65c6" d="M 18,17 L 42,15 L 51,153 L 25,154 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 60,77 C 64,68 73,68 77,77 M 96,74 C 100,65 109,65 113,74"/>
+    <path d="M 68,93 C 81,109 102,109 115,91"/>
+    <path d="M 14,49 L 30,48 M 16,78 L 32,77 M 18,107 L 34,106"/>
+  </g>
+</svg>

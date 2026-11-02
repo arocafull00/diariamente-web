@@ -49,7 +49,7 @@ export function WelcomeGoalOption({
           className={cn(
             "flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
             selected
-              ? "border-primary bg-primary text-primary-foreground"
+              ? WELCOME_TONE_CLASSES[goal.tone].check
               : "border-border",
           )}
           aria-hidden="true"

@@ -1,5 +1,8 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+
+import { Illustration } from "@/components/faces/illustration";
+import type { IllustrationName } from "@/lib/illustrations";
 
 import { ProfileSectionCard } from "./profile-section-card";
 
@@ -8,7 +11,7 @@ type ProfileStatCardProps = {
   title: string;
   label: string;
   value: number;
-  icon: LucideIcon;
+  illustration: IllustrationName;
 };
 
 export function ProfileStatCard({
@@ -16,7 +19,7 @@ export function ProfileStatCard({
   title,
   label,
   value,
-  icon: Icon,
+  illustration,
 }: ProfileStatCardProps) {
   return (
     <ProfileSectionCard title={title}>
@@ -25,9 +28,7 @@ export function ProfileStatCard({
         data-cuelume-tap="type"
         className="group -m-4 flex flex-1 items-center gap-4 rounded-3xl p-4 transition-colors outline-none hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted lg:-m-5 lg:p-5"
       >
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-          <Icon className="size-6" aria-hidden="true" />
-        </span>
+        <Illustration name={illustration} />
         <span className="min-w-0 flex-1">
           <span className="block text-3xl leading-none font-bold tracking-tight">
             {value}

@@ -37,13 +37,13 @@ export function OnboardingRoleOption({
       <span
         className={`flex min-h-24 w-full items-center gap-3 rounded-xl border p-4 text-left outline-none transition-colors duration-200 motion-reduce:transition-none peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 ${
           selected
-            ? "border-primary bg-secondary text-foreground"
-            : "border-border bg-background text-foreground hover:border-primary/45 hover:bg-secondary/45"
+            ? "border-mood-lp-3 bg-mood-lp-soft text-foreground"
+            : "border-border bg-background text-foreground hover:border-mood-lp-3/60 hover:bg-mood-lp-soft/50"
         }`}
       >
         <span
           className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${
-            selected ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/65"
+            selected ? "bg-mood-lp-3 text-mood-foreground" : "bg-muted text-foreground/65"
           }`}
         >
           <Icon aria-hidden="true" className="size-5" />
@@ -58,7 +58,7 @@ export function OnboardingRoleOption({
           aria-hidden="true"
           className={`flex size-5 shrink-0 items-center justify-center rounded-full border ${
             selected
-              ? "border-primary bg-primary text-primary-foreground"
+              ? "border-mood-lp-3 bg-mood-lp-3 text-mood-foreground"
               : "border-input bg-background"
           }`}
         >

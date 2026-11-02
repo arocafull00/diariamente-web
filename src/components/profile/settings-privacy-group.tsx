@@ -43,7 +43,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
         URL.revokeObjectURL(url);
       } catch (error) {
         logger.error("privacy.data_export_failed", error);
-        toast.error("No se pudieron descargar tus datos");
+        toast.error("Uy, no hemos podido descargar tus datos");
       }
     });
   }
@@ -76,8 +76,8 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
         <SettingsRowContent
           icon={FileBraces}
           tone="primary"
-          title={exportPending ? "Preparando..." : "Descargar mis datos (JSON)"}
-          description="Una copia completa de tus datos en formato portable."
+          title={exportPending ? "Preparando..." : "Descargar todos mis datos"}
+          description="Una copia completa en un archivo, para llevártelos donde quieras."
           loading={exportPending}
         />
       </button>
@@ -92,7 +92,7 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
           icon={FileText}
           tone="primary"
           title="Descargar mis datos (PDF)"
-          description="Una versión legible para guardar o imprimir."
+          description="Una versión fácil de leer, para guardar o imprimir."
         />
       </Link>
       <Link

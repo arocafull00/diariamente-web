@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="house"><path d="M 18,68 L 64,24 C 72,16 81,15 90,22 L 140,63 C 148,70 149,77 143,84 L 138,89 L 139,121 C 140,135 133,142 119,142 L 43,145 C 29,145 23,138 23,124 L 23,88 L 18,84 C 12,79 12,74 18,68 Z"/></clipPath></defs>
+  <g clip-path="url(#house)">
+    <path fill="#ffce00" d="M 8,12 H 153 V 152 H 8 Z"/>
+    <path fill="#ff7300" d="M 5,123 C 40,78 70,93 91,113 C 108,128 132,118 154,100 V 153 H 5 Z"/>
+    <path fill="#ffa1cc" d="M 87,11 C 83,35 101,49 119,53 C 133,56 144,64 153,77 V 11 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 47,77 C 51,68 60,68 64,77 M 88,75 C 92,66 101,66 105,75"/>
+    <path d="M 56,94 C 68,111 91,112 105,94"/>
+  </g>
+</svg>

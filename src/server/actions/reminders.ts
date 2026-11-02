@@ -20,7 +20,7 @@ export async function saveReminderSettings(
   const parsed = reminderSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   await db
@@ -81,8 +81,8 @@ export async function sendPatientReminder(
 
   const delivered = await sendPushToUser(patientId, {
     topic: "reminder",
-    title: "Hola, hace tiempo que no te conectas",
-    body: "¿Quieres registrar alguna emoción del día?",
+    title: "¡Hola! ¿Qué tal te va?",
+    body: "¿Te apetece registrar cómo te sientes hoy?",
     url: "/nuevo-registro",
   });
 

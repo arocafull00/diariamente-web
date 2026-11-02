@@ -28,10 +28,10 @@ export function InstallGuidePointer({ position, label }: InstallGuidePointerProp
         positionClassNames[position],
       )}
     >
-      <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground shadow-lg">
+      <span className="rounded-full bg-mood-lp-3 px-3 py-1 text-xs font-semibold text-mood-foreground shadow-lg">
         {label}
       </span>
-      <span className="flex size-10 animate-bounce items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg">
+      <span className="flex size-10 animate-bounce items-center justify-center rounded-full bg-mood-lp-3 text-mood-foreground shadow-lg">
         <Arrow className="size-5" />
       </span>
     </div>,

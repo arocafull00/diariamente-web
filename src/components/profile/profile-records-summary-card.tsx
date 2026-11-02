@@ -1,5 +1,3 @@
-import { BookOpen } from "lucide-react";
-
 import { ProfileStatCard } from "./profile-stat-card";
 
 type ProfileRecordsSummaryCardProps = {
@@ -15,7 +13,7 @@ export function ProfileRecordsSummaryCard({
       title="Mis registros"
       label={recordCount === 1 ? "registro en total" : "registros en total"}
       value={recordCount}
-      icon={BookOpen}
+      illustration="registros"
     />
   );
 }

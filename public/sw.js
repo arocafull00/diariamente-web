@@ -15,6 +15,15 @@ const SHELL_ASSETS = [
   "/caras/ansiedad.svg",
   "/caras/rabia.svg",
   "/caras/tristeza.svg",
+  "/illustrations/equipo.svg",
+  "/illustrations/prueba-gratuita.svg",
+  "/illustrations/sugerencias.svg",
+  "/illustrations/generar-enlace.svg",
+  "/illustrations/compartir-equipo.svg",
+  "/illustrations/aceptar-invitacion.svg",
+  "/illustrations/inicio.svg",
+  "/illustrations/registros.svg",
+  "/illustrations/perfil.svg",
 ];
 const APP_SHELL_PATHS = ["/inicio", "/mis-registros", "/perfil", "/clinica"];
 const MAX_STATIC_ENTRIES = 300;
@@ -216,7 +225,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.startsWith("/caras/")) {
+  if (
+    url.pathname.startsWith("/caras/") ||
+    url.pathname.startsWith("/illustrations/")
+  ) {
     event.respondWith(
       caches
         .match(url.pathname, { cacheName: SHELL_CACHE })

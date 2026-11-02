@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Architecture, conventions, auth model, data layer and PWA rules live in `AGENTS.md` (imported below); product spec and phases in `PROJECT.md`.
 
 @AGENTS.md
+@DESIGN.md
 
 ## Commands
 

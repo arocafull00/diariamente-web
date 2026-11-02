@@ -17,7 +17,7 @@ export async function submitFeedback(input: unknown): Promise<ActionResult> {
   const parsed = submitFeedbackSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const wantsCall = profile.role === "psychologist" && parsed.data.wantsCall;
@@ -58,7 +58,7 @@ export async function submitFeedbackEase(input: unknown): Promise<ActionResult> 
   const parsed = feedbackEaseSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const [created] = await db

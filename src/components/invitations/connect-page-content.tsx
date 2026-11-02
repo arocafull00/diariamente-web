@@ -25,8 +25,8 @@ export async function ConnectPageContent({
     return (
       <ConnectStatusCard
         icon={Link2Off}
-        title="Enlace no encontrado"
-        description="Pide a tu profesional que te comparta de nuevo su enlace de invitación."
+        title="Este enlace no existe"
+        description="Pide a tu psicólogo/a que te lo vuelva a enviar."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -39,8 +39,8 @@ export async function ConnectPageContent({
     return (
       <ConnectStatusCard
         icon={AlertTriangle}
-        title="Enlace inválido"
-        description="Este enlace de invitación ya no es válido. Pide a tu profesional que te comparta uno nuevo."
+        title="Este enlace ya no funciona"
+        description="Pide a tu psicólogo/a que te mande uno nuevo."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -52,7 +52,7 @@ export async function ConnectPageContent({
       <ConnectStatusCard
         icon={AlertTriangle}
         title="Enlace solo para pacientes"
-        description="Este enlace de invitación solo puede usarlo una cuenta de paciente."
+        description="Este enlace es para cuentas de paciente."
         href="/"
         hrefLabel="Ir al inicio"
       />
@@ -65,8 +65,8 @@ export async function ConnectPageContent({
     return (
       <ConnectStatusCard
         icon={UserRoundCheck}
-        title="Ya estás vinculado"
-        description="Ya tienes un psicólogo/a asignado. Desvincúlate desde tu perfil si quieres conectar con otro profesional."
+        title="¡Ya tienes psicólogo/a!"
+        description="Si quieres conectar con otro profesional, desvincúlate antes desde tu perfil."
         href="/perfil"
         hrefLabel="Ir a mi perfil"
       />
@@ -82,8 +82,8 @@ export async function ConnectPageContent({
     return (
       <ConnectStatusCard
         icon={UserCheck}
-        title="Solicitud pendiente"
-        description="Ya has enviado una solicitud de conexión. Espera a que tu profesional la acepte."
+        title="Tu solicitud está en camino"
+        description="En cuanto tu psicólogo/a la acepte, estaréis conectados."
         href="/perfil"
         hrefLabel="Ir a mi perfil"
       />
@@ -96,8 +96,8 @@ export async function ConnectPageContent({
     return (
       <ConnectStatusCard
         icon={AlertTriangle}
-        title="Enlace inválido"
-        description="Este enlace de invitación ya no es válido. Pide a tu profesional que te comparta uno nuevo."
+        title="Este enlace ya no funciona"
+        description="Pide a tu psicólogo/a que te mande uno nuevo."
         href="/"
         hrefLabel="Ir al inicio"
       />

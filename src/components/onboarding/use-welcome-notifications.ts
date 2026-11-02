@@ -45,7 +45,7 @@ export function useWelcomeNotifications(role: "patient" | "psychologist") {
     }
 
     setEnabled(true);
-    toast.success("Notificaciones activadas");
+    toast.success("¡Notificaciones activadas!");
     return true;
   }
 

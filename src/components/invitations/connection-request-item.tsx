@@ -38,7 +38,7 @@ export function ConnectionRequestItem({
         return;
       }
 
-      toast.success("Solicitud aceptada");
+      toast.success("¡Nuevo paciente a bordo!");
       router.refresh();
     });
   }
@@ -58,17 +58,19 @@ export function ConnectionRequestItem({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-secondary p-3">
+    <div className="flex items-center gap-3 px-4 py-3">
       <Avatar className="size-10">
         {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
-        <AvatarFallback>{getInitials(firstName, lastName)}</AvatarFallback>
+        <AvatarFallback className="bg-mood-lu-soft font-semibold text-mood-lu-strong">
+          {getInitials(firstName, lastName)}
+        </AvatarFallback>
       </Avatar>
-      <p className="min-w-0 flex-1 truncate font-medium">
+      <p className="min-w-0 flex-1 truncate text-[0.95rem] font-semibold">
         {getFullName(firstName, lastName)}
       </p>
       <div className="flex gap-2">
         <Button
-          size="icon"
+          size="icon-lg"
           variant="outline"
           disabled={pending}
           onClick={handleReject}
@@ -81,7 +83,8 @@ export function ConnectionRequestItem({
           )}
         </Button>
         <Button
-          size="icon"
+          size="icon-lg"
+          className="btn-raised-joy text-mood-foreground"
           disabled={pending}
           onClick={handleAccept}
           aria-label="Aceptar"

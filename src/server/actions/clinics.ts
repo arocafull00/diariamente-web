@@ -59,7 +59,7 @@ export async function joinClinic(
   const parsed = clinicJoinConsentSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const cookieStore = await cookies();
@@ -67,7 +67,7 @@ export async function joinClinic(
   const link = token ? await getClinicInviteLinkByToken(token) : null;
 
   if (!link) {
-    return { error: "El enlace de invitación no es válido" };
+    return { error: "Este enlace ya no funciona" };
   }
 
   const existingClinic = await getPsychologistClinic(profile.id);
@@ -87,7 +87,7 @@ export async function joinClinic(
       psychologistId: profile.id,
       clinicId: link.clinicId,
     });
-    return { error: "No se pudo completar la unión a la clínica" };
+    return { error: "Uy, no hemos podido unirte a la clínica" };
   }
 
   await logAuditEvent({
@@ -149,7 +149,7 @@ export async function removeClinicPsychologist(
   const parsed = clinicPsychologistIdSchema.safeParse(psychologistId);
 
   if (!parsed.success) {
-    return { error: "Datos inválidos" };
+    return { error: "Algo no cuadra en los datos. Revísalos" };
   }
 
   const [membership] = await db

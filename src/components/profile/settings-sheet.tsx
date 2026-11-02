@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, LoaderCircle, Settings, Trash2 } from "lucide-react";
+import { Bell, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 import { PushSubscribeButton } from "@/components/pwa/push-subscribe-button";
 import { SettingsGrammaticalGenderRow } from "@/components/profile/settings-grammatical-gender-row";
+import { SettingsDeleteAccountDialog } from "@/components/profile/settings-delete-account-dialog";
 import { SettingsGroup } from "@/components/profile/settings-group";
 import { SettingsPrivacyGroup } from "@/components/profile/settings-privacy-group";
 import {
@@ -16,17 +17,6 @@ import {
 } from "@/components/profile/settings-row-content";
 import { SettingsSignOutDialog } from "@/components/profile/settings-sign-out-dialog";
 import { SettingsSoundRow } from "@/components/profile/settings-sound-row";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import {
   Sheet,
   SheetContent,
@@ -37,7 +27,6 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import type { GrammaticalGender, UserRole } from "@/db/schema";
-import { deleteAccount } from "@/server/actions/onboarding";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
 type SettingsSheetProps = {
@@ -54,7 +43,6 @@ export function SettingsSheet({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [, startSaveTransition] = useTransition();
-  const [deletePending, startDeleteTransition] = useTransition();
   const [enabled, setEnabled] = useState(remindersEnabled);
 
   function handleOpenChange(nextOpen: boolean) {
@@ -81,16 +69,6 @@ export function SettingsSheet({
     });
   }
 
-  function handleDeleteAccount() {
-    startDeleteTransition(async () => {
-      const result = await deleteAccount();
-
-      if (result?.error) {
-        toast.error(result.error);
-      }
-    });
-  }
-
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger
@@ -109,8 +87,8 @@ export function SettingsSheet({
           </SheetTitle>
           <SheetDescription>
             {role === "patient"
-              ? "Gestiona recordatorios, notificaciones, sesión y cuenta."
-              : "Gestiona tu sesión y cuenta."}
+              ? "Ponlo todo a tu gusto: recordatorios, avisos y tu cuenta."
+              : "Ponlo todo a tu gusto."}
           </SheetDescription>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 pb-6">
@@ -129,7 +107,7 @@ export function SettingsSheet({
                   icon={Bell}
                   tone="yellow"
                   title="Recordatorio diario"
-                  description="Un aviso a las 21:00 para registrar tu día."
+                  description="Un toque a las 21:00 para contar qué tal tu día."
                   trailing={
                     <Switch
                       id="reminders"
@@ -154,47 +132,7 @@ export function SettingsSheet({
 
           <div className="mt-auto">
             <SettingsGroup title="Zona de peligro">
-              <AlertDialog>
-                <AlertDialogTrigger
-                  data-slot="settings-row"
-                  className={settingsRowClassName}
-                >
-                  <SettingsRowContent
-                    icon={Trash2}
-                    tone="destructive"
-                    title="Eliminar cuenta"
-                    description="Borra tus datos de forma permanente."
-                  />
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>¿Eliminar tu cuenta?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Esta acción no se puede deshacer. Se eliminarán todos tus
-                      datos.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      variant="destructive"
-                      disabled={deletePending}
-                      onClick={handleDeleteAccount}
-                    >
-                      {deletePending ? (
-                        <LoaderCircle
-                          className="animate-spin"
-                          data-icon="inline-start"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Trash2 data-icon="inline-start" aria-hidden="true" />
-                      )}
-                      {deletePending ? "Eliminando..." : "Eliminar"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <SettingsDeleteAccountDialog />
             </SettingsGroup>
           </div>
         </div>

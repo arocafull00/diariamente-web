@@ -95,7 +95,7 @@ export function PatientCard({
             </div>
 
             {hasUnseenRecords ? (
-              <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-primary px-2 text-xs font-semibold text-primary-foreground shadow-sm">
+              <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-mood-hu-3 px-2 text-xs font-bold text-mood-foreground shadow-sm">
                 {unseenCount > 99 ? "99+" : unseenCount}
               </div>
             ) : null}

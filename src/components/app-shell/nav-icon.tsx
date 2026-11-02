@@ -1,18 +1,16 @@
 "use client";
 
-import { BookOpen, Building2, Home, User, Users } from "lucide-react";
+import { Illustration } from "@/components/faces/illustration";
+import type { IllustrationName } from "@/lib/illustrations";
 
 import type { NavIconName } from "./nav-items";
 
-const ICONS: Record<
-  NavIconName,
-  React.ComponentType<{ className?: string }>
-> = {
-  home: Home,
-  "book-open": BookOpen,
-  user: User,
-  users: Users,
-  building: Building2,
+const ICONS: Record<NavIconName, IllustrationName> = {
+  home: "inicio",
+  "book-open": "registros",
+  user: "perfil",
+  users: "equipo",
+  building: "equipo",
 };
 
 type NavIconProps = {
@@ -21,6 +19,5 @@ type NavIconProps = {
 };
 
 export function NavIcon({ name, className }: NavIconProps) {
-  const Icon = ICONS[name];
-  return <Icon className={className} aria-hidden={true} />;
+  return <Illustration name={ICONS[name]} className={className} />;
 }

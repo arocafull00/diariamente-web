@@ -19,12 +19,12 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 const SUBSCRIBE_ERROR_MESSAGES: Record<string, string> = {
-  NotAllowedError: "Permiso de notificaciones denegado",
+  NotAllowedError: "Has bloqueado las notificaciones. Actívalas en los ajustes del navegador",
   AbortError:
-    "Tu navegador ha bloqueado el servicio de notificaciones. Revisa su configuración de privacidad.",
+    "Tu navegador está bloqueando las notificaciones. Échale un ojo a su configuración de privacidad.",
   InvalidStateError:
-    "Las notificaciones no están disponibles. Recarga la página e inténtalo de nuevo.",
-  InvalidAccessError: "La configuración de notificaciones no es válida",
+    "Ahora mismo no podemos activar las notificaciones. Recarga la página y vuelve a probar.",
+  InvalidAccessError: "Uy, algo falla con las notificaciones. Inténtalo más tarde",
 };
 
 async function createSubscription(
@@ -59,12 +59,12 @@ export function usePushSubscription() {
 
   async function subscribe() {
     if (!publicKey) {
-      toast.error("Push no configurado");
+      toast.error("Las notificaciones aún no están disponibles");
       return false;
     }
 
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      toast.error("Tu navegador no soporta notificaciones push");
+      toast.error("Tu navegador no admite notificaciones");
       return false;
     }
 
@@ -74,12 +74,12 @@ export function usePushSubscription() {
       const permission = await Notification.requestPermission();
 
       if (permission !== "granted") {
-        toast.error("Permiso de notificaciones denegado");
+        toast.error("Has bloqueado las notificaciones. Actívalas en los ajustes del navegador");
         return false;
       }
 
       if (!(await navigator.serviceWorker.getRegistration())) {
-        toast.error("Las notificaciones no están disponibles. Recarga la página e inténtalo de nuevo.");
+        toast.error("Ahora mismo no podemos activar las notificaciones. Recarga la página y vuelve a probar.");
         return false;
       }
 
@@ -98,7 +98,7 @@ export function usePushSubscription() {
           new Error(`Push subscribe responded ${response.status}`),
           { status: response.status },
         );
-        toast.error("No se pudo guardar la suscripción");
+        toast.error("Uy, no hemos podido activar las notificaciones");
         return false;
       }
 
@@ -107,7 +107,7 @@ export function usePushSubscription() {
       logger.error("push.subscribe_failed", error);
       toast.error(
         (error instanceof DOMException && SUBSCRIBE_ERROR_MESSAGES[error.name]) ||
-          "Error al activar notificaciones",
+          "Uy, no hemos podido activar las notificaciones",
       );
       return false;
     } finally {

@@ -19,7 +19,7 @@ export default async function ClinicPsychologistPage({
 
   const stats: { label: string; value: number; quadrant: MoodQuadrant }[] = [
     { label: "Pacientes", value: psychologist.patients, quadrant: "HIGH_PLEASANT" },
-    { label: "Altas en 30 días", value: psychologist.newPatients, quadrant: "LOW_PLEASANT" },
+    { label: "Nuevos en 30 días", value: psychologist.newPatients, quadrant: "LOW_PLEASANT" },
     { label: "Registros en 7 días", value: psychologist.records7d, quadrant: "HIGH_UNPLEASANT" },
     { label: "Registros en 30 días", value: psychologist.records30d, quadrant: "HIGH_UNPLEASANT" },
     { label: "Revisados en 30 días", value: psychologist.reviewed30d, quadrant: "LOW_PLEASANT" },
@@ -49,8 +49,8 @@ export default async function ClinicPsychologistPage({
           ))}
         </div>
         <p className="text-xs text-muted-foreground">
-          Métricas agregadas. Los registros, notas y datos de los pacientes son
-          privados entre cada paciente y su profesional.
+          Aquí ves cómo va su consulta. Lo que escribe cada paciente solo lo
+          ve su psicólogo/a.
         </p>
         <ClinicRemovePsychologistButton
           psychologistId={psychologist.id}

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import type { CSSProperties } from "react";
 
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
 import { NewRecordStepTitle } from "@/components/records/new-record-step-title";
@@ -100,7 +101,8 @@ export function NewRecordIntensityStep({
               playStepSound(intensity, next);
               onChange(next);
             }}
-            className="[&_[data-slot=slider-range]]:bg-foreground [&_[data-slot=slider-thumb]]:size-7 [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:shadow-md [&_[data-slot=slider-track]]:h-2"
+            style={{ "--mood-color": styles.color } as CSSProperties}
+            className="[&_[data-slot=slider-range]]:bg-(--mood-color) [&_[data-slot=slider-thumb]]:size-7 [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:shadow-md [&_[data-slot=slider-track]]:h-2"
           />
           <div className="flex justify-between text-xs font-medium text-muted-foreground">
             <span>Apenas</span>

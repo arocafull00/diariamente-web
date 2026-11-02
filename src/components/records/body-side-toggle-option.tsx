@@ -19,7 +19,7 @@ export function BodySideToggleOption({ side, selected, onSelect }: BodySideToggl
       aria-pressed={selected}
       className={cn(
         "h-9 rounded-full px-4 text-sm font-semibold outline-none transition-[color,background-color,transform] active:scale-95 focus-visible:ring-3 focus-visible:ring-ring/50",
-        selected ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+        selected ? "bg-mood-lp-3 text-mood-foreground" : "text-muted-foreground hover:text-foreground",
       )}
     >
       {BODY_SIDE_LABELS[side]}

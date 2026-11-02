@@ -42,7 +42,7 @@ export function RecordNoteSheetForm({
         return;
       }
 
-      toast.success(isEditing ? "Nota actualizada" : "Nota guardada");
+      toast.success(isEditing ? "¡Nota actualizada!" : "¡Nota guardada!");
       onOpenChange(false);
       router.refresh();
     });
@@ -53,8 +53,7 @@ export function RecordNoteSheetForm({
       <SheetHeader>
         <SheetTitle>{isEditing ? "Editar nota" : "Añadir nota"}</SheetTitle>
         <SheetDescription>
-          Esta nota es privada. Solo tú puedes verla; el paciente no tiene
-          acceso a ella.
+          Esta nota es solo para ti: tu paciente no puede verla.
         </SheetDescription>
       </SheetHeader>
       <div className="flex min-h-0 flex-1 flex-col gap-4 px-4">

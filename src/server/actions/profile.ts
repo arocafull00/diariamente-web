@@ -20,7 +20,7 @@ export async function updateProfile(input: unknown): Promise<ActionResult> {
   const parsed = updateProfileSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const { firstName, lastName, avatarUrl } = parsed.data;
@@ -57,7 +57,7 @@ export async function updateGrammaticalGender(
   const parsed = updateGrammaticalGenderSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   await db

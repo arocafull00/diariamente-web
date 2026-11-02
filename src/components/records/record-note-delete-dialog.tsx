@@ -64,8 +64,7 @@ export function RecordNoteDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>¿Eliminar la nota?</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta acción no se puede deshacer. La nota se borrará de forma
-            permanente.
+            No hay vuelta atrás: la nota se borrará para siempre.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

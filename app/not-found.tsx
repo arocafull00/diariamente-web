@@ -24,7 +24,7 @@ export default function NotFound() {
         Aquí no hay nada
       </h1>
       <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
-        La página que buscas no existe o se ha movido.
+        Esta página se ha perdido por el camino. Volvamos al inicio.
       </p>
       <Link href="/" data-cuelume-tap="" className={cn(buttonVariants({ size: "lg" }), "mt-8")}>
         <House data-icon="inline-start" aria-hidden="true" />

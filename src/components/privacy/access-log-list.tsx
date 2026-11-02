@@ -15,7 +15,7 @@ export function AccessLogList({ entries }: AccessLogListProps) {
           size={64}
           className="mx-auto mb-4 size-14 rotate-6 drop-shadow-sm motion-safe:animate-mood-float"
         />
-        Ningún profesional ha consultado todavía tus registros.
+        Por aquí todo tranquilo: nadie ha abierto tus registros todavía.
       </div>
     );
   }

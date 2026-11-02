@@ -20,7 +20,7 @@ export function OfflineNotice() {
     toast("Sin conexión", {
       id: OFFLINE_TOAST_ID,
       description:
-        "Estás viendo tus datos guardados. Se actualizarán al recuperar la conexión.",
+        "Te enseñamos lo último que guardaste. Lo actualizamos en cuanto vuelvas a tener conexión.",
       icon: <WifiOff className="size-4" aria-hidden="true" />,
     });
   }, [isOnline]);

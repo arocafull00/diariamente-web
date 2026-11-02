@@ -9,7 +9,10 @@ import { clinics, profiles, screenAcknowledgements } from "@/db/schema";
 import { logger } from "@/lib/logger";
 import { REQUIRED_SCREENS } from "@/lib/required-screens";
 import { logAuditEvent } from "@/server/audit";
-import { requireUser } from "@/server/auth/get-current-profile";
+import {
+  getCurrentProfile,
+  requireUser,
+} from "@/server/auth/get-current-profile";
 import { deleteProfileAndIdentity } from "@/server/profiles/delete-profile";
 import { onboardingSchema } from "@/validation/schemas";
 
@@ -23,6 +26,11 @@ export async function completeOnboarding(
   formData: FormData,
 ): Promise<ActionResult> {
   const userId = await requireUser();
+  const existingProfile = await getCurrentProfile();
+
+  if (existingProfile?.onboardingCompleted) {
+    redirect("/");
+  }
 
   const rawAvatarUrl = formData.get("avatarUrl");
 
@@ -43,7 +51,7 @@ export async function completeOnboarding(
       userId,
       field: parsed.error.issues[0]?.path.join(".") ?? null,
     });
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
   const { firstName, lastName, role, clinicName, grammaticalGender, avatarUrl } =
@@ -96,7 +104,21 @@ export async function completeOnboarding(
       });
     }
 
-    if (clerkUser.legalAcceptedAt) {
+    const acceptedNow =
+      !clerkUser.legalAcceptedAt && formData.get("legalAccepted") === "true";
+
+    if (acceptedNow) {
+      await client.users.updateUser(userId, { legalAcceptedAt: new Date() });
+      await logAuditEvent({
+        actorId: userId,
+        action: "legal.terms_accepted",
+        entityType: "profile",
+        entityId: userId,
+        metadata: { version: REQUIRED_SCREENS.terms.version },
+      });
+    }
+
+    if (clerkUser.legalAcceptedAt || acceptedNow) {
       await db
         .insert(screenAcknowledgements)
         .values({
@@ -112,7 +134,7 @@ export async function completeOnboarding(
     });
   } catch (error) {
     logger.error("auth.signup.onboarding_failed", error, { userId, role });
-    return { error: "No se pudo completar el registro. Inténtalo de nuevo." };
+    return { error: "Uy, no hemos podido crear tu cuenta. Inténtalo de nuevo." };
   }
 
   logger.info("auth.signup.completed", { userId, role });
@@ -133,5 +155,6 @@ export async function deleteAccount(): Promise<ActionResult> {
   await deleteProfileAndIdentity(userId);
 
   revalidatePath("/");
-  redirect("/login");
+
+  return { success: true };
 }

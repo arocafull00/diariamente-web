@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="bubble"><path d="M 79,19 C 117,17 143,37 144,69 C 146,101 120,122 84,123 L 45,144 L 48,116 C 27,107 15,90 16,70 C 17,42 41,21 79,19 Z"/></clipPath></defs>
+  <g clip-path="url(#bubble)">
+    <path fill="#ffce00" d="M 10,13 H 151 V 150 H 10 Z"/>
+    <path fill="#ff7300" d="M 8,109 C 37,69 63,84 85,102 C 106,120 130,116 151,97 V 150 H 8 Z"/>
+    <path fill="#ffa1cc" d="M 89,12 C 84,36 102,50 118,53 C 132,56 145,67 152,80 V 12 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 45,67 C 49,58 58,58 62,67 M 83,64 C 87,55 97,56 101,65"/>
+    <path d="M 52,80 C 64,97 87,100 105,81"/>
+  </g>
+</svg>

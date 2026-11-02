@@ -1,21 +1,15 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import {
-  BadgeCheck,
-  Building2,
-  CircleAlert,
-  Clock,
-  Gift,
-  type LucideIcon,
-} from "lucide-react";
+import { CircleAlert, Clock, type LucideIcon } from "lucide-react";
 
 import { formatMonthlyPrice } from "@/lib/billing";
+import type { IllustrationName } from "@/lib/illustrations";
 import type { getBillingSummary } from "@/server/billing/get-billing-summary";
 
 export type BillingSummary = Awaited<ReturnType<typeof getBillingSummary>>;
 
 type BillingStatusCopy = {
-  icon: LucideIcon;
+  icon: LucideIcon | IllustrationName;
   title: string;
   description: string;
   canSubscribe: boolean;
@@ -43,7 +37,7 @@ function getSubscribedCopy(summary: BillingSummary): BillingStatusCopy {
       icon: CircleAlert,
       title: "Pago pendiente",
       description:
-        "No hemos podido cobrar tu suscripción. Actualiza tu método de pago para no perder el acceso.",
+        "No hemos podido cobrar tu suscripción. Actualiza tu método de pago y seguimos como siempre.",
       canSubscribe: false,
       canManage: true,
     };
@@ -63,18 +57,16 @@ function getSubscribedCopy(summary: BillingSummary): BillingStatusCopy {
 
   if (summary.subscriptionStatus === "trialing") {
     return {
-      icon: BadgeCheck,
+      icon: "prueba-gratuita",
       title: "Suscripción activa",
-      description: periodEnd
-        ? `Estás en tu mes gratuito. El primer cobro${priceLabel ? ` de ${priceLabel}` : ""} será el ${periodEnd}.`
-        : "Estás en tu mes gratuito.",
+      description: "¡Estás disfrutando de tu mes de prueba gratis!",
       canSubscribe: false,
       canManage: true,
     };
   }
 
   return {
-    icon: BadgeCheck,
+    icon: "aceptar-invitacion",
     title: "Suscripción activa",
     description: [priceLabel, periodEnd ? `se renueva el ${periodEnd}` : null]
       .filter(Boolean)
@@ -93,9 +85,9 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
 
   if (summary.access === "lifetime") {
     return {
-      icon: Gift,
+      icon: "aceptar-invitacion",
       title: "Acceso gratuito de por vida",
-      description: "Tu cuenta tiene acceso completo a DiariaMente sin coste.",
+      description: "Tienes DiariaMente completo y gratis. ¡Que lo disfrutes!",
       canSubscribe: false,
       canManage: summary.hasCustomer,
     };
@@ -103,11 +95,11 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
 
   if (summary.access === "clinic") {
     return {
-      icon: Building2,
+      icon: "equipo",
       title: "Incluido en tu clínica",
       description: summary.clinicName
-        ? `Tu acceso lo cubre ${summary.clinicName}.`
-        : "Tu acceso lo cubre tu clínica.",
+        ? `${summary.clinicName} se encarga de tu suscripción.`
+        : "Tu clínica se encarga de tu suscripción.",
       canSubscribe: false,
       canManage: summary.hasCustomer,
     };
@@ -115,11 +107,11 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
 
   if (summary.access === "trial_available") {
     return {
-      icon: Gift,
+      icon: "prueba-gratuita",
       title: "Empieza tu mes gratuito",
       description: hasPrice
-        ? "Prueba DiariaMente gratis durante 30 días. Hoy no se te cobra nada."
-        : "Estamos preparando tu precio. Escríbenos y te lo enviaremos para que puedas empezar tu mes gratuito.",
+        ? "Prueba DiariaMente 30 días gratis. Hoy no pagas nada."
+        : "Estamos preparando tu precio. Escríbenos y te lo mandamos para que empieces tu mes gratis.",
       canSubscribe: hasPrice,
       canManage: false,
     };
@@ -129,10 +121,10 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
     const trialEnd = formatDay(summary.trialEndsAt);
 
     return {
-      icon: Clock,
+      icon: "prueba-gratuita",
       title: "Mes gratuito",
       description: hasPrice
-        ? `Gratis hasta el ${trialEnd}. Si te suscribes ahora no se te cobrará nada hasta esa fecha.`
+        ? `Gratis hasta el ${trialEnd}. Si te suscribes ahora, no pagas nada hasta entonces.`
         : `Gratis hasta el ${trialEnd}. Te enviaremos tu precio personalizado antes de que termine.`,
       canSubscribe: hasPrice,
       canManage: false,
@@ -141,9 +133,9 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
 
   return {
     icon: CircleAlert,
-    title: "Tu mes gratuito ha terminado",
+    title: "Tu mes gratis se ha acabado",
     description: hasPrice
-      ? `Suscríbete por ${getPriceLabel(summary)} para seguir usando DiariaMente con tus pacientes.`
+      ? `Suscríbete por ${getPriceLabel(summary)} y sigue acompañando a tus pacientes con DiariaMente.`
       : "Escríbenos y te ofreceremos un precio personalizado para tu clínica.",
     canSubscribe: hasPrice,
     canManage: summary.hasCustomer,

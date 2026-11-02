@@ -1,10 +1,10 @@
 "use client";
 
-import { MessageCircleHeart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { Illustration } from "@/components/faces/illustration";
 import { GrammaticalGenderField } from "@/components/profile/grammatical-gender-field";
 import type { GrammaticalGender } from "@/db/schema";
 import { GRAMMATICAL_GENDER_QUESTION } from "@/lib/grammatical-gender";
@@ -39,9 +39,7 @@ export function SettingsGrammaticalGenderRow({
 
   return (
     <div data-slot="settings-row" className="flex w-full gap-3 px-4 py-3.5">
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-        <MessageCircleHeart className="size-5" aria-hidden="true" />
-      </span>
+      <Illustration name="sugerencias" className="size-10" />
       <div className="min-w-0 flex-1 pt-2">
         <GrammaticalGenderField
           name="grammaticalGender"

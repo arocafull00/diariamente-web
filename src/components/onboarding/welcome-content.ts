@@ -46,7 +46,7 @@ export type WelcomeFlow = {
 
 const NO_CLINICAL_PUSH: WelcomeFeature = {
   faceId: "02_azul_rosa",
-  title: "Avisos sin datos clínicos",
+  title: "Avisos discretos",
   description: "Las notificaciones nunca muestran el contenido de los registros.",
 };
 
@@ -237,14 +237,14 @@ const PSYCHOLOGIST_FLOW: WelcomeFlow = {
     {
       id: "privacy",
       faceId: "03_verde_morado",
-      title: "Confidencialidad por diseño",
+      title: "La privacidad, lo primero",
       description:
-        "El acceso a la información clínica está siempre limitado y bajo control del paciente.",
+        "Tus pacientes siempre tienen el control de su información.",
       features: [
         {
           faceId: "01_gradiente",
-          title: "Solo pacientes vinculados",
-          description: "Accedes únicamente a quien ha aceptado conectar contigo.",
+          title: "Solo quien te elige",
+          description: "Solo ves a los pacientes que han conectado contigo.",
         },
         {
           faceId: "05_rosa_verde",

@@ -80,7 +80,7 @@ export function GoogleSignInForm({
     }
 
     logger.error("auth.login.sso_failed", ssoError, { strategy: "oauth_google" });
-    setError(ssoError.message ?? "No se pudo iniciar sesión");
+    setError(ssoError.message ?? "Uy, no hemos podido iniciar sesión");
   };
 
   return (

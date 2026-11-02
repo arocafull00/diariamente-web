@@ -8,15 +8,17 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useSignOut } from "@/hooks/use-sign-out";
 
+import { SettingsConfirmHeader } from "./settings-confirm-header";
+import {
+  confirmDialogContentClassName,
+  confirmDialogFooterClassName,
+} from "./settings-dialog-styles";
 import { SettingsRowContent, settingsRowClassName } from "./settings-row-content";
 
 type SettingsSignOutDialogProps = {
@@ -59,18 +61,25 @@ export function SettingsSignOutDialog({
   return (
     <AlertDialog>
       {trigger}
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>¿Cerrar sesión?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Tendrás que volver a iniciar sesión para acceder a tu cuenta.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+      <AlertDialogContent className={confirmDialogContentClassName}>
+        <SettingsConfirmHeader
+          faceId="02_azul_rosa"
+          title={
+            <>
+              ¿Cerrar <span className="text-mood-lu-strong italic">sesión</span>?
+            </>
+          }
+          description="Para volver, solo tendrás que iniciar sesión de nuevo. ¡Aquí te esperamos!"
+        />
+        <AlertDialogFooter className={confirmDialogFooterClassName}>
+          <AlertDialogCancel size="lg" className="w-full">
+            Cancelar
+          </AlertDialogCancel>
           <AlertDialogAction
             data-cuelume-tap="close"
             data-cuelume-emphasis="strong"
+            size="lg"
+            className="w-full"
             disabled={pending}
             onClick={handleSignOut}
           >

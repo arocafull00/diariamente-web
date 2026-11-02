@@ -76,7 +76,10 @@ export async function POST(req: Request) {
     }
 
     if (SUBSCRIPTION_EVENTS.has(event.type)) {
-      await handleSubscription(event.data.object as Stripe.Subscription);
+      const subscription = await stripe.subscriptions.retrieve(
+        (event.data.object as Stripe.Subscription).id,
+      );
+      await handleSubscription(subscription);
     }
   } catch (error) {
     logger.error("webhooks.stripe.handler_failed", error, {

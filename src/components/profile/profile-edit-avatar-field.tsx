@@ -52,13 +52,13 @@ export function ProfileEditAvatarField({
     }
 
     if (!file.type.startsWith("image/")) {
-      onError("Selecciona una imagen válida");
+      onError("Ese archivo no parece una imagen. Prueba con otro");
       event.target.value = "";
       return;
     }
 
     if (file.size > maxAvatarSizeBytes) {
-      onError("La imagen no puede superar 5 MB");
+      onError("Esa imagen pesa demasiado. Elige una de menos de 5 MB");
       event.target.value = "";
       return;
     }

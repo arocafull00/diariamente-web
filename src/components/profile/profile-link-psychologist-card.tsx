@@ -35,7 +35,7 @@ export function ProfileLinkPsychologistCard({
               {getFullName(pendingRequest.firstName, pendingRequest.lastName)}
             </p>
             <p className="text-sm text-muted-foreground">
-              Pendiente de aceptación
+              Esperando respuesta
             </p>
           </div>
           <ProfileCancelConnectionButton requestId={pendingRequest.id} />
@@ -47,8 +47,7 @@ export function ProfileLinkPsychologistCard({
   return (
     <ProfileSectionCard title="Tu psicólogo/a">
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Pide a tu psicólogo/a que te comparta su enlace de invitación para
-        vincularos.
+        Pide a tu psicólogo/a su enlace de invitación y conectad en un momento.
       </p>
     </ProfileSectionCard>
   );

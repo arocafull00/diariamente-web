@@ -40,7 +40,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
         return;
       }
 
-      toast.success("Solicitud enviada");
+      toast.success("¡Solicitud enviada!");
       router.replace("/perfil");
       router.refresh();
     });
@@ -61,8 +61,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           {getFullName(psychologist.firstName, psychologist.lastName)}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Te invita a conectar en Diariamente. Al enviar la solicitud, tu
-          psicólogo/a deberá aceptarla para vincularos.
+          ¡Te invita a conectar en Diariamente! Envía la solicitud y, en cuanto la acepte, estaréis conectados.
         </p>
       </div>
       <div className="w-full space-y-4 rounded-2xl bg-card p-4 text-left">

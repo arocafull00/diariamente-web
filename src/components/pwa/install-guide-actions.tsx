@@ -17,12 +17,12 @@ export function InstallGuideActions({ action }: InstallGuideActionsProps) {
   async function handleCopyLink() {
     try {
       await navigator.clipboard.writeText(location.origin);
-      toast.success("Enlace copiado");
+      toast.success("¡Enlace copiado!");
     } catch (error) {
       logger.warn("pwa.copy_link_failed", {
         errorName: error instanceof Error ? error.name : null,
       });
-      toast.error("No se pudo copiar el enlace");
+      toast.error("Uy, no hemos podido copiar el enlace");
     }
   }
 

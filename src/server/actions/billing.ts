@@ -39,13 +39,13 @@ export async function startCheckout(): Promise<RedirectResult> {
   const profile = await requireProfile();
 
   if (profile.role !== "psychologist" && profile.role !== "clinic") {
-    return { error: "Tu cuenta no necesita suscripción" };
+    return { error: "Tu cuenta no necesita suscripción. ¡Todo en orden!" };
   }
 
   const billing = await getBillingState(profile.id);
 
   if (!billing || PAID_ACCESS.includes(billing.access)) {
-    return { error: "Ya tienes acceso a DiariaMente" };
+    return { error: "¡Ya tienes acceso a DiariaMente!" };
   }
 
   const priceId =
@@ -79,6 +79,13 @@ export async function startCheckout(): Promise<RedirectResult> {
       client_reference_id: profile.id,
       line_items: [{ price: priceId, quantity: 1 }],
       payment_method_collection: "if_required",
+      automatic_tax: { enabled: true },
+      billing_address_collection: "required",
+      customer_update: { address: "auto", name: "auto" },
+      name_collection: {
+        business: { enabled: true, optional: profile.role !== "clinic" },
+      },
+      tax_id_collection: { enabled: true },
       subscription_data: {
         metadata: { profileId: profile.id },
         trial_end: trialEnd,
@@ -89,11 +96,11 @@ export async function startCheckout(): Promise<RedirectResult> {
       },
       locale: "es",
       success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}${trialPeriodDays ? "&inicio=1" : ""}`,
-      cancel_url: `${origin}/perfil`,
+      cancel_url: `${origin}${trialPeriodDays ? "/suscripcion" : "/perfil"}`,
     });
 
     if (!session.url) {
-      return { error: "No se pudo iniciar el pago" };
+      return { error: "Uy, no hemos podido abrir el pago" };
     }
 
     await logAuditEvent({
@@ -106,7 +113,7 @@ export async function startCheckout(): Promise<RedirectResult> {
     return { url: session.url };
   } catch (error) {
     logger.error("billing.checkout_failed", error, { profileId: profile.id });
-    return { error: "No se pudo iniciar el pago. Inténtalo de nuevo." };
+    return { error: "Uy, no hemos podido abrir el pago. Inténtalo de nuevo." };
   }
 }
 
@@ -128,6 +135,6 @@ export async function openBillingPortal(): Promise<RedirectResult> {
     return { url: session.url };
   } catch (error) {
     logger.error("billing.portal_failed", error, { profileId: profile.id });
-    return { error: "No se pudo abrir la gestión de la suscripción" };
+    return { error: "Uy, no hemos podido abrir tu suscripción" };
   }
 }
