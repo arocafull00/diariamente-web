@@ -10,7 +10,9 @@ const nextConfig: NextConfig = {
   },
 };
 
-const uploadToSentry = process.env.VERCEL_ENV === "production";
+const uploadToSentry =
+  process.env.VERCEL_ENV === "production" &&
+  process.env.SENTRY_SKIP_UPLOAD !== "1";
 
 export default withSentryConfig(nextConfig, {
   org: "adrian-rocafull",

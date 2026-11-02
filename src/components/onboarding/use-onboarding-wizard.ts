@@ -23,7 +23,6 @@ import {
   markAccountCreated,
 } from "@/lib/account-created-sound";
 import { logger } from "@/lib/logger";
-import { consumeClinicSignupIntent } from "@/lib/onboarding-intent";
 import { completeOnboarding } from "@/server/actions/onboarding";
 import { onboardingSchema } from "@/validation/schemas";
 
@@ -118,10 +117,6 @@ export function useOnboardingWizard() {
   useEffect(() => {
     if (!isLoaded || fetchStatus === "fetching" || didInit.current) {
       return;
-    }
-
-    if (consumeClinicSignupIntent()) {
-      form.setValue("role", "clinic");
     }
 
     if (isSignedIn) {

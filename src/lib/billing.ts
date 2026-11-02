@@ -3,7 +3,6 @@ import { addDays } from "date-fns";
 import type { UserRole } from "@/db/schema";
 
 export const TRIAL_DAYS = 30;
-export const CLINIC_PRICE_GRACE_DAYS = 7;
 export const PSYCHOLOGIST_MONTHLY_PRICE_CENTS = 999;
 
 const ACCESS_SUBSCRIPTION_STATUSES = ["active", "trialing", "past_due"];
@@ -14,7 +13,7 @@ export type BillingAccess =
   | "clinic"
   | "subscribed"
   | "trial"
-  | "pricing_pending"
+  | "trial_available"
   | "expired";
 
 export type BillingAccount = {
@@ -22,11 +21,14 @@ export type BillingAccount = {
   lifetimeAccess: boolean;
   trialEndsAt: Date | null;
   subscriptionStatus: string | null;
-  clinicPriceId: string | null;
 };
 
 export function hasActiveSubscription(status: string | null) {
   return status !== null && ACCESS_SUBSCRIPTION_STATUSES.includes(status);
+}
+
+export function isBillingBlocked(access: BillingAccess) {
+  return access === "expired" || access === "trial_available";
 }
 
 export function resolveBillingAccess(
@@ -44,7 +46,7 @@ export function resolveBillingAccess(
 
   if (
     coveringClinic &&
-    resolveBillingAccess(coveringClinic, null, now) !== "expired"
+    !isBillingBlocked(resolveBillingAccess(coveringClinic, null, now))
   ) {
     return "clinic";
   }
@@ -57,8 +59,8 @@ export function resolveBillingAccess(
     return "trial";
   }
 
-  if (account.role === "clinic" && !account.clinicPriceId) {
-    return "pricing_pending";
+  if (!account.trialEndsAt && !account.subscriptionStatus) {
+    return "trial_available";
   }
 
   return "expired";

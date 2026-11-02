@@ -662,7 +662,6 @@ export async function getBillingSnapshot(profileId: string) {
     db
       .select({
         name: clinics.name,
-        stripePriceId: clinics.stripePriceId,
         ownerRole: profiles.role,
         ownerLifetimeAccess: profiles.lifetimeAccess,
         ownerTrialEndsAt: profiles.trialEndsAt,

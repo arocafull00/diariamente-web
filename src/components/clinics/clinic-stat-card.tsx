@@ -1,23 +1,40 @@
-import type { LucideIcon } from "lucide-react";
+import { MoodBubble } from "@/components/records/mood-bubble";
+import type { MoodQuadrant } from "@/db/schema";
+import { getMoodStyles } from "@/lib/emotions";
+import { cn } from "@/lib/utils";
 
 type ClinicStatCardProps = {
   label: string;
   value: number;
-  icon: LucideIcon;
+  quadrant: MoodQuadrant;
 };
 
-export function ClinicStatCard({ label, value, icon: Icon }: ClinicStatCardProps) {
+export function ClinicStatCard({ label, value, quadrant }: ClinicStatCardProps) {
+  const styles = getMoodStyles(quadrant);
+
   return (
-    <div className="flex flex-col gap-3 rounded-3xl bg-card p-4 shadow-sm ring-1 ring-border/60">
-      <span className="flex size-9 items-center justify-center rounded-xl bg-accent text-primary">
-        <Icon className="size-4" aria-hidden="true" />
-      </span>
-      <div>
-        <p className="text-2xl leading-none font-bold tracking-tight text-foreground">
-          {value}
-        </p>
-        <p className="mt-1 text-xs text-muted-foreground">{label}</p>
-      </div>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-3xl p-4 lg:p-5",
+        styles.soft,
+      )}
+    >
+      <MoodBubble
+        quadrant={quadrant}
+        tone={1}
+        className="absolute -top-6 -right-6 size-16 opacity-70"
+      />
+      <p
+        className={cn(
+          "relative font-display text-4xl leading-none font-medium tracking-tight",
+          styles.strong,
+        )}
+      >
+        {value}
+      </p>
+      <p className="relative mt-2 text-xs font-medium text-pretty text-mood-foreground/70">
+        {label}
+      </p>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { PSYCHOLOGIST_MONTHLY_PRICE_CENTS } from "@/lib/billing";
 
 import { getBillingState } from "./get-billing-state";
+import { getClinicDefaultPriceCents } from "./get-clinic-default-price";
 
 export async function getBillingSummary(profileId: string) {
   const billing = await getBillingState(profileId);
@@ -20,7 +21,7 @@ export async function getBillingSummary(profileId: string) {
     cancelAtPeriodEnd: account.cancelAtPeriodEnd ?? false,
     monthlyPriceCents:
       account.role === "clinic"
-        ? (ownClinic?.monthlyPriceCents ?? null)
+        ? (ownClinic?.monthlyPriceCents ?? (await getClinicDefaultPriceCents()))
         : PSYCHOLOGIST_MONTHLY_PRICE_CENTS,
     clinicName: memberClinic?.name ?? null,
     hasCustomer: account.stripeCustomerId !== null,

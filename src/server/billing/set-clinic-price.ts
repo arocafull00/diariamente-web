@@ -2,9 +2,8 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { clinics, subscriptions } from "@/db/schema";
-import { CLINIC_PRICE_GRACE_DAYS, hasActiveSubscription } from "@/lib/billing";
+import { hasActiveSubscription } from "@/lib/billing";
 
-import { extendTrial } from "./extend-trial";
 import { getStripe } from "./stripe";
 
 export async function setClinicPrice(clinicId: string, monthlyPriceCents: number) {
@@ -57,8 +56,4 @@ export async function setClinicPrice(clinicId: string, monthlyPriceCents: number
     .update(clinics)
     .set({ stripePriceId: price.id, monthlyPriceCents, updatedAt: new Date() })
     .where(eq(clinics.id, clinicId));
-
-  if (!clinic.stripePriceId) {
-    await extendTrial(clinic.ownerId, CLINIC_PRICE_GRACE_DAYS);
-  }
 }

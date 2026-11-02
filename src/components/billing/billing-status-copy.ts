@@ -6,7 +6,6 @@ import {
   CircleAlert,
   Clock,
   Gift,
-  Hourglass,
   type LucideIcon,
 } from "lucide-react";
 
@@ -114,13 +113,14 @@ export function getBillingStatusCopy(summary: BillingSummary): BillingStatusCopy
     };
   }
 
-  if (summary.access === "pricing_pending") {
+  if (summary.access === "trial_available") {
     return {
-      icon: Hourglass,
-      title: "Preparando tu precio",
-      description:
-        "Te ofreceremos un precio personalizado según el tamaño de tu equipo. Mientras tanto, sigues teniendo acceso.",
-      canSubscribe: false,
+      icon: Gift,
+      title: "Empieza tu mes gratuito",
+      description: hasPrice
+        ? "Prueba DiariaMente gratis durante 30 días. Hoy no se te cobra nada."
+        : "Estamos preparando tu precio. Escríbenos y te lo enviaremos para que puedas empezar tu mes gratuito.",
+      canSubscribe: hasPrice,
       canManage: false,
     };
   }

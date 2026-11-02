@@ -8,7 +8,7 @@ export async function getBillingState(profileId: string) {
     return null;
   }
 
-  const { account, ownClinic, memberClinic } = snapshot;
+  const { account, memberClinic } = snapshot;
 
   const access = resolveBillingAccess(
     {
@@ -16,14 +16,12 @@ export async function getBillingState(profileId: string) {
       lifetimeAccess: account.lifetimeAccess,
       trialEndsAt: account.trialEndsAt,
       subscriptionStatus: account.subscriptionStatus,
-      clinicPriceId: ownClinic?.stripePriceId ?? null,
     },
     memberClinic && {
       role: memberClinic.ownerRole,
       lifetimeAccess: memberClinic.ownerLifetimeAccess,
       trialEndsAt: memberClinic.ownerTrialEndsAt,
       subscriptionStatus: memberClinic.ownerSubscriptionStatus,
-      clinicPriceId: memberClinic.stripePriceId,
     },
     new Date(),
   );

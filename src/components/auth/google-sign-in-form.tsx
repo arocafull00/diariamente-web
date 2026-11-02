@@ -60,6 +60,10 @@ export function GoogleSignInForm({
   const handleGoogleSignIn = async () => {
     setError(null);
 
+    if (signIn.id) {
+      await signIn.reset();
+    }
+
     const { error: ssoError } = await signIn.sso({
       strategy: "oauth_google",
       redirectUrl,

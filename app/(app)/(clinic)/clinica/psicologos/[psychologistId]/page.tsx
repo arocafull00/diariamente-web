@@ -1,17 +1,8 @@
-import {
-  Activity,
-  BookOpen,
-  CalendarCheck,
-  CalendarDays,
-  Eye,
-  Moon,
-  UserPlus,
-} from "lucide-react";
-
 import { AppHeader } from "@/components/app-shell/app-header";
 import { ClinicPsychologistSummary } from "@/components/clinics/clinic-psychologist-summary";
 import { ClinicRemovePsychologistButton } from "@/components/clinics/clinic-remove-psychologist-button";
 import { ClinicStatCard } from "@/components/clinics/clinic-stat-card";
+import type { MoodQuadrant } from "@/db/schema";
 import { getFullName } from "@/lib/utils-app";
 import { requireClinicPsychologist } from "@/server/auth/require-clinic";
 
@@ -26,14 +17,14 @@ export default async function ClinicPsychologistPage({
   const { psychologist } = await requireClinicPsychologist(psychologistId);
   const fullName = getFullName(psychologist.firstName, psychologist.lastName);
 
-  const stats = [
-    { label: "Pacientes", value: psychologist.patients, icon: Activity },
-    { label: "Altas (30 días)", value: psychologist.newPatients, icon: UserPlus },
-    { label: "Registros (7 días)", value: psychologist.records7d, icon: CalendarDays },
-    { label: "Registros (30 días)", value: psychologist.records30d, icon: BookOpen },
-    { label: "Revisados (30 días)", value: psychologist.reviewed30d, icon: Eye },
-    { label: "Sesiones (30 días)", value: psychologist.sessions30d, icon: CalendarCheck },
-    { label: "Pacientes inactivos", value: psychologist.inactivePatients, icon: Moon },
+  const stats: { label: string; value: number; quadrant: MoodQuadrant }[] = [
+    { label: "Pacientes", value: psychologist.patients, quadrant: "HIGH_PLEASANT" },
+    { label: "Altas en 30 días", value: psychologist.newPatients, quadrant: "LOW_PLEASANT" },
+    { label: "Registros en 7 días", value: psychologist.records7d, quadrant: "HIGH_UNPLEASANT" },
+    { label: "Registros en 30 días", value: psychologist.records30d, quadrant: "HIGH_UNPLEASANT" },
+    { label: "Revisados en 30 días", value: psychologist.reviewed30d, quadrant: "LOW_PLEASANT" },
+    { label: "Sesiones en 30 días", value: psychologist.sessions30d, quadrant: "HIGH_PLEASANT" },
+    { label: "Pacientes inactivos", value: psychologist.inactivePatients, quadrant: "LOW_UNPLEASANT" },
   ];
 
   return (
@@ -53,7 +44,7 @@ export default async function ClinicPsychologistPage({
               key={stat.label}
               label={stat.label}
               value={stat.value}
-              icon={stat.icon}
+              quadrant={stat.quadrant}
             />
           ))}
         </div>

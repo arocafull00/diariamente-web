@@ -26,7 +26,11 @@ export function ProfileSubscriptionCard({ billing }: ProfileSubscriptionCardProp
       </div>
       {canSubscribe || canManage ? (
         <div className="mt-4 flex flex-wrap gap-2">
-          {canSubscribe ? <BillingRedirectButton action="checkout" /> : null}
+          {canSubscribe ? (
+            <BillingRedirectButton
+              action={billing.access === "trial_available" ? "trial" : "checkout"}
+            />
+          ) : null}
           {canManage ? <BillingRedirectButton action="portal" /> : null}
         </div>
       ) : null}

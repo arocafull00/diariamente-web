@@ -3,6 +3,7 @@
 import { addHours } from "date-fns";
 import { headers } from "next/headers";
 
+import { TRIAL_DAYS } from "@/lib/billing";
 import { logger } from "@/lib/logger";
 import { logAuditEvent } from "@/server/audit";
 import { requireProfile } from "@/server/auth/get-current-profile";
@@ -38,7 +39,8 @@ export async function startCheckout(): Promise<RedirectResult> {
 
   const priceId =
     profile.role === "clinic"
-      ? billing.ownClinic?.stripePriceId
+      ? (billing.ownClinic?.stripePriceId ??
+        process.env.STRIPE_CLINIC_DEFAULT_PRICE_ID)
       : process.env.STRIPE_PSYCHOLOGIST_PRICE_ID;
 
   if (!priceId) {
@@ -56,18 +58,26 @@ export async function startCheckout(): Promise<RedirectResult> {
             Math.max(trialEndsAt.getTime(), minTrialEnd.getTime()) / 1000,
           )
         : undefined;
+    const trialPeriodDays =
+      billing.access === "trial_available" ? TRIAL_DAYS : undefined;
+    const hasTrial = trialEnd !== undefined || trialPeriodDays !== undefined;
 
     const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
       client_reference_id: profile.id,
       line_items: [{ price: priceId, quantity: 1 }],
+      payment_method_collection: "if_required",
       subscription_data: {
         metadata: { profileId: profile.id },
         trial_end: trialEnd,
+        trial_period_days: trialPeriodDays,
+        trial_settings: hasTrial
+          ? { end_behavior: { missing_payment_method: "cancel" } }
+          : undefined,
       },
       locale: "es",
-      success_url: `${origin}/perfil?suscripcion=ok`,
+      success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/perfil`,
     });
 

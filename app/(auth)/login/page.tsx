@@ -1,6 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import logo from "../../../public/logo.png";
@@ -49,15 +48,6 @@ export default async function LoginPage() {
         </div>
         <div className="w-full space-y-4">
           <GoogleSignInForm />
-          <p className="text-center text-sm text-muted-foreground">
-            ¿Gestionas una clínica?{" "}
-            <Link
-              href="/login/clinica"
-              className="font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Accede aquí
-            </Link>
-          </p>
         </div>
       </div>
     </div>

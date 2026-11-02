@@ -10,6 +10,7 @@ import { openBillingPortal, startCheckout } from "@/server/actions/billing";
 
 const BILLING_ACTIONS = {
   checkout: { run: startCheckout, label: "Suscribirme" },
+  trial: { run: startCheckout, label: "Empezar mes gratuito" },
   portal: { run: openBillingPortal, label: "Gestionar suscripción" },
 };
 
@@ -40,8 +41,8 @@ export function BillingRedirectButton({
 
   return (
     <Button
-      variant={action === "checkout" ? "default" : "outline"}
-      className={cn(action === "checkout" && "btn-raised", className)}
+      variant={action === "portal" ? "outline" : "default"}
+      className={cn(action !== "portal" && "btn-raised", className)}
       disabled={pending}
       onClick={handleClick}
     >

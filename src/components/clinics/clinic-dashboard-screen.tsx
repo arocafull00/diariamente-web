@@ -1,7 +1,5 @@
 "use client";
 
-import { Activity, BookOpen, Moon, UserPlus, Users } from "lucide-react";
-
 import { AppHeader } from "@/components/app-shell/app-header";
 import { AppLoading } from "@/components/app-shell/app-loading";
 import { StaggerItem } from "@/components/motion/stagger-item";
@@ -11,8 +9,8 @@ import { getClinicScreenData } from "@/server/actions/screen-data";
 
 import { ClinicEmptyState } from "./clinic-empty-state";
 import { ClinicInviteSheet } from "./clinic-invite-sheet";
+import { ClinicOverview } from "./clinic-overview";
 import { ClinicPsychologistCard } from "./clinic-psychologist-card";
-import { ClinicStatCard } from "./clinic-stat-card";
 
 type ClinicDashboardScreenProps = {
   refreshedAt: number;
@@ -44,54 +42,44 @@ export function ClinicDashboardScreen({
     );
   }
 
-  const stats = [
-    { label: "Psicólogos/as", value: data.psychologists.length, icon: Users },
-    { label: "Pacientes", value: data.totals.patients, icon: Activity },
-    { label: "Altas (30 días)", value: data.totals.newPatients, icon: UserPlus },
-    { label: "Registros (30 días)", value: data.totals.records30d, icon: BookOpen },
-    {
-      label: "Pacientes inactivos",
-      value: data.totals.inactivePatients,
-      icon: Moon,
-    },
-  ];
-
   return (
     <>
       <AppHeader
         title={TITLE}
-        eyebrow={data.clinicName}
+        centerLabel={data.clinicName}
         action={<ClinicInviteSheet token={data.inviteToken} origin={origin} />}
       />
       <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
-          {stats.map((stat) => (
-            <ClinicStatCard
-              key={stat.label}
-              label={stat.label}
-              value={stat.value}
-              icon={stat.icon}
-            />
-          ))}
-        </div>
         {data.psychologists.length === 0 ? (
           <ClinicEmptyState token={data.inviteToken} origin={origin} />
         ) : (
-          <StaggerList className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 xl:grid-cols-3">
-            {data.psychologists.map((psychologist) => (
-              <StaggerItem key={psychologist.id}>
-                <ClinicPsychologistCard
-                  id={psychologist.id}
-                  firstName={psychologist.firstName}
-                  lastName={psychologist.lastName}
-                  avatarUrl={psychologist.avatarUrl}
-                  patients={psychologist.patients}
-                  records7d={psychologist.records7d}
-                  lastActiveAt={psychologist.lastActiveAt}
-                />
-              </StaggerItem>
-            ))}
-          </StaggerList>
+          <>
+            <ClinicOverview
+              psychologists={data.psychologists.length}
+              patients={data.totals.patients}
+              newPatients={data.totals.newPatients}
+              records30d={data.totals.records30d}
+              inactivePatients={data.totals.inactivePatients}
+            />
+            <section className="space-y-3">
+              <h2 className="px-1 font-semibold">Psicólogos/as</h2>
+              <StaggerList className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 xl:grid-cols-3">
+                {data.psychologists.map((psychologist) => (
+                  <StaggerItem key={psychologist.id}>
+                    <ClinicPsychologistCard
+                      id={psychologist.id}
+                      firstName={psychologist.firstName}
+                      lastName={psychologist.lastName}
+                      avatarUrl={psychologist.avatarUrl}
+                      patients={psychologist.patients}
+                      records7d={psychologist.records7d}
+                      lastActiveAt={psychologist.lastActiveAt}
+                    />
+                  </StaggerItem>
+                ))}
+              </StaggerList>
+            </section>
+          </>
         )}
       </div>
     </>

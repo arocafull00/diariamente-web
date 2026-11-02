@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { after } from "next/server";
 
+import { isBillingBlocked } from "@/lib/billing";
 import { getPendingRequiredScreen } from "@/lib/required-screens";
 import { getCurrentProfile } from "@/server/auth/get-current-profile";
 import { getBillingState } from "@/server/billing/get-billing-state";
@@ -39,6 +40,6 @@ export async function getSessionProfile() {
     },
     pendingScreenHref:
       getPendingRequiredScreen(profile.role, acknowledgements)?.href ?? null,
-    billingBlocked: billing?.access === "expired",
+    billingBlocked: billing ? isBillingBlocked(billing.access) : false,
   };
 }
