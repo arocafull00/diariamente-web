@@ -10,11 +10,16 @@ const nextConfig: NextConfig = {
   },
 };
 
+const uploadToSentry = process.env.VERCEL_ENV === "production";
+
 export default withSentryConfig(nextConfig, {
   org: "adrian-rocafull",
   project: "diariamente",
   authToken: process.env.SENTRY_AUTH_TOKEN,
   silent: !process.env.CI,
+  telemetry: false,
+  sourcemaps: { disable: !uploadToSentry },
+  release: { create: uploadToSentry },
   widenClientFileUpload: true,
   tunnelRoute: "/relay",
 });
