@@ -86,7 +86,7 @@ export function AppSessionGate({ refreshedAt, children }: AppSessionGateProps) {
             result.billingBlocked &&
             !BILLING_ALLOWED_PATHS.includes(window.location.pathname)
           ) {
-            router.replace("/suscripcion");
+            window.location.replace("/suscripcion");
           }
           return;
         }
