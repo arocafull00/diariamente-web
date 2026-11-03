@@ -8,6 +8,7 @@ import type { EmailPasswordValues } from "@/components/auth/auth-types";
 import { EmailPasswordForm } from "@/components/auth/email-password-form";
 import { GoogleSignInForm } from "@/components/auth/google-sign-in-form";
 import { OnboardingLegalAcceptance } from "@/components/onboarding/onboarding-legal-acceptance";
+import { Button } from "@/components/ui/button";
 
 type OnboardingAccountStepProps = {
   hasAccount: boolean;
@@ -18,6 +19,8 @@ type OnboardingAccountStepProps = {
   credentialsForm: UseFormReturn<EmailPasswordValues>;
   onSubmitCredentials: () => void;
   onGoogleStart: () => boolean;
+  onUseAnotherEmail?: () => void;
+  emailTaken: boolean;
 };
 
 export function OnboardingAccountStep({
@@ -29,6 +32,8 @@ export function OnboardingAccountStep({
   credentialsForm,
   onSubmitCredentials,
   onGoogleStart,
+  onUseAnotherEmail,
+  emailTaken,
 }: OnboardingAccountStepProps) {
   const legal = requiresLegal ? (
     <OnboardingLegalAcceptance
@@ -45,22 +50,38 @@ export function OnboardingAccountStep({
           Tu cuenta ya está creada. Solo falta guardar tu perfil.
         </p>
         {legal}
+        {onUseAnotherEmail ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="mx-auto flex text-muted-foreground"
+            onClick={onUseAnotherEmail}
+          >
+            Usar otro correo
+          </Button>
+        ) : null}
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {legal}
-      <GoogleSignInForm redirectUrl="/onboarding" onBeforeRedirect={onGoogleStart} />
-      <AuthDivider />
+      {emailTaken ? (
+        <p className="rounded-2xl bg-mood-hp-soft px-4 py-3 text-sm font-semibold text-mood-hp-strong">
+          Ya tienes cuenta con este correo, pero esa contraseña no es la suya. Revísala y entra.
+        </p>
+      ) : null}
       <EmailPasswordForm
         form={credentialsForm}
         onSubmit={onSubmitCredentials}
-        submitLabel="Crear cuenta"
-        pendingLabel="Creando cuenta..."
+        submitLabel={emailTaken ? "Iniciar sesión con esta cuenta" : "Crear cuenta"}
+        pendingLabel={emailTaken ? "Entrando..." : "Creando cuenta..."}
         passwordAutoComplete="new-password"
+        beforeSubmit={legal}
       />
+      <AuthDivider />
+      <GoogleSignInForm redirectUrl="/onboarding" onBeforeRedirect={onGoogleStart} />
       <p className="text-center text-sm text-muted-foreground">
         ¿Ya tienes cuenta?{" "}
         <Link

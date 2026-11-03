@@ -10,8 +10,10 @@ import { useOnboardingStore } from "@/stores/onboarding-store";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
 
+const SIGN_OUT_TIMEOUT_MS = 3000;
+
 export function useSignOut() {
-  const { signOut } = useClerk();
+  const clerk = useClerk();
   const clearScreenCache = useScreenCacheStore((state) => state.clear);
   const clearSession = useSessionStore((state) => state.clear);
 
@@ -19,10 +21,18 @@ export function useSignOut() {
     clearAppShell();
     clearLastActivity();
     logger.identify(null);
-    await signOut({ redirectUrl: "/empezar" });
     clearScreenCache();
     clearSession();
     useOnboardingStore.getState().reset();
     useOnboardingStore.persist.clearStorage();
-  }, [clearScreenCache, clearSession, signOut]);
+
+    if (clerk.session) {
+      await Promise.race([
+        clerk.signOut(),
+        new Promise((resolve) => setTimeout(resolve, SIGN_OUT_TIMEOUT_MS)),
+      ]);
+    }
+
+    window.location.assign("/empezar");
+  }, [clearScreenCache, clearSession, clerk]);
 }

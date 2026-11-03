@@ -1,15 +1,11 @@
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { WelcomeWizard } from "@/components/onboarding/welcome-wizard";
 import { CLINIC_INVITE_COOKIE_NAME } from "@/lib/clinic-invitations";
 import { INVITE_COOKIE_NAME } from "@/lib/invitations";
 import { requireProfile } from "@/server/auth/get-current-profile";
-import {
-  getInviteLink,
-  getPatientPsychologist,
-  getTherapyStatus,
-} from "@/server/queries";
+import { getPatientPsychologist, getTherapyStatus } from "@/server/queries";
 
 export default async function WelcomePage() {
   const profile = await requireProfile();
@@ -19,18 +15,12 @@ export default async function WelcomePage() {
   }
 
   const isPatient = profile.role === "patient";
-  const [inviteLink, therapyStatus, psychologist, cookieStore, headersList] =
-    await Promise.all([
-      isPatient ? null : getInviteLink(profile.id),
-      isPatient ? getTherapyStatus(profile.id) : null,
-      isPatient ? getPatientPsychologist(profile.id) : null,
-      cookies(),
-      headers(),
-    ]);
+  const [therapyStatus, psychologist, cookieStore] = await Promise.all([
+    isPatient ? getTherapyStatus(profile.id) : null,
+    isPatient ? getPatientPsychologist(profile.id) : null,
+    cookies(),
+  ]);
 
-  const host = headersList.get("host") ?? "";
-  const protocol = headersList.get("x-forwarded-proto") ?? "https";
-  const origin = `${protocol}://${host}`;
   const hasInvite = Boolean(cookieStore.get(INVITE_COOKIE_NAME)?.value);
   const hasClinicInvite = Boolean(
     cookieStore.get(CLINIC_INVITE_COOKIE_NAME)?.value,
@@ -52,8 +42,6 @@ export default async function WelcomePage() {
           role={profile.role}
           firstName={profile.firstName ?? ""}
           finishHref={finishHref}
-          inviteToken={inviteLink?.token ?? null}
-          origin={origin}
           showConnect={showConnect}
         />
       </main>

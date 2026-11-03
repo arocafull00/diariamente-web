@@ -1,16 +1,16 @@
 "use client";
 
-import { CreditCard, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { openBillingPortal, startCheckout } from "@/server/actions/billing";
+import { openBillingPortal, startCheckout, startTrial } from "@/server/actions/billing";
 
 import { useBillingRedirect } from "./use-billing-redirect";
 
 const BILLING_ACTIONS = {
   checkout: { run: startCheckout, label: "Suscribirme" },
-  trial: { run: startCheckout, label: "Empezar prueba gratuita" },
+  trial: { run: startTrial, label: "Empezar mi prueba gratuita" },
   portal: { run: openBillingPortal, label: "Gestionar suscripción" },
 };
 
@@ -36,11 +36,7 @@ export function BillingRedirectButton({
       disabled={pending}
       onClick={redirect}
     >
-      {pending ? (
-        <LoaderCircle className="animate-spin" aria-hidden="true" />
-      ) : action === "trial" ? (
-        <CreditCard aria-hidden="true" />
-      ) : null}
+      {pending ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : null}
       {label}
     </Button>
   );

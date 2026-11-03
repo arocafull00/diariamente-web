@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import type { EmailPasswordValues } from "@/components/auth/auth-types";
@@ -14,6 +15,7 @@ type EmailPasswordFormProps = {
   submitLabel: string;
   pendingLabel: string;
   passwordAutoComplete: "current-password" | "new-password";
+  beforeSubmit?: ReactNode;
 };
 
 export function EmailPasswordForm({
@@ -22,6 +24,7 @@ export function EmailPasswordForm({
   submitLabel,
   pendingLabel,
   passwordAutoComplete,
+  beforeSubmit,
 }: EmailPasswordFormProps) {
   const { errors, isSubmitting } = form.formState;
 
@@ -56,6 +59,7 @@ export function EmailPasswordForm({
           <p className="text-sm text-destructive">{errors.password.message}</p>
         ) : null}
       </div>
+      {beforeSubmit}
       <Button
         type="submit"
         disabled={isSubmitting}

@@ -56,15 +56,13 @@ export default async function SubscriptionPage({
     billing.access === "trial_available" &&
     billing.monthlyPriceCents !== null
   ) {
-    const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
     const referrerName = referrer
-      ? [referrer.firstName, referrer.lastName].filter(Boolean).join(" ") || "tu colega"
+      ? [referrer.firstName, referrer.lastName].filter(Boolean).join(" ") || "Otro psicólogo"
       : null;
 
     return (
       <div className="flex min-h-svh flex-col bg-background">
         <SubscriptionTrialOffer
-          eyebrow={(profile.role === "clinic" ? billing.ownClinicName : null) ?? fullName}
           role={profile.role}
           monthlyPriceCents={billing.monthlyPriceCents}
           referrerName={referrerName}

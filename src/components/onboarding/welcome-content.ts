@@ -13,13 +13,11 @@ export type WelcomeGoal = {
   faceId: FaceId;
   tone: WelcomeTone;
   label: string;
-  replyTitle: string;
 };
 
 export type WelcomeStepId =
   | "connect"
   | "notifications"
-  | "invite"
   | "install"
   | "ready";
 
@@ -74,13 +72,6 @@ const PATIENT_STEPS: readonly WelcomeStep[] = [
 ];
 
 const PSYCHOLOGIST_STEPS: readonly WelcomeStep[] = [
-  {
-    id: "invite",
-    faceId: "05_rosa_verde",
-    title: "Invita a tu primer paciente",
-    description:
-      "Comparte tu enlace. Cuando tu paciente lo abra, recibirás una solicitud para aceptarla.",
-  },
   {
     id: "notifications",
     faceId: "04_naranja_amarillo",

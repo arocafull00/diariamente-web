@@ -10,7 +10,8 @@ type PushTopic =
   | "connection_resolved"
   | "patient_record"
   | "reminder"
-  | "account_inactivity";
+  | "account_inactivity"
+  | "trial_ending";
 
 type PushPayload = {
   topic: PushTopic;

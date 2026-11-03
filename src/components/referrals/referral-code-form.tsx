@@ -45,8 +45,7 @@ export function ReferralCodeForm({ defaultCode }: ReferralCodeFormProps) {
         className="mx-auto mt-3 text-muted-foreground"
         onClick={() => setOpen(true)}
       >
-        <Gift data-icon="inline-start" aria-hidden="true" />
-        ¿Te ha invitado un colega?
+        ¿Te ha invitado otro psicólogo?
       </Button>
     );
   }
@@ -60,7 +59,7 @@ export function ReferralCodeForm({ defaultCode }: ReferralCodeFormProps) {
         <span className="flex size-7 items-center justify-center rounded-xl bg-mood-hp-soft text-mood-hp-strong">
           <Gift className="size-4" aria-hidden="true" />
         </span>
-        Código de tu colega
+        Código de invitación
       </label>
       <div className="flex gap-2">
         <Input

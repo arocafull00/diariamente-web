@@ -1,6 +1,7 @@
 "use server";
 
 import { addHours } from "date-fns";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { TRIAL_DAYS } from "@/lib/billing";
@@ -9,6 +10,7 @@ import { logger } from "@/lib/logger";
 import { logAuditEvent } from "@/server/audit";
 import { requireProfile } from "@/server/auth/get-current-profile";
 import { ensureStripeCustomer } from "@/server/billing/ensure-stripe-customer";
+import { extendTrial } from "@/server/billing/extend-trial";
 import { getBillingState } from "@/server/billing/get-billing-state";
 import { getStripe } from "@/server/billing/stripe";
 import { getReferrer } from "@/server/queries";
@@ -35,6 +37,41 @@ async function getOrigin() {
   }
 
   return `${headerList.get("x-forwarded-proto") ?? "https"}://${host}`;
+}
+
+export async function startTrial(): Promise<RedirectResult> {
+  const profile = await requireProfile();
+
+  if (profile.role !== "psychologist" && profile.role !== "clinic") {
+    return { error: "Tu cuenta no necesita suscripción. ¡Todo en orden!" };
+  }
+
+  const [billing, referrer] = await Promise.all([
+    getBillingState(profile.id),
+    getReferrer(profile.id),
+  ]);
+
+  if (!billing || billing.access !== "trial_available") {
+    return { error: "¡Ya tienes acceso a DiariaMente!" };
+  }
+
+  try {
+    await extendTrial(profile.id, TRIAL_DAYS + (referrer ? REFERRAL_BONUS_DAYS : 0));
+
+    await logAuditEvent({
+      actorId: profile.id,
+      action: "billing.trial_started",
+      entityType: "profile",
+      entityId: profile.id,
+    });
+
+    revalidatePath("/", "layout");
+
+    return { url: profile.role === "psychologist" ? "/bienvenida" : "/" };
+  } catch (error) {
+    logger.error("billing.trial_failed", error, { profileId: profile.id });
+    return { error: "Uy, no hemos podido empezar tu prueba. Inténtalo de nuevo." };
+  }
 }
 
 export async function startCheckout(): Promise<RedirectResult> {

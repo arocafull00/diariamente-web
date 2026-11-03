@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { userReminders } from "@/db/schema";
 import { logger } from "@/lib/logger";
 import { isCronRequest } from "@/server/auth/require-admin-api";
+import { notifyTrialEnding } from "@/server/billing/notify-trial-ending";
 import { sendPushToUser } from "@/server/push/send-push";
 
 export async function GET(req: Request) {
@@ -34,6 +35,10 @@ export async function GET(req: Request) {
       });
     }
   }
+
+  await notifyTrialEnding().catch((error: unknown) => {
+    logger.error("cron.trial_ending.failed", error);
+  });
 
   logger.info("cron.reminders.completed", { sent: reminders.length, failed });
 

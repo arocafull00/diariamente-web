@@ -7,7 +7,6 @@ import { useWelcomeWizard } from "@/components/onboarding/use-welcome-wizard";
 import { WelcomeFaceBunch } from "@/components/onboarding/welcome-face-bunch";
 import { WelcomeFooter } from "@/components/onboarding/welcome-footer";
 import { WelcomeInstallStep } from "@/components/onboarding/welcome-install-step";
-import { WelcomeInviteStep } from "@/components/onboarding/welcome-invite-step";
 import { WelcomeMascot } from "@/components/onboarding/welcome-mascot";
 import { WelcomeNotificationsStep } from "@/components/onboarding/welcome-notifications-step";
 import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
@@ -18,8 +17,6 @@ type WelcomeWizardProps = {
   role: "patient" | "psychologist";
   firstName: string;
   finishHref: string;
-  inviteToken: string | null;
-  origin: string;
   showConnect: boolean;
 };
 
@@ -27,8 +24,6 @@ export function WelcomeWizard({
   role,
   firstName,
   finishHref,
-  inviteToken,
-  origin,
   showConnect,
 }: WelcomeWizardProps) {
   const {
@@ -93,9 +88,6 @@ export function WelcomeWizard({
           {step.id === "connect" ? <WelcomeTrustCircle /> : null}
           {step.id === "notifications" ? (
             <WelcomeNotificationsStep role={role} />
-          ) : null}
-          {step.id === "invite" ? (
-            <WelcomeInviteStep token={inviteToken} origin={origin} />
           ) : null}
           {step.id === "install" ? (
             <WelcomeInstallStep

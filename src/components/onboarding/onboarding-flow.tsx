@@ -81,6 +81,10 @@ export function OnboardingFlow() {
               credentialsForm={account.credentialsForm}
               onSubmitCredentials={account.submitCredentials}
               onGoogleStart={account.startGoogle}
+              emailTaken={account.emailTaken}
+              onUseAnotherEmail={
+                account.mode === "pending" ? account.discardSignUp : undefined
+              }
             />
           ) : (
             <OnboardingStepBody

@@ -35,7 +35,8 @@ export function SettingsDeleteAccountDialog() {
         return;
       }
 
-      await signOut().catch(() => window.location.assign("/empezar"));
+      void signOut().catch(() => {});
+      window.location.assign("/empezar");
     });
   }
 

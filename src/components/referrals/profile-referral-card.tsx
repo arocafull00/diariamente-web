@@ -11,7 +11,8 @@ type ProfileReferralCardProps = {
 };
 
 function getStatsLabel(joined: number, rewarded: number) {
-  const joinedLabel = joined === 1 ? "1 colega se ha unido" : `${joined} colegas se han unido`;
+  const joinedLabel =
+    joined === 1 ? "1 psicólogo se ha unido" : `${joined} psicólogos se han unido`;
   const rewardedLabel = rewarded === 1 ? "1 mes ganado" : `${rewarded} meses ganados`;
 
   return `${joinedLabel} · ${rewardedLabel}`;
@@ -19,7 +20,7 @@ function getStatsLabel(joined: number, rewarded: number) {
 
 export function ProfileReferralCard({ code, joined, rewarded }: ProfileReferralCardProps) {
   return (
-    <ProfileSectionCard title="Invita a un colega">
+    <ProfileSectionCard title="Invita a otro psicólogo">
       <div className="flex items-start gap-3">
         <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-mood-hp-soft text-mood-hp-strong">
           <Gift className="size-6" aria-hidden="true" />
@@ -27,7 +28,8 @@ export function ProfileReferralCard({ code, joined, rewarded }: ProfileReferralC
         <div className="min-w-0 flex-1">
           <p className="font-semibold">Un mes gratis para los dos</p>
           <p className="text-sm text-muted-foreground">
-            Tu colega estrena un mes extra de prueba y tú te llevas un mes gratis cuando se suscriba.
+            Quien use tu código estrena un mes extra de prueba y tú te llevas un mes gratis
+            cuando se suscriba.
           </p>
         </div>
       </div>

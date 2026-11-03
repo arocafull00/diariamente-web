@@ -21,13 +21,13 @@ import {
 
 const SIGN_IN_ERROR = "Uy, no hemos podido iniciar sesión";
 
-export function useEmailSignIn() {
+export function useEmailSignIn(defaultEmail?: string) {
   const router = useRouter();
   const { signIn } = useSignIn();
   const [step, setStep] = useState<EmailAuthStep>("credentials");
   const credentialsForm = useForm<EmailPasswordValues>({
     resolver: zodResolver(emailPasswordSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: defaultEmail ?? "", password: "" },
   });
   const codeForm = useForm<VerificationCodeValues>({
     resolver: zodResolver(verificationCodeSchema),

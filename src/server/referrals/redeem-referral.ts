@@ -34,7 +34,7 @@ export async function redeemReferral(
     .returning({ id: referrals.id });
 
   if (!referral) {
-    return { error: "Ya has usado el código de un colega" };
+    return { error: "Ya has usado un código de invitación" };
   }
 
   await logAuditEvent({

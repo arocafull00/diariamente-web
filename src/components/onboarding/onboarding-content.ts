@@ -23,7 +23,6 @@ export type OnboardingStepId =
   | "gender"
   | "source"
   | "goal"
-  | "goal-reply"
   | "therapy"
   | "experience"
   | "caseload"
@@ -199,28 +198,24 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       faceId: "alegria",
       tone: "hp",
       label: "Entender mejor mis emociones",
-      replyTitle: "¡Me encanta! Vamos a ello",
     },
     {
       id: "therapy",
       faceId: "01_gradiente",
       tone: "lu",
       label: "Aprovechar más mis sesiones de terapia",
-      replyTitle: "¡Buena idea!",
     },
     {
       id: "anxiety",
       faceId: "ansiedad",
       tone: "hu",
       label: "Gestionar la ansiedad o el estrés",
-      replyTitle: "Estás en buen lugar",
     },
     {
       id: "vent",
       faceId: "tristeza",
       tone: "lp",
       label: "Desahogarme y ordenar mis ideas",
-      replyTitle: "Aquí puedes soltarlo todo",
     },
   ],
   psychologist: [
@@ -229,28 +224,24 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       faceId: "alegria",
       tone: "hp",
       label: "Llegar a cada sesión con más contexto",
-      replyTitle: "¡Para eso estoy!",
     },
     {
       id: "homework",
       faceId: "01_gradiente",
       tone: "lu",
       label: "Que mis pacientes registren entre sesiones",
-      replyTitle: "¡Lo haremos fácil!",
     },
     {
       id: "progress",
       faceId: "05_rosa_verde",
       tone: "lp",
       label: "Seguir su evolución emocional",
-      replyTitle: "¡Buena elección!",
     },
     {
       id: "time",
       faceId: "04_naranja_amarillo",
       tone: "hu",
       label: "Ahorrar tiempo recogiendo información",
-      replyTitle: "¡Hecho!",
     },
   ],
 };
@@ -424,13 +415,6 @@ const SOURCE_STEP: OnboardingStep = {
   title: "¿Cómo nos has conocido?",
 };
 
-const GOAL_REPLY_STEP: OnboardingStep = {
-  id: "goal-reply",
-  faceId: "alegria",
-  title: "",
-  hero: true,
-};
-
 const ACCOUNT_STEP: OnboardingStep = {
   id: "account",
   faceId: "04_naranja_amarillo",
@@ -461,7 +445,6 @@ const PATIENT_STEPS: readonly OnboardingStep[] = [
     faceId: "01_gradiente",
     title: "¿Qué te trae por aquí?",
   },
-  GOAL_REPLY_STEP,
   {
     id: "therapy",
     faceId: "03_verde_morado",
@@ -520,7 +503,6 @@ const PSYCHOLOGIST_STEPS: readonly OnboardingStep[] = [
     faceId: "01_gradiente",
     title: "¿Qué te gustaría conseguir?",
   },
-  GOAL_REPLY_STEP,
   {
     id: "caseload",
     faceId: "03_verde_morado",

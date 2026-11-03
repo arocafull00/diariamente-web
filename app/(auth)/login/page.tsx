@@ -9,8 +9,12 @@ import { AuthDivider } from "@/components/auth/auth-divider";
 import { EmailSignInForm } from "@/components/auth/email-sign-in-form";
 import { GoogleSignInForm } from "@/components/auth/google-sign-in-form";
 
-export default async function LoginPage() {
-  const { isAuthenticated } = await auth();
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ email?: string }>;
+}) {
+  const [{ isAuthenticated }, { email }] = await Promise.all([auth(), searchParams]);
 
   if (isAuthenticated) {
     redirect("/");
@@ -38,7 +42,7 @@ export default async function LoginPage() {
           </h1>
         </div>
         <div className="w-full space-y-4">
-          <EmailSignInForm />
+          <EmailSignInForm defaultEmail={email} />
           <AuthDivider />
           <GoogleSignInForm />
           <div className="flex flex-col items-center gap-2 text-sm">

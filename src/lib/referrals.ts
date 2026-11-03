@@ -8,7 +8,7 @@ export const generateReferralCode = customAlphabet(
 );
 
 export function buildReferralUrl(origin: string, code: string) {
-  return `${origin}/colega/${code}`;
+  return `${origin}/invitacion/${code}`;
 }
 
 export const REFERRAL_COOKIE_NAME = "dm_referral";

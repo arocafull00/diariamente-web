@@ -1,13 +1,14 @@
 "use client";
 
-import { useSignUp, useUser } from "@clerk/nextjs";
+import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import type { EmailPasswordValues } from "@/components/auth/auth-types";
-import { getAuthErrorMessage } from "@/lib/auth-errors";
+import { getAuthErrorCode, getAuthErrorMessage } from "@/lib/auth-errors";
 import { logger } from "@/lib/logger";
 import { useOnboardingStore } from "@/stores/onboarding-store";
 import { emailPasswordSchema } from "@/validation/schemas";
@@ -17,6 +18,7 @@ type OnboardingAccountMode = "loading" | "create" | "pending" | "signed-in";
 type SignUpOutcome = "failed" | "ready" | "redirecting";
 
 const SIGN_UP_ERROR = "Uy, no hemos podido crear tu cuenta";
+const SIGN_IN_ERROR = "Uy, no hemos podido iniciar sesión";
 const LEGAL_ERROR =
   "Necesitamos que aceptes los términos y la política de privacidad para seguir";
 const SIGN_UP_TIMEOUT_MS = 15000;
@@ -39,21 +41,30 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 export function useOnboardingAccount(submitProfile: () => void) {
+  const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const { signUp, fetchStatus } = useSignUp();
+  const { signIn } = useSignIn();
   const hasHydrated = useOnboardingStore((state) => state.hasHydrated);
   const legalAccepted = useOnboardingStore((state) => state.answers.legalAccepted);
   const submitRequested = useOnboardingStore((state) => state.answers.submitRequested);
   const setAnswer = useOnboardingStore((state) => state.setAnswer);
   const [legalError, setLegalError] = useState<string | undefined>();
+  const [takenEmail, setTakenEmail] = useState<string | null>(null);
   const [working, setWorking] = useState(false);
   const didResume = useRef(false);
   const credentialsForm = useForm<EmailPasswordValues>({
     resolver: zodResolver(emailPasswordSchema),
     defaultValues: { email: "", password: "" },
   });
+  const emailValue = useWatch({ control: credentialsForm.control, name: "email" });
+  const emailTaken = takenEmail !== null && takenEmail === emailValue.trim().toLowerCase();
   const hasPendingSignUp =
-    Boolean(signUp.id) && signUp.status !== "abandoned" && signUp.status !== "complete";
+    Boolean(signUp.id) &&
+    signUp.status !== "abandoned" &&
+    signUp.status !== "complete" &&
+    Boolean(signUp.emailAddress) &&
+    !signUp.missingFields.includes("email_address");
   const mode: OnboardingAccountMode = !isLoaded
     ? "loading"
     : isSignedIn
@@ -81,6 +92,15 @@ export function useOnboardingAccount(submitProfile: () => void) {
     return false;
   }
 
+  async function discardSignUp() {
+    if (signUp.id) {
+      await signUp.reset();
+    }
+
+    setAnswer("submitRequested", false);
+    setWorking(false);
+  }
+
   function fail(message: string) {
     toast.error(message);
     setAnswer("submitRequested", false);
@@ -91,7 +111,16 @@ export function useOnboardingAccount(submitProfile: () => void) {
     let outcome = "failed" as SignUpOutcome;
     const { error } = await signUp.finalize({
       navigate: async ({ session, decorateUrl }) => {
-        if (session?.currentTask) {
+        if (!session) {
+          logger.error(
+            "auth.signup.no_session",
+            new Error("Sign-up finalized without a session"),
+            { signUpStatus: signUp.status },
+          );
+          return;
+        }
+
+        if (session.currentTask) {
           logger.warn("auth.signup.pending_task", { task: session.currentTask.key });
           return;
         }
@@ -113,6 +142,10 @@ export function useOnboardingAccount(submitProfile: () => void) {
       return "failed";
     }
 
+    if (outcome === "failed") {
+      toast.error("Uy, no hemos podido terminar de crear tu cuenta. Inténtalo otra vez.");
+    }
+
     return outcome;
   }
 
@@ -129,6 +162,7 @@ export function useOnboardingAccount(submitProfile: () => void) {
       if (error) {
         logger.error("auth.signup.update_failed", error, { signUpStatus: signUp.status });
         toast.error(getAuthErrorMessage(error, SIGN_UP_ERROR));
+        await discardSignUp();
         return "failed";
       }
     }
@@ -139,7 +173,8 @@ export function useOnboardingAccount(submitProfile: () => void) {
         new Error("Sign-up is not complete after update"),
         { signUpStatus: signUp.status, missingFields: signUp.missingFields.join(",") },
       );
-      toast.error("Uy, no hemos podido terminar de crear tu cuenta. Vuelve a iniciar sesión.");
+      toast.error("Uy, no hemos podido terminar de crear tu cuenta. Prueba otra vez.");
+      await discardSignUp();
       return "failed";
     }
 
@@ -175,7 +210,49 @@ export function useOnboardingAccount(submitProfile: () => void) {
     submitProfile();
   }
 
+  async function signInExisting(email: string, password: string) {
+    setWorking(true);
+
+    if (signIn.id) {
+      await signIn.reset();
+    }
+
+    const { error } = await signIn.password({ emailAddress: email, password });
+
+    if (error) {
+      setWorking(false);
+      credentialsForm.setError("password", {
+        message: getAuthErrorMessage(error, SIGN_IN_ERROR),
+      });
+      return;
+    }
+
+    if (signIn.status !== "complete") {
+      setWorking(false);
+      toast.error("Necesitamos un paso más para entrar con esta cuenta");
+      router.push(`/login?email=${encodeURIComponent(email.trim())}`);
+      return;
+    }
+
+    const { error: finalizeError } = await signIn.finalize({
+      navigate: async () => {
+        window.location.assign("/");
+      },
+    });
+
+    if (finalizeError) {
+      setWorking(false);
+      logger.error("auth.signup.sign_in_finalize_failed", finalizeError);
+      toast.error(getAuthErrorMessage(finalizeError, SIGN_IN_ERROR));
+    }
+  }
+
   const submitCredentials = credentialsForm.handleSubmit(async ({ email, password }) => {
+    if (takenEmail !== null && takenEmail === email.trim().toLowerCase()) {
+      await signInExisting(email, password);
+      return;
+    }
+
     if (!ensureLegal()) {
       return;
     }
@@ -184,6 +261,11 @@ export function useOnboardingAccount(submitProfile: () => void) {
 
     await runSignUp(async () => {
       const { firstName, lastName } = useOnboardingStore.getState().answers;
+
+      if (signUp.id && !hasPendingSignUp) {
+        await signUp.reset();
+      }
+
       const { error } = await signUp.create({
         emailAddress: email,
         password,
@@ -193,6 +275,14 @@ export function useOnboardingAccount(submitProfile: () => void) {
       });
 
       if (error) {
+        await discardSignUp();
+
+        if (getAuthErrorCode(error) === "form_identifier_exists") {
+          setTakenEmail(email.trim().toLowerCase());
+          await signInExisting(email, password);
+          return "failed";
+        }
+
         toast.error(getAuthErrorMessage(error, SIGN_UP_ERROR));
         return "failed";
       }
@@ -204,6 +294,7 @@ export function useOnboardingAccount(submitProfile: () => void) {
           { signUpStatus: signUp.status, missingFields: signUp.missingFields.join(",") },
         );
         toast.error(SIGN_UP_ERROR);
+        await discardSignUp();
         return "failed";
       }
 
@@ -284,6 +375,8 @@ export function useOnboardingAccount(submitProfile: () => void) {
     submitCredentials,
     startGoogle,
     confirm,
+    discardSignUp,
+    emailTaken,
     busy: working || (submitRequested && mode !== "create"),
   };
 }

@@ -68,17 +68,6 @@ function canContinueFrom(step: OnboardingStep, answers: OnboardingAnswers) {
 }
 
 function resolveStep(step: OnboardingStep, answers: OnboardingAnswers): OnboardingStep {
-  if (step.id === "goal-reply" && answers.role !== "clinic" && answers.role !== null) {
-    const goal = GOAL_CHOICES[answers.role].find((item) => item.id === answers.goal);
-    if (goal) {
-      return {
-        ...step,
-        faceId: goal.faceId,
-        title: goal.replyTitle,
-      };
-    }
-  }
-
   return { ...step, title: fillName(step.title, answers.firstName) };
 }
 

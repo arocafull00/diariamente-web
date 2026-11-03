@@ -4,8 +4,12 @@ import { EmailPasswordForm } from "@/components/auth/email-password-form";
 import { useEmailSignIn } from "@/components/auth/use-email-sign-in";
 import { VerificationCodeForm } from "@/components/auth/verification-code-form";
 
-export function EmailSignInForm() {
-  const signIn = useEmailSignIn();
+type EmailSignInFormProps = {
+  defaultEmail?: string;
+};
+
+export function EmailSignInForm({ defaultEmail }: EmailSignInFormProps) {
+  const signIn = useEmailSignIn(defaultEmail);
 
   if (signIn.step === "code") {
     return (

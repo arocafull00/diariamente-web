@@ -23,12 +23,16 @@ const AUTH_ERROR_MESSAGES: Record<string, string> = {
   session_exists: "¡Ya estás dentro!",
 };
 
-export function getAuthErrorMessage(error: unknown, fallback: string) {
+export function getAuthErrorCode(error: unknown) {
   if (!isClerkAPIResponseError(error)) {
-    return fallback;
+    return null;
   }
 
-  const code = error.errors[0]?.code;
+  return error.errors[0]?.code ?? null;
+}
+
+export function getAuthErrorMessage(error: unknown, fallback: string) {
+  const code = getAuthErrorCode(error);
 
   if (!code) {
     return fallback;
