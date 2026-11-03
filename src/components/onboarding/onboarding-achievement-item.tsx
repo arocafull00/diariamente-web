@@ -9,10 +9,7 @@ export function OnboardingAchievementItem({ achievement }: OnboardingAchievement
   return (
     <li className="flex items-center gap-3 px-4 py-3.5">
       <Illustration name={achievement.icon} className="size-10" />
-      <div className="min-w-0">
-        <p className="text-[0.95rem] font-semibold">{achievement.title}</p>
-        <p className="text-sm leading-5 text-foreground/65">{achievement.description}</p>
-      </div>
+      <p className="min-w-0 text-[0.95rem] font-semibold">{achievement.title}</p>
     </li>
   );
 }

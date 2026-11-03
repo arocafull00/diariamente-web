@@ -26,9 +26,6 @@ export function WelcomeTrustCircle() {
       <p className="mt-5 text-pretty text-base font-semibold">
         Solo vosotros dos veréis lo que escribas.
       </p>
-      <p className="mt-1 text-pretty text-sm leading-5 text-foreground/65">
-        Así podréis hablarlo juntos en la próxima sesión.
-      </p>
     </div>
   );
 }

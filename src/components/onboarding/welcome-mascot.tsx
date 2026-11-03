@@ -52,7 +52,7 @@ export function WelcomeMascot({
         transition={{ type: "spring", stiffness: 300, damping: 24, delay: 0.12 }}
         className={cn(
           "relative min-w-0 rounded-3xl border-2 border-border bg-card px-5 py-4 shadow-xs",
-          hero ? "w-full" : "mb-3 flex-1",
+          hero ? "w-full" : "mb-3",
         )}
       >
         <span
@@ -71,9 +71,11 @@ export function WelcomeMascot({
         >
           {title}
         </h1>
-        <p className="mt-1.5 text-pretty text-base leading-6 text-foreground/70">
-          {description}
-        </p>
+        {description ? (
+          <p className="mt-1.5 text-pretty text-base leading-6 text-foreground/70">
+            {description}
+          </p>
+        ) : null}
       </motion.div>
     </div>
   );

@@ -40,7 +40,6 @@ export type OnboardingStep = {
   id: OnboardingStepId;
   faceId: FaceId;
   title: string;
-  description: string;
   hero?: boolean;
 };
 
@@ -67,7 +66,6 @@ export type OnboardingAchievement = {
   icon: IllustrationName;
   tone: WelcomeTone;
   title: string;
-  description: string;
 };
 
 export const ROLE_CHOICES: readonly OnboardingChoice<OnboardingRole>[] = [
@@ -206,8 +204,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "hp",
       label: "Entender mejor mis emociones",
       replyTitle: "¡Me encanta! Vamos a ello",
-      replyDescription:
-        "Registrando lo que sientes descubrirás patrones que hoy pasan desapercibidos.",
     },
     {
       id: "therapy",
@@ -215,8 +211,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "lu",
       label: "Aprovechar más mis sesiones de terapia",
       replyTitle: "¡Buena idea!",
-      replyDescription:
-        "Llegarás a cada sesión con lo que has vivido anotado, sin depender de la memoria.",
     },
     {
       id: "anxiety",
@@ -224,8 +218,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "hu",
       label: "Gestionar la ansiedad o el estrés",
       replyTitle: "Estás en buen lugar",
-      replyDescription:
-        "Identificar qué dispara tu ansiedad es el primer paso para manejarla mejor.",
     },
     {
       id: "vent",
@@ -233,8 +225,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "lp",
       label: "Desahogarme y ordenar mis ideas",
       replyTitle: "Aquí puedes soltarlo todo",
-      replyDescription:
-        "Escribir lo que te pasa ayuda a verlo con más distancia y claridad.",
     },
   ],
   psychologist: [
@@ -244,8 +234,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "hp",
       label: "Llegar a cada sesión con más contexto",
       replyTitle: "¡Para eso estoy!",
-      replyDescription:
-        "Verás lo que ha vivido tu paciente durante la semana antes de empezar la sesión.",
     },
     {
       id: "homework",
@@ -253,8 +241,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "lu",
       label: "Que mis pacientes registren entre sesiones",
       replyTitle: "¡Lo haremos fácil!",
-      replyDescription:
-        "Recordatorios diarios y un registro guiado de pocos minutos ayudan a crear el hábito.",
     },
     {
       id: "progress",
@@ -262,8 +248,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "lp",
       label: "Seguir su evolución emocional",
       replyTitle: "¡Buena elección!",
-      replyDescription:
-        "Los registros muestran cómo cambian las emociones y su intensidad con el tiempo.",
     },
     {
       id: "time",
@@ -271,8 +255,6 @@ export const GOAL_CHOICES: Record<"patient" | "psychologist", readonly WelcomeGo
       tone: "hu",
       label: "Ahorrar tiempo recogiendo información",
       replyTitle: "¡Hecho!",
-      replyDescription:
-        "Los autorregistros llegan ordenados y listos para revisar, sin papeles.",
     },
   ],
 };
@@ -341,14 +323,6 @@ export const PRIVACY_FEATURES: readonly WelcomeFeature[] = [
     description: "Las notificaciones nunca muestran el contenido de los registros.",
   },
 ];
-
-export const HOW_IT_WORKS_INTRO: Record<RecordsExperience, string> = {
-  never:
-    "Te lo pongo fácil: te guío paso a paso y se completa en unos pocos minutos.",
-  paper: "Como en papel, pero sin perder nada y con tu evolución siempre a la vista.",
-  with_psychologist:
-    "Lo mismo que haces en consulta, ahora en tu bolsillo y listo para compartir.",
-};
 
 export const SCIENCE_FINDINGS: Record<"patient" | "psychologist", readonly ScienceFinding[]> = {
   patient: [
@@ -434,19 +408,16 @@ export const PATIENT_ACHIEVEMENTS: readonly OnboardingAchievement[] = [
     icon: "perfil",
     tone: "hp",
     title: "Entender lo que sientes",
-    description: "Pondrás nombre a tus emociones y verás qué las dispara.",
   },
   {
     icon: "evolucion",
     tone: "lp",
     title: "Ver tu evolución",
-    description: "Tus registros dibujan cómo cambias semana a semana.",
   },
   {
     icon: "equipo",
     tone: "lu",
     title: "Aprovechar más la terapia",
-    description: "Llevarás lo vivido anotado, sin depender de la memoria.",
   },
 ];
 
@@ -454,28 +425,24 @@ const ROLE_STEP: OnboardingStep = {
   id: "role",
   faceId: "01_gradiente",
   title: "¿Cómo vas a usar Diariamente?",
-  description: "Elige la opción que mejor te encaje y te enseño justo lo que necesitas.",
 };
 
 const GENDER_STEP: OnboardingStep = {
   id: "gender",
   faceId: "alegria",
   title: "¡Encantados, {name}! ¿Cómo prefieres que te hablemos?",
-  description: "Así adaptamos los textos a ti.",
 };
 
 const SOURCE_STEP: OnboardingStep = {
   id: "source",
   faceId: "04_naranja_amarillo",
   title: "¿Cómo nos has conocido?",
-  description: "Nos ayuda mucho a llegar a más gente como tú.",
 };
 
 const GOAL_REPLY_STEP: OnboardingStep = {
   id: "goal-reply",
   faceId: "alegria",
   title: "",
-  description: "",
   hero: true,
 };
 
@@ -483,12 +450,10 @@ const ACCOUNT_STEP: OnboardingStep = {
   id: "account",
   faceId: "04_naranja_amarillo",
   title: "¡Guarda tu progreso, {name}!",
-  description: "Crea tu cuenta para no perder nada de lo que has preparado.",
 };
 
 const PROFESSIONAL_ACCOUNT_STEP: OnboardingStep = {
   ...ACCOUNT_STEP,
-  description: "Crea tu cuenta y empieza tu mes de prueba gratis. Hoy no pagas nada.",
 };
 
 const PATIENT_STEPS: readonly OnboardingStep[] = [
@@ -497,15 +462,12 @@ const PATIENT_STEPS: readonly OnboardingStep[] = [
     id: "hello",
     faceId: "alegria",
     title: "¡Hola! Soy tu diario emocional",
-    description:
-      "Te acompaño entre sesión y sesión para que entiendas mejor lo que sientes. Antes, unas preguntas rápidas.",
     hero: true,
   },
   {
     id: "name",
     faceId: "02_azul_rosa",
     title: "¿Cómo te podemos llamar?",
-    description: "Tu nombre y tus apellidos, para que tu psicólogo/a te reconozca.",
   },
   GENDER_STEP,
   SOURCE_STEP,
@@ -513,51 +475,42 @@ const PATIENT_STEPS: readonly OnboardingStep[] = [
     id: "goal",
     faceId: "01_gradiente",
     title: "¿Qué te trae por aquí?",
-    description: "Elige lo que más se parezca a lo que buscas.",
   },
   GOAL_REPLY_STEP,
   {
     id: "therapy",
     faceId: "03_verde_morado",
     title: "¿Ahora mismo vas a terapia?",
-    description: "Diariamente brilla con un psicólogo/a, pero también te sirve por tu cuenta.",
   },
   {
     id: "experience",
     faceId: "05_rosa_verde",
     title: "¿Has hecho registros emocionales antes?",
-    description: "Sin presión: aquí no hay respuestas incorrectas.",
   },
   {
     id: "how-it-works",
     faceId: "02_azul_rosa",
     title: "Así es un registro",
-    description: HOW_IT_WORKS_INTRO.never,
   },
   {
     id: "science",
     faceId: "01_gradiente",
     title: "Esto no nos lo inventamos",
-    description: "Tres estudios que lo demuestran.",
   },
   {
     id: "achieve",
     faceId: "alegria",
     title: "Esto es lo que vas a conseguir",
-    description: "Con unos minutos al día, esto es lo que irás notando.",
   },
   {
     id: "safe-space",
     faceId: "03_verde_morado",
     title: "Este es tu espacio seguro",
-    description:
-      "Escribe con total sinceridad: aquí no hay respuestas correctas ni nadie que te juzgue.",
   },
   {
     id: "avatar",
     faceId: "05_rosa_verde",
     title: "Elige tu cara",
-    description: "Es la que verá tu psicólogo/a. Puedes cambiarla cuando quieras.",
   },
   ACCOUNT_STEP,
 ];
@@ -568,15 +521,12 @@ const PSYCHOLOGIST_STEPS: readonly OnboardingStep[] = [
     id: "hello",
     faceId: "alegria",
     title: "¡Hola! Encantados de conocerte",
-    description:
-      "Te ayudo a acompañar a tus pacientes entre sesiones. Antes, unas preguntas rápidas para preparar tu espacio.",
     hero: true,
   },
   {
     id: "name",
     faceId: "02_azul_rosa",
     title: "¿Cómo te podemos llamar?",
-    description: "Tu nombre y tus apellidos, tal y como te conocen tus pacientes.",
   },
   GENDER_STEP,
   SOURCE_STEP,
@@ -584,38 +534,32 @@ const PSYCHOLOGIST_STEPS: readonly OnboardingStep[] = [
     id: "goal",
     faceId: "01_gradiente",
     title: "¿Qué te gustaría conseguir?",
-    description: "Elige lo que más te interese ahora mismo.",
   },
   GOAL_REPLY_STEP,
   {
     id: "caseload",
     faceId: "03_verde_morado",
     title: "¿Cuántos pacientes acompañas ahora?",
-    description: "Así sabemos cómo ayudarte mejor.",
   },
   {
     id: "how-it-works",
     faceId: "02_azul_rosa",
     title: "Así trabajarás conmigo",
-    description: "Tus pacientes registran lo que viven y tú lo consultas cuando lo necesites.",
   },
   {
     id: "science",
     faceId: "01_gradiente",
     title: "Esto no nos lo inventamos",
-    description: "Tres estudios que lo respaldan.",
   },
   {
     id: "privacy",
     faceId: "03_verde_morado",
     title: "La privacidad, lo primero",
-    description: "Tus pacientes siempre tienen el control de su información.",
   },
   {
     id: "avatar",
     faceId: "05_rosa_verde",
     title: "Elige tu cara",
-    description: "Es la que verán tus pacientes. Puedes cambiarla cuando quieras.",
   },
   PROFESSIONAL_ACCOUNT_STEP,
 ];
@@ -626,15 +570,12 @@ const CLINIC_STEPS: readonly OnboardingStep[] = [
     id: "hello",
     faceId: "alegria",
     title: "¡Hola! Preparemos vuestro centro",
-    description:
-      "En unos minutos tendrás el espacio de tu clínica listo para invitar a tu equipo.",
     hero: true,
   },
   {
     id: "name",
     faceId: "02_azul_rosa",
     title: "¿Cómo te podemos llamar?",
-    description: "Tu nombre y tus apellidos. El de la clínica te lo pregunto enseguida.",
   },
   GENDER_STEP,
   SOURCE_STEP,
@@ -642,13 +583,11 @@ const CLINIC_STEPS: readonly OnboardingStep[] = [
     id: "clinic-name",
     faceId: "03_verde_morado",
     title: "¿Cómo se llama vuestro centro?",
-    description: "Es el nombre que verá tu equipo al unirse.",
   },
   {
     id: "avatar",
     faceId: "05_rosa_verde",
     title: "Elige tu cara",
-    description: "Es la que verá tu equipo. Puedes cambiarla cuando quieras.",
   },
   PROFESSIONAL_ACCOUNT_STEP,
 ];

@@ -15,7 +15,6 @@ export type WelcomeGoal = {
   tone: WelcomeTone;
   label: string;
   replyTitle: string;
-  replyDescription: string;
 };
 
 export type WelcomeStepId =

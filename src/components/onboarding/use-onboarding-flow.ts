@@ -5,7 +5,6 @@ import { toast } from "sonner";
 
 import {
   GOAL_CHOICES,
-  HOW_IT_WORKS_INTRO,
   ONBOARDING_PROGRESS_SHARE,
   ONBOARDING_STEPS,
   type OnboardingStep,
@@ -76,16 +75,8 @@ function resolveStep(step: OnboardingStep, answers: OnboardingAnswers): Onboardi
         ...step,
         faceId: goal.faceId,
         title: goal.replyTitle,
-        description: goal.replyDescription,
       };
     }
-  }
-
-  if (step.id === "how-it-works" && answers.role === "patient") {
-    return {
-      ...step,
-      description: HOW_IT_WORKS_INTRO[answers.recordsExperience ?? "never"],
-    };
   }
 
   return { ...step, title: fillName(step.title, answers.firstName) };

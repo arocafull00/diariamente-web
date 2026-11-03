@@ -10,7 +10,6 @@ import { useOnboardingFlow } from "@/components/onboarding/use-onboarding-flow";
 import { WelcomeFooter } from "@/components/onboarding/welcome-footer";
 import { WelcomeMascot } from "@/components/onboarding/welcome-mascot";
 import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
-import { cn } from "@/lib/utils";
 
 function noop() {}
 
@@ -62,15 +61,12 @@ export function OnboardingFlow() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -32 }}
           transition={{ type: "spring", stiffness: 320, damping: 30 }}
-          className={cn(
-            "flex flex-1 flex-col gap-7 pt-8",
-            step.hero ? "justify-center" : "justify-start",
-          )}
+          className="flex flex-1 flex-col items-center justify-center gap-7 py-8 *:w-full"
         >
           <WelcomeMascot
             faceId={step.faceId}
             title={step.title}
-            description={step.description}
+            description=""
             hero={Boolean(step.hero)}
             titleRef={headingRef}
           />
