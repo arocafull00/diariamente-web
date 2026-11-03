@@ -6,7 +6,6 @@ export type WelcomeTone = "hp" | "lu" | "hu" | "lp";
 export type WelcomeFeature = {
   faceId: FaceId;
   title: string;
-  description: string;
 };
 
 export type WelcomeGoal = {

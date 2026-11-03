@@ -46,7 +46,6 @@ export type OnboardingStep = {
 export type OnboardingChoice<T extends string> = {
   value: T;
   label: string;
-  description?: string;
   icon: IllustrationName;
   tone: WelcomeTone;
 };
@@ -72,21 +71,18 @@ export const ROLE_CHOICES: readonly OnboardingChoice<OnboardingRole>[] = [
   {
     value: "patient",
     label: "Paciente",
-    description: "Quiero entender mejor cómo me siento.",
     icon: "perfil",
     tone: "lp",
   },
   {
     value: "psychologist",
     label: "Psicólogo/a",
-    description: "Quiero acompañar a mis pacientes entre sesiones.",
     icon: "equipo",
     tone: "lu",
   },
   {
     value: "clinic",
     label: "Clínica",
-    description: "Quiero gestionar el equipo de mi centro.",
     icon: "clinica",
     tone: "hp",
   },
@@ -264,44 +260,36 @@ export const HOW_IT_WORKS_FEATURES: Record<"patient" | "psychologist", readonly 
     {
       faceId: "alegria",
       title: "Cómo te sientes",
-      description: "Elige una emoción y su intensidad.",
     },
     {
       faceId: "02_azul_rosa",
       title: "En qué contexto",
-      description: "Marca dónde estabas o con quién.",
     },
     {
       faceId: "05_rosa_verde",
       title: "Dónde lo notas",
-      description: "Señala las sensaciones en tu cuerpo.",
     },
     {
       faceId: "03_verde_morado",
       title: "Profundiza",
-      description: "Describe la situación, lo que pensaste y lo que hiciste.",
     },
   ],
   psychologist: [
     {
       faceId: "alegria",
       title: "Tus pacientes en un lugar",
-      description: "Consulta a quién acompañas y su último registro.",
     },
     {
       faceId: "02_azul_rosa",
       title: "Registros completos",
-      description: "Emociones, contexto, sensaciones, pensamientos y conductas.",
     },
     {
       faceId: "04_naranja_amarillo",
       title: "Novedades de un vistazo",
-      description: "Identifica los registros que aún no has revisado.",
     },
     {
       faceId: "03_verde_morado",
       title: "Tus notas",
-      description: "Añade anotaciones privadas a cada registro.",
     },
   ],
 };
@@ -310,17 +298,14 @@ export const PRIVACY_FEATURES: readonly WelcomeFeature[] = [
   {
     faceId: "01_gradiente",
     title: "Solo quien te elige",
-    description: "Solo ves a los pacientes que han conectado contigo.",
   },
   {
     faceId: "05_rosa_verde",
     title: "El paciente decide",
-    description: "Puede desvincularse cuando quiera y dejarás de ver sus registros.",
   },
   {
     faceId: "02_azul_rosa",
     title: "Avisos discretos",
-    description: "Las notificaciones nunca muestran el contenido de los registros.",
   },
 ];
 

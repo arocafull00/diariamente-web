@@ -7,7 +7,7 @@ type WelcomeFeatureItemProps = {
 };
 
 export function WelcomeFeatureItem({ feature, index }: WelcomeFeatureItemProps) {
-  const { faceId, title, description } = feature;
+  const { faceId, title } = feature;
 
   return (
     <li className="flex items-center gap-4 py-3.5">
@@ -20,12 +20,7 @@ export function WelcomeFeatureItem({ feature, index }: WelcomeFeatureItemProps) 
             : "size-12 shrink-0 -rotate-6 drop-shadow-sm"
         }
       />
-      <div className="min-w-0">
-        <p className="font-semibold">{title}</p>
-        <p className="mt-0.5 text-sm leading-5 text-foreground/65">
-          {description}
-        </p>
-      </div>
+      <p className="min-w-0 font-semibold">{title}</p>
     </li>
   );
 }

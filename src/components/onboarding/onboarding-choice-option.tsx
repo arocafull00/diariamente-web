@@ -52,11 +52,6 @@ export function OnboardingChoiceOption<T extends string>({
         </span>
         <span className={cn("min-w-0 flex-1", compact && "w-full")}>
           <span className="block leading-5">{choice.label}</span>
-          {choice.description ? (
-            <span className="mt-0.5 block text-sm leading-5 font-normal text-foreground/65">
-              {choice.description}
-            </span>
-          ) : null}
         </span>
         {compact ? null : (
           <span
