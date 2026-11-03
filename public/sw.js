@@ -1,4 +1,4 @@
-const SHELL_CACHE = "diariamente-shell-v7";
+const SHELL_CACHE = "diariamente-shell-v8";
 const STATIC_CACHE = "diariamente-static-v1";
 const OFFLINE_URL = "/offline";
 const HOME_KEY = "/__app-home";
@@ -16,6 +16,16 @@ const SHELL_ASSETS = [
   "/caras/rabia.svg",
   "/caras/tristeza.svg",
   "/illustrations/equipo.svg",
+  "/illustrations/clinica.svg",
+  "/illustrations/buscar.svg",
+  "/illustrations/crecer.svg",
+  "/illustrations/descubrir.svg",
+  "/illustrations/evolucion.svg",
+  "/illustrations/reloj.svg",
+  "/illustrations/etiqueta.svg",
+  "/illustrations/camara.svg",
+  "/illustrations/musica.svg",
+  "/illustrations/tienda.svg",
   "/illustrations/prueba-gratuita.svg",
   "/illustrations/sugerencias.svg",
   "/illustrations/generar-enlace.svg",

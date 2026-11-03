@@ -6,7 +6,7 @@ export default function RecoverPasswordPage() {
       <SignIn
         routing="path"
         path="/recuperar-password"
-        signUpUrl="/registro"
+        signUpUrl="/onboarding"
         forceRedirectUrl="/"
       />
     </div>

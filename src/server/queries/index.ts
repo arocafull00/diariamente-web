@@ -24,6 +24,7 @@ import {
   connectionRequests,
   customEmotions,
   inviteLinks,
+  onboardingAnswers,
   patientRecords,
   profiles,
   psychologistPatient,
@@ -442,6 +443,7 @@ export async function getDataExport(profileId: string) {
     notes,
     accessLog,
     activity,
+    onboarding,
   ] = await Promise.all([
     db
       .select()
@@ -517,6 +519,18 @@ export async function getDataExport(profileId: string) {
       .from(auditEvents)
       .where(eq(auditEvents.actorId, profileId))
       .orderBy(desc(auditEvents.createdAt)),
+    db
+      .select({
+        acquisitionSource: onboardingAnswers.acquisitionSource,
+        goal: onboardingAnswers.goal,
+        therapyStatus: onboardingAnswers.therapyStatus,
+        recordsExperience: onboardingAnswers.recordsExperience,
+        caseload: onboardingAnswers.caseload,
+      })
+      .from(onboardingAnswers)
+      .where(eq(onboardingAnswers.profileId, profileId))
+      .limit(1)
+      .then(([row]) => row ?? null),
   ]);
 
   const counterpartIds = [
@@ -575,7 +589,18 @@ export async function getDataExport(profileId: string) {
     recordNotes: notes,
     accessLog,
     activity,
+    onboarding,
   };
+}
+
+export async function getTherapyStatus(profileId: string) {
+  const [answers] = await db
+    .select({ therapyStatus: onboardingAnswers.therapyStatus })
+    .from(onboardingAnswers)
+    .where(eq(onboardingAnswers.profileId, profileId))
+    .limit(1);
+
+  return answers?.therapyStatus ?? null;
 }
 
 export async function getScreenAcknowledgements(profileId: string) {

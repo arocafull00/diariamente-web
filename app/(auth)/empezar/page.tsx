@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -6,6 +7,12 @@ import { redirect } from "next/navigation";
 import logo from "../../../public/logo.png";
 
 import { FaceCluster } from "@/components/faces/face-cluster";
+
+export const metadata: Metadata = {
+  title: "Diariamente: diario emocional para tu terapia",
+  description:
+    "Diariamente es tu diario emocional: registra lo que sientes cada día y compártelo con tu psicólogo o psicóloga. Gratis para pacientes, en web y en Android.",
+};
 
 export default async function WelcomePage() {
   const { isAuthenticated } = await auth();
@@ -39,7 +46,7 @@ export default async function WelcomePage() {
       </div>
       <div className="flex w-full max-w-sm flex-col gap-3 pt-8 lg:mb-auto">
         <Link
-          href="/registro"
+          href="/onboarding"
           className="btn-raised-joy flex h-14 w-full items-center justify-center rounded-2xl text-base font-extrabold tracking-wide text-mood-foreground uppercase outline-none focus-visible:ring-4 focus-visible:ring-ring/50"
         >
           Empieza ahora

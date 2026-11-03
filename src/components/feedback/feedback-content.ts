@@ -27,3 +27,11 @@ export const FEEDBACK_COPY = {
   promptThanks: "¡Gracias por contárnoslo!",
   promptMore: "Contarnos más",
 } as const;
+
+export const PLAY_REVIEW_COPY = {
+  eyebrow: "¿Nos echas una mano?",
+  title: "Si DiariaMente te está ayudando, cuéntalo en Google Play",
+  description: "Tu valoración hace que más gente nos encuentre. Es solo un minuto.",
+  rate: "Valorar en Google Play",
+  dismiss: "Ahora no",
+} as const;

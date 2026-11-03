@@ -6,7 +6,7 @@
   </g>
   <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
     <path d="M 39,63 C 43,73 53,73 57,63 M 77,60 C 81,70 91,70 96,60"/>
-    <path d="M 48,84 C 59,100 81,102 97,83"/>
+    <path d="M 58,88 Q 72,97 87,85"/>
   </g>
   <path fill="#ffce00" d="M 118,93 C 137,92 149,104 149,121 C 150,138 138,150 121,150 C 103,151 91,138 92,121 C 92,105 102,94 118,93 Z"/>
   <path d="M 106,121 L 116,131 L 135,112" fill="none" stroke="#191919" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>

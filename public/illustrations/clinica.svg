@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="clinic"><path d="M 43,19 L 88,16 C 102,15 110,23 110,37 L 110,62 L 129,61 C 141,60 147,67 147,80 L 148,126 C 148,139 141,145 129,145 L 41,148 C 28,148 21,141 21,128 L 21,42 C 21,27 29,20 43,19 Z"/></clipPath></defs>
+  <g clip-path="url(#clinic)">
+    <path fill="#ffce00" d="M 14,10 H 154 V 154 H 14 Z"/>
+    <path fill="#ff7300" d="M 105,56 L 154,54 L 154,154 L 101,154 Z"/>
+    <path fill="#ffa1cc" d="M 15,14 H 117 V 44 C 93,54 77,44 60,38 C 42,32 28,35 15,44 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 39,62 Q 47,70 55,62 M 75,60 Q 83,68 91,60"/>
+    <path d="M 58,87 L 76,86"/>
+    <path d="M 54,146 L 54,121 C 54,114 58,110 65,110 C 72,110 77,114 77,121 L 77,145"/>
+    <path d="M 123,80 L 129,80 M 123,98 L 129,98 M 123,116 L 129,116"/>
+  </g>
+</svg>

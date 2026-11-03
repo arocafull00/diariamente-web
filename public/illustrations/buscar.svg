@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="lens"><circle cx="67" cy="65" r="48"/></clipPath></defs>
+  <path d="M 102,101 L 133,135" fill="none" stroke="#9e65c6" stroke-width="23" stroke-linecap="round"/>
+  <g clip-path="url(#lens)">
+    <circle cx="67" cy="65" r="48" fill="#00a4ff"/>
+    <path fill="#ffc9e6" d="M 14,49 C 44,14 75,31 95,50 C 104,58 113,55 120,47 V 10 H 14 Z"/>
+  </g>
+  <circle cx="67" cy="65" r="52" fill="none" stroke="#9e65c6" stroke-width="8"/>
+  <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 50,57 L 50,65 M 84,55 L 84,63"/>
+    <path d="M 72,45 Q 81,39 90,44"/>
+    <ellipse cx="70" cy="83" rx="6" ry="8"/>
+  </g>
+</svg>

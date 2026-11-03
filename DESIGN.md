@@ -26,7 +26,7 @@ Antes de dar un componente por terminado, compáralo con su pantalla hermana (mi
 
 - Para datos de un cuadrante concreto usa `getMoodStyles(quadrant)` de `@/lib/emotions`.
 - En listas de filas, alterna tonos (verde → azul → amarillo) en los chips de icono, como en Ajustes y en la oferta de prueba.
-- Sólidos (`bg-mood-*-2`, `bg-mood-*-3`) solo para badges pequeños o decoración (ej. sticker "14 días gratis" `bg-mood-lp-3 rotate-3`); su texto es `text-mood-foreground`.
+- Sólidos (`bg-mood-*-2`, `bg-mood-*-3`) solo para badges pequeños o decoración (ej. sticker "30 días gratis" `bg-mood-lp-3 rotate-3`); su texto es `text-mood-foreground`.
 - `destructive` solo para borrar/peligro.
 - **Estados seleccionados/activos** (radios, checks, switches, sliders, progreso, calendario, `Badge`): `bg-mood-lp-3 text-mood-foreground`, nunca `bg-primary`. Si la opción tiene tono propio (cuadrante, objetivo), usa el `-3` de ese tono; el slider de intensidad usa el color del cuadrante del registro. Contadores de "sin ver": `bg-mood-hu-3 text-mood-foreground`.
 

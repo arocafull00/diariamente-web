@@ -6,8 +6,9 @@
     <path fill="#9e65c6" d="M 18,17 L 42,15 L 51,153 L 25,154 Z"/>
   </g>
   <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 60,77 C 64,68 73,68 77,77 M 96,74 C 100,65 109,65 113,74"/>
-    <path d="M 68,93 C 81,109 102,109 115,91"/>
+    <path d="M 65,73 L 65,80 M 101,70 L 101,77"/>
+    <path d="M 58,62 L 74,65 M 94,60 L 110,57"/>
+    <path d="M 78,101 L 99,99"/>
     <path d="M 14,49 L 30,48 M 16,78 L 32,77 M 18,107 L 34,106"/>
   </g>
 </svg>

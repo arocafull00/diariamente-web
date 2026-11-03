@@ -10,6 +10,7 @@ import { logger } from "@/lib/logger";
 
 type GoogleSignInFormProps = {
   redirectUrl?: string;
+  onBeforeRedirect?: () => boolean;
 };
 
 function GoogleIcon() {
@@ -37,6 +38,7 @@ function GoogleIcon() {
 
 export function GoogleSignInForm({
   redirectUrl = "/",
+  onBeforeRedirect,
 }: GoogleSignInFormProps) {
   const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
@@ -59,6 +61,10 @@ export function GoogleSignInForm({
 
   const handleGoogleSignIn = async () => {
     setError(null);
+
+    if (onBeforeRedirect && !onBeforeRedirect()) {
+      return;
+    }
 
     if (signIn.id) {
       await signIn.reset();

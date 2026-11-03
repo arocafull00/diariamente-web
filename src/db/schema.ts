@@ -11,6 +11,14 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+import {
+  ACQUISITION_SOURCES,
+  CASELOADS,
+  ONBOARDING_GOALS,
+  RECORDS_EXPERIENCES,
+  THERAPY_STATUSES,
+} from "../lib/onboarding-answers";
+
 export const userRoleEnum = pgEnum("user_role", [
   "patient",
   "psychologist",
@@ -46,6 +54,16 @@ export const connectionRequestStatusEnum = pgEnum("connection_request_status", [
   "accepted",
   "rejected",
 ]);
+
+export const acquisitionSourceEnum = pgEnum("acquisition_source", ACQUISITION_SOURCES);
+
+export const onboardingGoalEnum = pgEnum("onboarding_goal", ONBOARDING_GOALS);
+
+export const therapyStatusEnum = pgEnum("therapy_status", THERAPY_STATUSES);
+
+export const recordsExperienceEnum = pgEnum("records_experience", RECORDS_EXPERIENCES);
+
+export const caseloadEnum = pgEnum("caseload", CASELOADS);
 
 export const feedbackKindEnum = pgEnum("feedback_kind", ["idea", "bug", "other"]);
 
@@ -414,6 +432,20 @@ export const screenAcknowledgements = pgTable(
   ],
 );
 
+export const onboardingAnswers = pgTable("onboarding_answers", {
+  profileId: text("profile_id")
+    .primaryKey()
+    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  acquisitionSource: acquisitionSourceEnum("acquisition_source").notNull(),
+  goal: onboardingGoalEnum("goal"),
+  therapyStatus: therapyStatusEnum("therapy_status"),
+  recordsExperience: recordsExperienceEnum("records_experience"),
+  caseload: caseloadEnum("caseload"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export const auditEvents = pgTable(
   "audit_events",
   {
@@ -472,6 +504,11 @@ export type RequiredScreen = (typeof requiredScreenEnum.enumValues)[number];
 export type BodyFigure = (typeof bodyFigureEnum.enumValues)[number];
 export type GrammaticalGender =
   (typeof grammaticalGenderEnum.enumValues)[number];
+export type AcquisitionSource = (typeof acquisitionSourceEnum.enumValues)[number];
+export type OnboardingGoal = (typeof onboardingGoalEnum.enumValues)[number];
+export type TherapyStatus = (typeof therapyStatusEnum.enumValues)[number];
+export type RecordsExperience = (typeof recordsExperienceEnum.enumValues)[number];
+export type Caseload = (typeof caseloadEnum.enumValues)[number];
 export type FeedbackKind = (typeof feedbackKindEnum.enumValues)[number];
 export type FeedbackEase = (typeof feedbackEaseEnum.enumValues)[number];
 export type FeedbackTrigger = (typeof feedbackTriggerEnum.enumValues)[number];

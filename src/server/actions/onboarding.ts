@@ -6,7 +6,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
-import { clinics, profiles, screenAcknowledgements } from "@/db/schema";
+import {
+  clinics,
+  onboardingAnswers,
+  profiles,
+  screenAcknowledgements,
+} from "@/db/schema";
 import { logger } from "@/lib/logger";
 import { REFERRAL_COOKIE_NAME } from "@/lib/referrals";
 import { REQUIRED_SCREENS } from "@/lib/required-screens";
@@ -24,10 +29,7 @@ export type ActionResult = {
   success?: boolean;
 };
 
-export async function completeOnboarding(
-  _prevState: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
+export async function completeOnboarding(input: unknown): Promise<ActionResult> {
   const userId = await requireUser();
   const existingProfile = await getCurrentProfile();
 
@@ -35,19 +37,7 @@ export async function completeOnboarding(
     redirect("/");
   }
 
-  const rawAvatarUrl = formData.get("avatarUrl");
-
-  const parsed = onboardingSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    role: formData.get("role"),
-    clinicName: formData.get("clinicName") ?? "",
-    grammaticalGender: formData.get("grammaticalGender"),
-    avatarUrl:
-      typeof rawAvatarUrl === "string" && rawAvatarUrl.length > 0
-        ? rawAvatarUrl
-        : null,
-  });
+  const parsed = onboardingSchema.safeParse(input);
 
   if (!parsed.success) {
     logger.warn("auth.signup.onboarding_invalid", {
@@ -57,8 +47,27 @@ export async function completeOnboarding(
     return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
-  const { firstName, lastName, role, clinicName, grammaticalGender, avatarUrl } =
-    parsed.data;
+  const {
+    firstName,
+    lastName,
+    role,
+    clinicName,
+    grammaticalGender,
+    avatarUrl,
+    acquisitionSource,
+    goal,
+    therapyStatus,
+    recordsExperience,
+    caseload,
+    legalAccepted,
+  } = parsed.data;
+  const answers = {
+    acquisitionSource,
+    goal: role === "clinic" ? null : goal,
+    therapyStatus: role === "patient" ? therapyStatus : null,
+    recordsExperience: role === "patient" ? recordsExperience : null,
+    caseload: role === "psychologist" ? caseload : null,
+  };
 
   try {
     const client = await clerkClient();
@@ -89,6 +98,11 @@ export async function completeOnboarding(
         },
       });
 
+    await db
+      .insert(onboardingAnswers)
+      .values({ profileId: userId, ...answers })
+      .onConflictDoUpdate({ target: onboardingAnswers.profileId, set: answers });
+
     if (role === "clinic") {
       const [clinic] = await db
         .insert(clinics)
@@ -107,8 +121,7 @@ export async function completeOnboarding(
       });
     }
 
-    const acceptedNow =
-      !clerkUser.legalAcceptedAt && formData.get("legalAccepted") === "true";
+    const acceptedNow = !clerkUser.legalAcceptedAt && legalAccepted;
 
     if (acceptedNow) {
       await client.users.updateUser(userId, { legalAcceptedAt: new Date() });

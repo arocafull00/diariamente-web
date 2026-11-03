@@ -6,12 +6,13 @@ import { motion } from "motion/react";
 import { Face } from "@/components/faces/face";
 import type { WelcomeGoal } from "@/components/onboarding/welcome-content";
 import { WELCOME_TONE_CLASSES } from "@/components/onboarding/welcome-tones";
+import type { OnboardingGoal } from "@/db/schema";
 import { cn } from "@/lib/utils";
 
 type WelcomeGoalOptionProps = {
   goal: WelcomeGoal;
   selected: boolean;
-  onSelect: (goalId: string) => void;
+  onSelect: (goalId: OnboardingGoal) => void;
 };
 
 export function WelcomeGoalOption({

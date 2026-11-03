@@ -5,15 +5,13 @@ import { useEffect, useRef } from "react";
 
 import { useWelcomeWizard } from "@/components/onboarding/use-welcome-wizard";
 import { WelcomeFaceBunch } from "@/components/onboarding/welcome-face-bunch";
-import { WelcomeFeatureList } from "@/components/onboarding/welcome-feature-list";
 import { WelcomeFooter } from "@/components/onboarding/welcome-footer";
-import { WelcomeGoalList } from "@/components/onboarding/welcome-goal-list";
 import { WelcomeInstallStep } from "@/components/onboarding/welcome-install-step";
 import { WelcomeInviteStep } from "@/components/onboarding/welcome-invite-step";
 import { WelcomeMascot } from "@/components/onboarding/welcome-mascot";
 import { WelcomeNotificationsStep } from "@/components/onboarding/welcome-notifications-step";
-import { WelcomeTrustCircle } from "@/components/onboarding/welcome-trust-circle";
 import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
+import { WelcomeTrustCircle } from "@/components/onboarding/welcome-trust-circle";
 import { playAccountCreatedSound } from "@/lib/account-created-sound";
 
 type WelcomeWizardProps = {
@@ -22,6 +20,7 @@ type WelcomeWizardProps = {
   finishHref: string;
   inviteToken: string | null;
   origin: string;
+  showConnect: boolean;
 };
 
 export function WelcomeWizard({
@@ -30,34 +29,29 @@ export function WelcomeWizard({
   finishHref,
   inviteToken,
   origin,
+  showConnect,
 }: WelcomeWizardProps) {
   const {
-    canContinue,
     finish,
     finishing,
     goBack,
-    goForward,
-    goal,
-    goals,
     installGuide,
     isLastStep,
     primaryAction,
     progress,
-    selectGoal,
     step,
     stepIndex,
-  } = useWelcomeWizard(role, firstName, finishHref);
+  } = useWelcomeWizard(role, firstName, finishHref, showConnect);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const hero =
-    !step.features &&
-    !step.faceRow &&
-    !["goal", "safe-space", "notifications", "invite", "install"].includes(step.id);
+  const hero = step.id === "ready" || step.id === "connect";
 
   useEffect(() => {
     playAccountCreatedSound();
   }, []);
 
   useEffect(() => {
+    window.scrollTo({ top: 0 });
+
     if (stepIndex > 0) {
       headingRef.current?.focus();
     }
@@ -91,21 +85,12 @@ export function WelcomeWizard({
             faceId={step.faceId}
             title={step.title}
             description={step.description}
-            hero={hero}
+            hero={hero && !step.faceRow}
             titleRef={headingRef}
           />
 
           {step.faceRow ? <WelcomeFaceBunch faceIds={step.faceRow} /> : null}
-
-          {step.id === "goal" ? (
-            <WelcomeGoalList
-              goals={goals}
-              selectedId={goal?.id ?? null}
-              onSelect={selectGoal}
-            />
-          ) : null}
-          {step.features ? <WelcomeFeatureList features={step.features} /> : null}
-          {step.id === "safe-space" ? <WelcomeTrustCircle /> : null}
+          {step.id === "connect" ? <WelcomeTrustCircle /> : null}
           {step.id === "notifications" ? (
             <WelcomeNotificationsStep role={role} />
           ) : null}
@@ -124,11 +109,12 @@ export function WelcomeWizard({
 
       <WelcomeFooter
         label={primaryAction.label}
-        disabled={!canContinue}
+        disabled={false}
         pending={primaryAction.pending}
         offersNotNow={primaryAction.offersNotNow}
+        showSignOut
         onPrimary={primaryAction.onClick}
-        onNotNow={goForward}
+        onNotNow={primaryAction.onNotNow}
       />
     </div>
   );

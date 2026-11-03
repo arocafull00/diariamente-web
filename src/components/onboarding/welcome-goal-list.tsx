@@ -1,10 +1,11 @@
 import type { WelcomeGoal } from "@/components/onboarding/welcome-content";
 import { WelcomeGoalOption } from "@/components/onboarding/welcome-goal-option";
+import type { OnboardingGoal } from "@/db/schema";
 
 type WelcomeGoalListProps = {
   goals: readonly WelcomeGoal[];
-  selectedId: string | null;
-  onSelect: (goalId: string) => void;
+  selectedId: OnboardingGoal | null;
+  onSelect: (goalId: OnboardingGoal) => void;
 };
 
 export function WelcomeGoalList({

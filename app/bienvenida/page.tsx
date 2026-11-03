@@ -5,7 +5,11 @@ import { WelcomeWizard } from "@/components/onboarding/welcome-wizard";
 import { CLINIC_INVITE_COOKIE_NAME } from "@/lib/clinic-invitations";
 import { INVITE_COOKIE_NAME } from "@/lib/invitations";
 import { requireProfile } from "@/server/auth/get-current-profile";
-import { getInviteLink } from "@/server/queries";
+import {
+  getInviteLink,
+  getPatientPsychologist,
+  getTherapyStatus,
+} from "@/server/queries";
 
 export default async function WelcomePage() {
   const profile = await requireProfile();
@@ -15,9 +19,11 @@ export default async function WelcomePage() {
   }
 
   const isPatient = profile.role === "patient";
-  const [inviteLink, cookieStore, headersList] =
+  const [inviteLink, therapyStatus, psychologist, cookieStore, headersList] =
     await Promise.all([
       isPatient ? null : getInviteLink(profile.id),
+      isPatient ? getTherapyStatus(profile.id) : null,
+      isPatient ? getPatientPsychologist(profile.id) : null,
       cookies(),
       headers(),
     ]);
@@ -29,6 +35,8 @@ export default async function WelcomePage() {
   const hasClinicInvite = Boolean(
     cookieStore.get(CLINIC_INVITE_COOKIE_NAME)?.value,
   );
+  const showConnect =
+    therapyStatus === "in_therapy" && !psychologist && !hasInvite;
   const finishHref = isPatient
     ? hasInvite
       ? "/conectar"
@@ -46,6 +54,7 @@ export default async function WelcomePage() {
           finishHref={finishHref}
           inviteToken={inviteLink?.token ?? null}
           origin={origin}
+          showConnect={showConnect}
         />
       </main>
     </div>

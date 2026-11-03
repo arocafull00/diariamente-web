@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="chart"><path d="M 39,23 L 120,17 C 135,16 142,24 143,39 L 148,119 C 149,135 141,143 126,144 L 42,149 C 27,150 19,142 18,127 L 14,49 C 13,33 22,24 39,23 Z"/></clipPath></defs>
+  <g clip-path="url(#chart)">
+    <path fill="#00a4ff" d="M 8,10 H 154 V 155 H 8 Z"/>
+    <path fill="#00a651" d="M 10,102 C 37,80 58,95 77,82 C 101,65 110,56 153,44 V 155 H 10 Z"/>
+    <path fill="#9e65c6" d="M 10,130 C 47,108 66,127 85,140 L 153,155 H 10 Z"/>
+  </g>
+  <path d="M 36,74 L 62,55 L 83,65 L 121,35 M 105,35 L 121,35 L 121,51" fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="none" stroke="#191919" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 54,100 L 54,106 M 88,101 L 100,99"/>
+    <path d="M 69,121 Q 83,122 94,114"/>
+  </g>
+</svg>

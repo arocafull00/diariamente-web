@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { clearAppShell } from "@/lib/app-shell-cache";
 import { clearLastActivity } from "@/lib/last-activity";
 import { logger } from "@/lib/logger";
+import { useOnboardingStore } from "@/stores/onboarding-store";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
 import { useSessionStore } from "@/stores/session-store";
 
@@ -21,5 +22,7 @@ export function useSignOut() {
     await signOut({ redirectUrl: "/empezar" });
     clearScreenCache();
     clearSession();
+    useOnboardingStore.getState().reset();
+    useOnboardingStore.persist.clearStorage();
   }, [clearScreenCache, clearSession, signOut]);
 }

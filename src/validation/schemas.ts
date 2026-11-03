@@ -2,6 +2,15 @@ import { z } from "zod";
 
 import { isPredefinedAvatarUrl } from "@/lib/avatars";
 import { MAX_BODY_SENSATIONS } from "@/lib/body-sensations";
+import {
+  ACQUISITION_SOURCES,
+  CASELOADS,
+  ONBOARDING_GOALS,
+  PATIENT_GOALS,
+  PSYCHOLOGIST_GOALS,
+  RECORDS_EXPERIENCES,
+  THERAPY_STATUSES,
+} from "@/lib/onboarding-answers";
 
 const clerkImageHost = "img.clerk.com";
 
@@ -23,8 +32,12 @@ const grammaticalGenderSchema = z.enum(["feminine", "masculine", "unspecified"],
 });
 
 export const onboardingSchema = z.object({
-  firstName: z.string().trim().min(1, "Dinos tu nombre"),
-  lastName: z.string().trim().min(1, "Dinos tus apellidos"),
+  firstName: z.string().trim().min(1, "Dinos tu nombre").max(80, "Ese nombre es muy largo"),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, "Dinos tus apellidos")
+    .max(120, "Esos apellidos son muy largos"),
   role: z.enum(["patient", "psychologist", "clinic"], {
     error: "Elige un tipo de cuenta",
   }),
@@ -38,12 +51,50 @@ export const onboardingSchema = z.object({
       (value) => value === null || isPredefinedAvatarUrl(value),
       "Elige otro avatar",
     ),
+  acquisitionSource: z.enum(ACQUISITION_SOURCES, {
+    error: "Cuéntanos cómo nos has conocido",
+  }),
+  goal: z.enum(ONBOARDING_GOALS).nullable(),
+  therapyStatus: z.enum(THERAPY_STATUSES).nullable(),
+  recordsExperience: z.enum(RECORDS_EXPERIENCES).nullable(),
+  caseload: z.enum(CASELOADS).nullable(),
+  legalAccepted: z.boolean(),
 }).superRefine((value, ctx) => {
   if (value.role === "clinic" && !value.clinicName) {
     ctx.addIssue({
       code: "custom",
       path: ["clinicName"],
       message: "¿Cómo se llama tu clínica?",
+    });
+  }
+
+  if (
+    value.role === "patient" &&
+    !(PATIENT_GOALS as readonly (string | null)[]).includes(value.goal)
+  ) {
+    ctx.addIssue({ code: "custom", path: ["goal"], message: "Elige qué te trae por aquí" });
+  }
+
+  if (
+    value.role === "psychologist" &&
+    !(PSYCHOLOGIST_GOALS as readonly (string | null)[]).includes(value.goal)
+  ) {
+    ctx.addIssue({ code: "custom", path: ["goal"], message: "Elige qué te gustaría conseguir" });
+  }
+
+  if (value.role === "patient" && (!value.therapyStatus || !value.recordsExperience)) {
+    ctx.addIssue({
+      code: "custom",
+      path: [value.therapyStatus ? "recordsExperience" : "therapyStatus"],
+      message: "Te falta alguna pregunta por responder",
+    });
+  }
+
+  if (value.role === "psychologist" && !value.caseload) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["caseload"],
+      message: "Cuéntanos cuántos pacientes acompañas",
     });
   }
 });

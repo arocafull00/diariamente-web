@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { AppLoading } from "@/components/app-shell/app-loading";
 import { FeedbackPromptCard } from "@/components/feedback/feedback-prompt-card";
+import { PlayReviewCard } from "@/components/feedback/play-review-card";
 import { HomeCheckIn } from "@/components/home/home-check-in";
 import { HomeLatestMood } from "@/components/home/home-latest-mood";
 import { StaggerItem } from "@/components/motion/stagger-item";
@@ -54,6 +55,7 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
             todayRecords={data.todayRecords}
           />
           {data.showFeedbackPrompt ? <FeedbackPromptCard /> : null}
+          {data.canAskForReview ? <PlayReviewCard /> : null}
         </div>
 
         {latestRecord ? (

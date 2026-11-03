@@ -9,6 +9,7 @@ type WelcomeFooterProps = {
   disabled: boolean;
   pending: boolean;
   offersNotNow: boolean;
+  showSignOut: boolean;
   onPrimary: () => void;
   onNotNow: () => void;
 };
@@ -18,6 +19,7 @@ export function WelcomeFooter({
   disabled,
   pending,
   offersNotNow,
+  showSignOut,
   onPrimary,
   onNotNow,
 }: WelcomeFooterProps) {
@@ -41,7 +43,7 @@ export function WelcomeFooter({
           Por el momento no
         </Button>
       ) : null}
-      <SignOutLink className="py-1" />
+      {showSignOut ? <SignOutLink className="py-1" /> : null}
     </div>
   );
 }

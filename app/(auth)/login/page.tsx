@@ -51,7 +51,7 @@ export default async function LoginPage() {
             <p className="text-muted-foreground">
               ¿No tienes cuenta?{" "}
               <Link
-                href="/registro"
+                href="/onboarding"
                 className="font-semibold text-primary underline-offset-4 hover:underline"
               >
                 Regístrate

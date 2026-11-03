@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs><clipPath id="clock"><circle cx="80" cy="80" r="65"/></clipPath></defs>
+  <g clip-path="url(#clock)">
+    <circle cx="80" cy="80" r="65" fill="#ffce00"/>
+    <path fill="#ff7300" d="M 10,103 C 43,75 65,95 88,116 C 111,137 135,114 153,97 V 153 H 10 Z"/>
+    <path fill="#ffa1cc" d="M 84,10 C 81,36 109,47 128,45 L 153,45 V 10 Z"/>
+  </g>
+  <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 80,33 L 80,77 L 104,91"/>
+    <path d="M 45,68 L 45,75 M 112,66 L 112,73"/>
+    <path d="M 67,112 L 91,110"/>
+  </g>
+</svg>

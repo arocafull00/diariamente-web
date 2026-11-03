@@ -32,5 +32,5 @@ export async function GET(request: Request, { params }: RouteContext) {
 
   const { userId } = await auth();
 
-  return NextResponse.redirect(`${origin}${userId ? "/" : "/registro"}`);
+  return NextResponse.redirect(`${origin}${userId ? "/" : "/onboarding"}`);
 }

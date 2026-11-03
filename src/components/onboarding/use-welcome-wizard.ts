@@ -1,59 +1,55 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 
+import { ONBOARDING_PROGRESS_SHARE } from "@/components/onboarding/onboarding-content";
 import { useWelcomeNotifications } from "@/components/onboarding/use-welcome-notifications";
-import { WELCOME_FLOWS } from "@/components/onboarding/welcome-content";
+import { CONNECT_STEP, WELCOME_STEPS } from "@/components/onboarding/welcome-content";
 import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
 import { playCompletionSound } from "@/lib/completion-sound";
 import { acknowledgeScreen } from "@/server/actions/required-screens";
+import { useOnboardingStore } from "@/stores/onboarding-store";
+
+const FIRST_RECORD_HREF = "/nuevo-registro";
 
 export function useWelcomeWizard(
   role: "patient" | "psychologist",
   firstName: string,
   finishHref: string,
+  showConnect: boolean,
 ) {
   const router = useRouter();
   const notifications = useWelcomeNotifications(role);
   const install = usePwaInstall();
   const { goBack, goToStep, step: stepIndex } = useWizardHistory();
-  const [goalId, setGoalId] = useState<string | null>(null);
   const [finishing, startFinishTransition] = useTransition();
-  const { steps, goals } = WELCOME_FLOWS[role];
+  const steps = showConnect ? [CONNECT_STEP, ...WELCOME_STEPS[role]] : WELCOME_STEPS[role];
   const baseStep = steps[stepIndex];
-  const goal = goals.find((item) => item.id === goalId) ?? null;
   const isLastStep = stepIndex === steps.length - 1;
-  const canContinue = baseStep.id !== "goal" || goal !== null;
-  const step =
-    baseStep.id === "goal-reply" && goal
-      ? {
-          ...baseStep,
-          faceId: goal.faceId,
-          title: goal.replyTitle,
-          description: goal.replyDescription,
-        }
-      : {
-          ...baseStep,
-          title: baseStep.title.replace(", {name}", firstName ? `, ${firstName}` : ""),
-        };
+  const offersFirstRecord = role === "patient" && finishHref === "/inicio";
+  const step = {
+    ...baseStep,
+    title: baseStep.title.replace(", {name}", firstName ? `, ${firstName}` : ""),
+  };
 
-  function finish() {
+  useEffect(() => {
+    useOnboardingStore.getState().reset();
+    useOnboardingStore.persist.clearStorage();
+  }, []);
+
+  function finish(href: string) {
     startFinishTransition(async () => {
       await acknowledgeScreen("welcome");
-      router.replace(finishHref);
+      router.replace(href);
     });
   }
 
   function goForward() {
-    if (!canContinue) {
-      return;
-    }
-
     if (isLastStep) {
       playCompletionSound();
-      finish();
+      finish(offersFirstRecord ? FIRST_RECORD_HREF : finishHref);
       return;
     }
 
@@ -73,6 +69,7 @@ export function useWelcomeWizard(
         pending: notifications.loading,
         onClick: activateNotifications,
         offersNotNow: true,
+        onNotNow: goForward,
       };
     }
 
@@ -82,6 +79,17 @@ export function useWelcomeWizard(
         pending: install.loading,
         onClick: install.handleInstall,
         offersNotNow: true,
+        onNotNow: goForward,
+      };
+    }
+
+    if (isLastStep && offersFirstRecord) {
+      return {
+        label: "Hacer mi primer registro",
+        pending: finishing,
+        onClick: goForward,
+        offersNotNow: true,
+        onNotNow: () => finish(finishHref),
       };
     }
 
@@ -90,17 +98,14 @@ export function useWelcomeWizard(
       pending: finishing,
       onClick: goForward,
       offersNotNow: false,
+      onNotNow: goForward,
     };
   }
 
   return {
-    canContinue,
-    finish,
+    finish: () => finish(finishHref),
     finishing,
     goBack,
-    goForward,
-    goal,
-    goals,
     installGuide: {
       open: install.guideOpen,
       onOpenChange: install.setGuideOpen,
@@ -108,8 +113,9 @@ export function useWelcomeWizard(
     },
     isLastStep,
     primaryAction: getPrimaryAction(),
-    progress: (stepIndex + 1) / steps.length,
-    selectGoal: setGoalId,
+    progress:
+      ONBOARDING_PROGRESS_SHARE +
+      ((stepIndex + 1) / steps.length) * (1 - ONBOARDING_PROGRESS_SHARE),
     step,
     stepIndex,
   };

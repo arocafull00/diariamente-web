@@ -6,7 +6,7 @@
     <path fill="#ffa1cc" d="M 87,11 C 83,35 101,49 119,53 C 133,56 144,64 153,77 V 11 Z"/>
   </g>
   <g fill="none" stroke="#191919" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 47,77 C 51,68 60,68 64,77 M 88,75 C 92,66 101,66 105,75"/>
-    <path d="M 56,94 C 68,111 91,112 105,94"/>
+    <path d="M 47,72 Q 55,80 63,72 M 88,70 Q 96,78 104,70"/>
+    <path d="M 67,98 Q 80,105 94,96"/>
   </g>
 </svg>

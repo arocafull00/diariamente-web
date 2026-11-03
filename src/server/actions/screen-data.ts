@@ -10,7 +10,7 @@ import {
   getStreak,
 } from "@/lib/dates";
 import { getRecordQuadrant } from "@/lib/emotions";
-import { shouldShowFeedbackPrompt } from "@/lib/feedback";
+import { shouldShowFeedbackPrompt, shouldShowReviewPrompt } from "@/lib/feedback";
 import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import { requireClinic } from "@/server/auth/require-clinic";
@@ -70,6 +70,15 @@ export async function getHomeScreenData() {
 
   const streak = getStreak(windowRecords.map((record) => record.occurredAt), now);
   const latestRecord = recentRecords[0];
+  const latestQuadrant = latestRecord ? getRecordQuadrant(latestRecord) : null;
+  const latestIntensity = latestRecord?.emotionIntensity ?? null;
+  const showFeedbackPrompt = shouldShowFeedbackPrompt({
+    streak,
+    promptedAt: profile.feedbackPromptedAt,
+    latestQuadrant,
+    latestIntensity,
+    now,
+  });
 
   return {
     firstName: profile.firstName,
@@ -79,13 +88,10 @@ export async function getHomeScreenData() {
     week,
     todayRecords,
     recentRecords,
-    showFeedbackPrompt: shouldShowFeedbackPrompt({
-      streak,
-      promptedAt: profile.feedbackPromptedAt,
-      latestQuadrant: latestRecord ? getRecordQuadrant(latestRecord) : null,
-      latestIntensity: latestRecord?.emotionIntensity ?? null,
-      now,
-    }),
+    showFeedbackPrompt,
+    canAskForReview:
+      !showFeedbackPrompt &&
+      shouldShowReviewPrompt({ streak, latestQuadrant, latestIntensity }),
   };
 }
 
