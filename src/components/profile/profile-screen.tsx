@@ -108,6 +108,7 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
         patientCount={data.patientCount}
         clinic={data.clinic}
         billing={data.billing}
+        referral={data.referral}
       />
     </>
   );

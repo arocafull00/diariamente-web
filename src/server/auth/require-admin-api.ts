@@ -1,7 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 
-export function isAdminApiRequest(req: Request) {
-  const secret = process.env.ADMIN_API_SECRET;
+export function hasBearerSecret(req: Request, secret: string | undefined) {
   const header = req.headers.get("authorization");
 
   if (!secret || !header) {
@@ -14,4 +13,12 @@ export function isAdminApiRequest(req: Request) {
   return (
     expected.length === received.length && timingSafeEqual(expected, received)
   );
+}
+
+export function isAdminApiRequest(req: Request) {
+  return hasBearerSecret(req, process.env.ADMIN_API_SECRET);
+}
+
+export function isCronRequest(req: Request) {
+  return hasBearerSecret(req, process.env.CRON_SECRET);
 }

@@ -15,6 +15,7 @@ import { logger } from "@/lib/logger";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import { requireClinic } from "@/server/auth/require-clinic";
 import { getBillingSummary } from "@/server/billing/get-billing-summary";
+import { ensureReferralCode } from "@/server/referrals/ensure-referral-code";
 import {
   getClinicByOwner,
   getClinicInviteLink,
@@ -26,6 +27,7 @@ import {
   getPatientRecordsSince,
   getPsychologistClinic,
   getPsychologistPatients,
+  getReferralStats,
   getRecentPatientRecords,
   getReminderSettings,
 } from "@/server/queries";
@@ -149,10 +151,12 @@ export async function getProfileScreenData() {
     };
   }
 
-  const [patients, clinic, billing] = await Promise.all([
+  const [patients, clinic, billing, referralCode, referralStats] = await Promise.all([
     getPsychologistPatients(profile.id),
     getPsychologistClinic(profile.id),
     getBillingSummary(profile.id),
+    ensureReferralCode(profile),
+    getReferralStats(profile.id),
   ]);
 
   return {
@@ -161,6 +165,7 @@ export async function getProfileScreenData() {
     patientCount: patients.length,
     clinic,
     billing,
+    referral: { code: referralCode, ...referralStats },
   };
 }
 

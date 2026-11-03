@@ -9,14 +9,12 @@ import {
   INACTIVE_ACCOUNT_WARNING_DAYS,
 } from "@/lib/privacy";
 import { logger } from "@/lib/logger";
+import { isCronRequest } from "@/server/auth/require-admin-api";
 import { deleteProfileAndIdentity } from "@/server/profiles/delete-profile";
 import { sendPushToUser } from "@/server/push/send-push";
 
 export async function GET(req: Request) {
-  const authHeader = req.headers.get("authorization");
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!isCronRequest(req)) {
     logger.warn("cron.retention.unauthorized");
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }

@@ -33,7 +33,7 @@ function ensureVapidConfigured() {
     return false;
   }
 
-  webpush.setVapidDetails("mailto:support@diariamente.app", publicKey, privateKey);
+  webpush.setVapidDetails("mailto:support@diariamente.es", publicKey, privateKey);
   vapidConfigured = true;
 
   return true;
@@ -66,15 +66,20 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
       );
       delivered += 1;
     } catch (error) {
+      const statusCode =
+        error instanceof webpush.WebPushError ? error.statusCode : null;
+
       logger.warn("push.send_failed", {
         userId,
         topic: payload.topic,
-        statusCode:
-          error instanceof webpush.WebPushError ? error.statusCode : null,
+        statusCode,
       });
-      await db
-        .delete(pushSubscriptions)
-        .where(eq(pushSubscriptions.id, subscription.id));
+
+      if (statusCode === 404 || statusCode === 410) {
+        await db
+          .delete(pushSubscriptions)
+          .where(eq(pushSubscriptions.id, subscription.id));
+      }
     }
   }
 

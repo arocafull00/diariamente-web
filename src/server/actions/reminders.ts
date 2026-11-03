@@ -8,7 +8,7 @@ import { logAuditEvent } from "@/server/audit";
 import { requireProfile, requireRole } from "@/server/auth/get-current-profile";
 import { sendPushToUser } from "@/server/push/send-push";
 import { getPatientPsychologist } from "@/server/queries";
-import { reminderSchema } from "@/validation/schemas";
+import { pushSubscriptionSchema, reminderSchema } from "@/validation/schemas";
 
 import type { ActionResult } from "./onboarding";
 
@@ -42,26 +42,33 @@ export async function saveReminderSettings(
   return { success: true };
 }
 
-export async function savePushSubscription(input: {
-  endpoint: string;
-  keys: { p256dh: string; auth: string };
-}): Promise<ActionResult> {
+export async function savePushSubscription(
+  input: unknown,
+): Promise<ActionResult> {
   const profile = await requireProfile();
+
+  const parsed = pushSubscriptionSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return { error: "Suscripción no válida" };
+  }
+
+  const { endpoint, keys } = parsed.data;
 
   await db
     .insert(pushSubscriptions)
     .values({
       userId: profile.id,
-      endpoint: input.endpoint,
-      p256dh: input.keys.p256dh,
-      auth: input.keys.auth,
+      endpoint,
+      p256dh: keys.p256dh,
+      auth: keys.auth,
     })
     .onConflictDoUpdate({
       target: pushSubscriptions.endpoint,
       set: {
         userId: profile.id,
-        p256dh: input.keys.p256dh,
-        auth: input.keys.auth,
+        p256dh: keys.p256dh,
+        auth: keys.auth,
       },
     });
 

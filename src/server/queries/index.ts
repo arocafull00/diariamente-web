@@ -28,6 +28,7 @@ import {
   profiles,
   psychologistPatient,
   recordNotes,
+  referrals,
   screenAcknowledgements,
   subscriptions,
   therapySessions,
@@ -100,11 +101,16 @@ export async function getLastTherapySession(
   return session ?? null;
 }
 
-export async function getRecordNote(recordId: string) {
+export async function getRecordNote(recordId: string, psychologistId: string) {
   const [note] = await db
     .select()
     .from(recordNotes)
-    .where(eq(recordNotes.recordId, recordId))
+    .where(
+      and(
+        eq(recordNotes.recordId, recordId),
+        eq(recordNotes.psychologistId, psychologistId),
+      ),
+    )
     .limit(1);
 
   return note;
@@ -614,6 +620,39 @@ export async function getClinicInviteLinkByToken(token: string) {
     .limit(1);
 
   return link ?? null;
+}
+
+export async function getReferralCodeOwner(code: string) {
+  const [owner] = await db
+    .select({ id: profiles.id })
+    .from(profiles)
+    .where(and(eq(profiles.referralCode, code), eq(profiles.role, "psychologist")))
+    .limit(1);
+
+  return owner ?? null;
+}
+
+export async function getReferrer(referredId: string) {
+  const [referrer] = await db
+    .select({ firstName: profiles.firstName, lastName: profiles.lastName })
+    .from(referrals)
+    .innerJoin(profiles, eq(profiles.id, referrals.referrerId))
+    .where(eq(referrals.referredId, referredId))
+    .limit(1);
+
+  return referrer ?? null;
+}
+
+export async function getReferralStats(referrerId: string) {
+  const [stats] = await db
+    .select({
+      joined: count(),
+      rewarded: count(referrals.rewardedAt),
+    })
+    .from(referrals)
+    .where(eq(referrals.referrerId, referrerId));
+
+  return stats ?? { joined: 0, rewarded: 0 };
 }
 
 export async function getPsychologistClinic(psychologistId: string) {

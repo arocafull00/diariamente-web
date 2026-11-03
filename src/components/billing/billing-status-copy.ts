@@ -59,7 +59,9 @@ function getSubscribedCopy(summary: BillingSummary): BillingStatusCopy {
     return {
       icon: "prueba-gratuita",
       title: "Suscripción activa",
-      description: "¡Estás disfrutando de tu mes de prueba gratis!",
+      description: periodEnd
+        ? `¡Disfrutando gratis hasta el ${periodEnd}!`
+        : "¡Estás disfrutando de tu prueba gratis!",
       canSubscribe: false,
       canManage: true,
     };

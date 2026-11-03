@@ -135,6 +135,40 @@ export const reminderSchema = z.object({
   enabled: z.boolean(),
 });
 
+const pushServiceHosts = [
+  "fcm.googleapis.com",
+  "updates.push.services.mozilla.com",
+  "push.apple.com",
+  "notify.windows.com",
+];
+
+function isPushServiceUrl(url: string): boolean {
+  try {
+    const { protocol, hostname } = new URL(url);
+    return (
+      protocol === "https:" &&
+      pushServiceHosts.some(
+        (host) => hostname === host || hostname.endsWith(`.${host}`),
+      )
+    );
+  } catch {
+    return false;
+  }
+}
+
+const pushKeySchema = z
+  .string()
+  .max(200)
+  .regex(/^[A-Za-z0-9_-]+=*$/);
+
+export const pushSubscriptionSchema = z.object({
+  endpoint: z.string().max(1000).refine(isPushServiceUrl),
+  keys: z.object({
+    p256dh: pushKeySchema,
+    auth: pushKeySchema,
+  }),
+});
+
 export const recordNoteSchema = z.object({
   content: z
     .string()
@@ -212,3 +246,9 @@ export const adminBillingUpdateSchema = z.discriminatedUnion("action", [
     monthlyPriceCents: z.number().int().min(100).max(10_000_000),
   }),
 ]);
+
+export const referralCodeSchema = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .regex(/^[A-Z0-9]{8}$/, "El código tiene 8 letras y números");

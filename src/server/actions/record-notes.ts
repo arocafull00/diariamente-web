@@ -28,7 +28,7 @@ export async function upsertRecordNote(
     return { error: parsed.error.issues[0]?.message ?? "Algo no cuadra en los datos. Revísalos" };
   }
 
-  const existingNote = await getRecordNote(recordId);
+  const existingNote = await getRecordNote(record.id, profile.id);
 
   const [note] = await db
     .insert(recordNotes)
@@ -38,7 +38,7 @@ export async function upsertRecordNote(
       content: parsed.data.content,
     })
     .onConflictDoUpdate({
-      target: recordNotes.recordId,
+      target: [recordNotes.recordId, recordNotes.psychologistId],
       set: {
         content: parsed.data.content,
         updatedAt: new Date(),

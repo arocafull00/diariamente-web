@@ -1,0 +1,2 @@
+ALTER TABLE "record_notes" DROP CONSTRAINT "record_notes_record_id_unique";--> statement-breakpoint
+ALTER TABLE "record_notes" ADD CONSTRAINT "record_notes_record_psychologist_unique" UNIQUE("record_id","psychologist_id");

@@ -4,12 +4,14 @@ import { addHours } from "date-fns";
 import { headers } from "next/headers";
 
 import { TRIAL_DAYS } from "@/lib/billing";
+import { REFERRAL_BONUS_DAYS } from "@/lib/referrals";
 import { logger } from "@/lib/logger";
 import { logAuditEvent } from "@/server/audit";
 import { requireProfile } from "@/server/auth/get-current-profile";
 import { ensureStripeCustomer } from "@/server/billing/ensure-stripe-customer";
 import { getBillingState } from "@/server/billing/get-billing-state";
 import { getStripe } from "@/server/billing/stripe";
+import { getReferrer } from "@/server/queries";
 
 import type { ActionResult } from "./onboarding";
 
@@ -42,7 +44,10 @@ export async function startCheckout(): Promise<RedirectResult> {
     return { error: "Tu cuenta no necesita suscripción. ¡Todo en orden!" };
   }
 
-  const billing = await getBillingState(profile.id);
+  const [billing, referrer] = await Promise.all([
+    getBillingState(profile.id),
+    getReferrer(profile.id),
+  ]);
 
   if (!billing || PAID_ACCESS.includes(billing.access)) {
     return { error: "¡Ya tienes acceso a DiariaMente!" };
@@ -70,7 +75,9 @@ export async function startCheckout(): Promise<RedirectResult> {
           )
         : undefined;
     const trialPeriodDays =
-      billing.access === "trial_available" ? TRIAL_DAYS : undefined;
+      billing.access === "trial_available"
+        ? TRIAL_DAYS + (referrer ? REFERRAL_BONUS_DAYS : 0)
+        : undefined;
     const hasTrial = trialEnd !== undefined || trialPeriodDays !== undefined;
 
     const session = await getStripe().checkout.sessions.create({

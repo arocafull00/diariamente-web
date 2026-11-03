@@ -5,6 +5,7 @@ import { logger } from "@/lib/logger";
 import { logAuditEvent } from "@/server/audit";
 import { getStripe } from "@/server/billing/stripe";
 import { syncSubscription } from "@/server/billing/sync-subscription";
+import { rewardReferrer } from "@/server/referrals/reward-referrer";
 
 const SUBSCRIPTION_EVENTS = new Set([
   "customer.subscription.created",
@@ -28,6 +29,10 @@ async function handleSubscription(subscription: Stripe.Subscription) {
     entityType: "subscription",
     entityId: subscription.id,
   });
+
+  if (subscription.status === "active") {
+    await rewardReferrer(profileId);
+  }
 }
 
 export async function POST(req: Request) {

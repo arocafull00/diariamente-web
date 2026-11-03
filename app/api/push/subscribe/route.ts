@@ -17,19 +17,8 @@ export async function POST(req: Request) {
     return null;
   });
 
-  if (!body?.subscription?.endpoint || !body?.subscription?.keys) {
-    logger.warn("push.subscribe.invalid_subscription");
-    return Response.json({ error: "Invalid subscription" }, { status: 400 });
-  }
-
   try {
-    const result = await savePushSubscription({
-      endpoint: body.subscription.endpoint,
-      keys: {
-        p256dh: body.subscription.keys.p256dh,
-        auth: body.subscription.keys.auth,
-      },
-    });
+    const result = await savePushSubscription(body?.subscription);
 
     if (result.error) {
       logger.warn("push.subscribe.rejected", { reason: result.error });

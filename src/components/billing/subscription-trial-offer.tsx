@@ -1,10 +1,12 @@
-import { CreditCard, Receipt, RefreshCw } from "lucide-react";
+import { CreditCard, Gift, Receipt, RefreshCw } from "lucide-react";
 import Image from "next/image";
 
 import logo from "../../../public/logo.png";
 
 import { SignOutLink } from "@/components/auth/sign-out-link";
+import { ReferralCodeForm } from "@/components/referrals/referral-code-form";
 import { TRIAL_DAYS, formatMonthlyPrice } from "@/lib/billing";
+import { REFERRAL_BONUS_DAYS } from "@/lib/referrals";
 
 import { BillingRedirectButton } from "./billing-redirect-button";
 import { SubscriptionPlanRow } from "./subscription-plan-row";
@@ -28,22 +30,39 @@ type SubscriptionTrialOfferProps = {
   eyebrow: string;
   role: keyof typeof PLAN_BY_ROLE;
   monthlyPriceCents: number;
+  referrerName: string | null;
+  showReferralForm: boolean;
+  pendingReferralCode: string | undefined;
 };
 
 export function SubscriptionTrialOffer({
   eyebrow,
   role,
   monthlyPriceCents,
+  referrerName,
+  showReferralForm,
+  pendingReferralCode,
 }: SubscriptionTrialOfferProps) {
   const plan = PLAN_BY_ROLE[role];
   const price = formatMonthlyPrice(monthlyPriceCents);
+  const trialDays = TRIAL_DAYS + (referrerName ? REFERRAL_BONUS_DAYS : 0);
   const rows = [
     {
       icon: "prueba-gratuita",
       iconClassName: "bg-mood-lp-soft text-mood-lp-strong",
       label: "Días de prueba gratuita",
-      value: String(TRIAL_DAYS),
+      value: String(trialDays),
     },
+    ...(referrerName
+      ? [
+          {
+            icon: Gift,
+            iconClassName: "bg-mood-hp-soft text-mood-hp-strong",
+            label: `Regalo de ${referrerName}`,
+            value: `+${REFERRAL_BONUS_DAYS} días`,
+          },
+        ]
+      : []),
     {
       icon: CreditCard,
       iconClassName: "bg-mood-lu-soft text-mood-lu-strong",
@@ -106,7 +125,7 @@ export function SubscriptionTrialOffer({
               </p>
             </div>
             <span className="shrink-0 rotate-3 rounded-2xl bg-mood-lp-3 px-3 py-1.5 text-center text-mood-foreground shadow-sm">
-              <span className="block text-xl leading-none font-black tabular-nums">{TRIAL_DAYS}</span>
+              <span className="block text-xl leading-none font-black tabular-nums">{trialDays}</span>
               <span className="block text-[0.6rem] font-extrabold tracking-wide uppercase">
                 días gratis
               </span>
@@ -128,6 +147,8 @@ export function SubscriptionTrialOffer({
             </span>
           </div>
         </section>
+
+        {showReferralForm ? <ReferralCodeForm defaultCode={pendingReferralCode} /> : null}
       </div>
 
       <div className="sticky bottom-0 z-10 -mx-5 flex w-[calc(100%+2.5rem)] flex-col items-center gap-1 bg-linear-to-t from-background from-75% to-transparent px-5 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6">

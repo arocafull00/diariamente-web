@@ -117,6 +117,7 @@ export const profiles = pgTable("profiles", {
   trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
   lifetimeAccess: boolean("lifetime_access").default(false).notNull(),
   stripeCustomerId: text("stripe_customer_id").unique(),
+  referralCode: text("referral_code").unique(),
   lastActiveAt: timestamp("last_active_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -210,6 +211,25 @@ export const subscriptions = pgTable("subscriptions", {
     .notNull(),
 });
 
+export const referrals = pgTable(
+  "referrals",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    referrerId: text("referrer_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    referredId: text("referred_id")
+      .notNull()
+      .unique()
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    rewardedAt: timestamp("rewarded_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("referrals_referrer_id_idx").on(table.referrerId)],
+);
+
 export const clinicInviteLinks = pgTable("clinic_invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
@@ -265,23 +285,31 @@ export const therapySessions = pgTable(
   ],
 );
 
-export const recordNotes = pgTable("record_notes", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  recordId: uuid("record_id")
-    .notNull()
-    .references(() => patientRecords.id, { onDelete: "cascade" })
-    .unique(),
-  psychologistId: text("psychologist_id")
-    .notNull()
-    .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  content: text("content").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const recordNotes = pgTable(
+  "record_notes",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    recordId: uuid("record_id")
+      .notNull()
+      .references(() => patientRecords.id, { onDelete: "cascade" }),
+    psychologistId: text("psychologist_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("record_notes_record_psychologist_unique").on(
+      table.recordId,
+      table.psychologistId,
+    ),
+  ],
+);
 
 export const inviteLinks = pgTable("invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),

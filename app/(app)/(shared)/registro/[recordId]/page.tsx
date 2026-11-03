@@ -16,7 +16,9 @@ export default async function RecordPage({ params }: RecordPageProps) {
   const { recordId } = await params;
   const { profile, record } = await requireRecordAccess(recordId);
   const note =
-    profile.role === "psychologist" ? (await getRecordNote(recordId)) ?? null : null;
+    profile.role === "psychologist"
+      ? (await getRecordNote(record.id, profile.id)) ?? null
+      : null;
   const gender =
     profile.role === "patient"
       ? profile.grammaticalGender

@@ -2,11 +2,13 @@
 
 import { clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { clinics, profiles, screenAcknowledgements } from "@/db/schema";
 import { logger } from "@/lib/logger";
+import { REFERRAL_COOKIE_NAME } from "@/lib/referrals";
 import { REQUIRED_SCREENS } from "@/lib/required-screens";
 import { logAuditEvent } from "@/server/audit";
 import {
@@ -14,6 +16,7 @@ import {
   requireUser,
 } from "@/server/auth/get-current-profile";
 import { deleteProfileAndIdentity } from "@/server/profiles/delete-profile";
+import { redeemReferral } from "@/server/referrals/redeem-referral";
 import { onboardingSchema } from "@/validation/schemas";
 
 export type ActionResult = {
@@ -138,6 +141,22 @@ export async function completeOnboarding(
   }
 
   logger.info("auth.signup.completed", { userId, role });
+
+  const cookieStore = await cookies();
+  const referralCode = cookieStore.get(REFERRAL_COOKIE_NAME)?.value;
+
+  if (role === "psychologist" && referralCode) {
+    const referral = await redeemReferral(userId, referralCode).catch(
+      (error: unknown) => {
+        logger.error("referrals.redeem_on_signup_failed", error, { userId });
+        return { success: false };
+      },
+    );
+
+    if (referral.success) {
+      cookieStore.delete(REFERRAL_COOKIE_NAME);
+    }
+  }
 
   redirect(role === "patient" ? "/bienvenida" : "/suscripcion");
 }
