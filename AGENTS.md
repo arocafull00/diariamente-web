@@ -1,10 +1,12 @@
-# DiariaMente — Guía para agentes
+# Diariamente — Guía para agentes
 
-PWA de apoyo a la terapia cognitivo-conductual (TCC) que conecta **pacientes** y **psicólogos/as**. El paciente registra situaciones emocionales; el profesional consulta los registros de sus pacientes vinculados.
+App de autorregistro emocional que conecta **pacientes** y **profesionales de la psicología** entre sesiones, para cualquier enfoque terapéutico. El paciente registra lo que siente; el profesional consulta los registros de sus pacientes vinculados.
+
+**Antes de decidir funcionalidades, textos o diseño, lee `PRODUCT.md`**: es el ADN de producto (avatar, tono, misión, líneas rojas y filtro de decisiones) y prevalece sobre cualquier otra descripción del producto.
 
 **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Clerk · Neon PostgreSQL · Drizzle ORM · Tailwind CSS v4 · shadcn/ui · Zustand · Zod · React Hook Form · Sonner · Web Push.
 
-Especificación completa del producto, rutas, modelo de datos y fases: `PROJECT.md`.
+Especificación técnica, rutas, modelo de datos y fases: `PROJECT.md`.
 
 ## Dominios
 
@@ -192,7 +194,7 @@ Flujo de datos:
 
 ## Seguridad y privacidad
 
-DiariaMente maneja información de salud potencialmente sensible:
+Diariamente maneja información de salud potencialmente sensible:
 
 - Autorización en cada consulta y mutación.
 - Validación Zod en servidor.

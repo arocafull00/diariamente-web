@@ -1,4 +1,4 @@
-# DESIGN.md — Lenguaje visual de DiariaMente
+# DESIGN.md — Lenguaje visual de Diariamente
 
 Léelo **antes** de crear o modificar cualquier pantalla, sheet, diálogo o componente visual. Los tokens viven en `app/globals.css`; aquí está cómo se combinan.
 
@@ -21,7 +21,7 @@ Antes de dar un componente por terminado, compáralo con su pantalla hermana (mi
 | --- | --- | --- | --- |
 | `lp` (verde) | Acción positiva, prueba, clínica, éxito, "empezar" | `bg-mood-lp-soft` | `text-mood-lp-strong` |
 | `lu` (azul) | Información, compartir, privacidad | `bg-mood-lu-soft` | `text-mood-lu-strong` |
-| `hp` (amarillo) | Recordatorios, rachas, feedback, aviso amable | `bg-mood-hp-soft` | `text-mood-hp-strong` |
+| `hp` (amarillo) | Recordatorios, feedback, aviso amable | `bg-mood-hp-soft` | `text-mood-hp-strong` |
 | `hu` (rojo/coral) | Alerta suave, cobros | `bg-mood-hu-soft` | `text-mood-hu-strong` |
 
 - Para datos de un cuadrante concreto usa `getMoodStyles(quadrant)` de `@/lib/emotions`.

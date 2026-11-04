@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Architecture, conventions, auth model, data layer and PWA rules live in `AGENTS.md` (imported below); product spec and phases in `PROJECT.md`.
+Architecture, conventions, auth model, data layer and PWA rules live in `AGENTS.md` (imported below); product DNA (audience, tone, mission, red lines) in `PRODUCT.md`; technical spec and phases in `PROJECT.md`.
 
 @AGENTS.md
 @DESIGN.md
