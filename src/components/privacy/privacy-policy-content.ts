@@ -38,6 +38,16 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
     ],
   },
   {
+    title: "Dónde se guardan y quién nos ayuda",
+    paragraphs: [
+      "Tus registros y el resto de datos de la app se guardan en servidores de la Unión Europea, en Fráncfort (Alemania). Allí están nuestra base de datos (Neon) y los servidores que hacen funcionar la app (Vercel).",
+      "Tu correo, tu contraseña y los datos básicos de tu cuenta de acceso los gestiona nuestro proveedor de identidad, Clerk, en servidores de Estados Unidos. Clerk está adherido al Marco de Privacidad de Datos UE-EE. UU., que la Comisión Europea reconoce como garantía adecuada. No recibe el contenido de tus registros.",
+      "Para detectar errores usamos Sentry, con servidores en la Unión Europea. Los profesionales pagan su suscripción a través de Stripe.",
+      "Algunos de estos proveedores son empresas de Estados Unidos y pueden tratar datos técnicos, como registros de acceso o estadísticas de visitas, fuera de la Unión Europea. Cuando ocurre, lo hacen con las garantías que exige el RGPD: el Marco de Privacidad de Datos UE-EE. UU. o cláusulas contractuales tipo.",
+      "Las notificaciones pasan por el servicio de tu navegador o de tu móvil (Google, Apple o Mozilla) y nunca incluyen contenido clínico.",
+    ],
+  },
+  {
     title: "Tus derechos",
     paragraphs: [
       "Puedes acceder a tus datos y descargarlos en JSON o PDF desde Ajustes, Privacidad (derecho de acceso y portabilidad).",

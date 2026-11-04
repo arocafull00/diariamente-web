@@ -8,7 +8,7 @@ import { PrivacyPolicySection } from "@/components/privacy/privacy-policy-sectio
 export const metadata: Metadata = {
   title: "Política de privacidad · Diariamente",
   description:
-    "Qué datos trata Diariamente, quién puede verlos, cuánto tiempo se conservan y cómo ejercer tus derechos.",
+    "Qué datos trata Diariamente, quién puede verlos, cuánto tiempo se conservan, dónde se guardan y cómo ejercer tus derechos.",
 };
 
 export default function PrivacyPolicyPage() {
