@@ -84,7 +84,6 @@ export async function getHomeScreenData() {
     firstName: profile.firstName,
     grammaticalGender: profile.grammaticalGender,
     period: getDayPeriod(now),
-    streak,
     week,
     todayRecords,
     recentRecords,

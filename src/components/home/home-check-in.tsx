@@ -1,6 +1,5 @@
 import { Face } from "@/components/faces/face";
 import { HomeMoodRing } from "@/components/home/home-mood-ring";
-import { HomeStreakBadge } from "@/components/home/home-streak-badge";
 import { HomeWeekStrip } from "@/components/home/home-week-strip";
 import type { MoodQuadrant } from "@/db/schema";
 import type { WeekDay } from "@/lib/dates";
@@ -8,7 +7,6 @@ import type { WeekDay } from "@/lib/dates";
 type HomeCheckInProps = {
   firstName: string | null;
   period: string;
-  streak: number;
   week: (WeekDay & { quadrant: MoodQuadrant | null; hasRecord: boolean })[];
   todayRecords: { id: string; quadrant: MoodQuadrant | null }[];
 };
@@ -16,7 +14,6 @@ type HomeCheckInProps = {
 export function HomeCheckIn({
   firstName,
   period,
-  streak,
   week,
   todayRecords,
 }: HomeCheckInProps) {
@@ -40,9 +37,6 @@ export function HomeCheckIn({
         </h2>
       </div>
       <HomeMoodRing todayRecords={todayRecords} />
-      <div className="flex justify-center">
-        <HomeStreakBadge streak={streak} />
-      </div>
     </section>
   );
 }

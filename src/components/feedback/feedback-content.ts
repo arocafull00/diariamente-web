@@ -22,7 +22,7 @@ export const FEEDBACK_COPY = {
   callLabel: "¿Te apetece una llamada de 15 minutos?",
   callDescription: "Te escribiremos para buscar un hueco.",
   success: "¡Gracias! Lo leeremos con calma.",
-  promptTitle: "¡Llevas una buena racha!",
+  promptTitle: "¡Gracias por seguir aquí!",
   promptQuestion: "¿Te está resultando fácil registrar cómo te sientes?",
   promptThanks: "¡Gracias por contárnoslo!",
   promptMore: "Contarnos más",

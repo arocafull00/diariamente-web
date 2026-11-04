@@ -50,7 +50,6 @@ export function HomeScreen({ refreshedAt }: HomeScreenProps) {
           <HomeCheckIn
             firstName={data.firstName}
             period={data.period}
-            streak={data.streak}
             week={data.week}
             todayRecords={data.todayRecords}
           />
