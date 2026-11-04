@@ -49,7 +49,7 @@ export function PatientSessionButton({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         className={cn(
-          buttonVariants({ variant: "secondary" }),
+          buttonVariants({ size: "lg" }),
           "w-full",
         )}
       >

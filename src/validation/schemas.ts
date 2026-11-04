@@ -311,3 +311,14 @@ export const referralCodeSchema = z
   .trim()
   .toUpperCase()
   .regex(/^[A-Z0-9]{8}$/, "El código tiene 8 letras y números");
+
+export const recordFiltersSchema = z.object({
+  emocion: z
+    .union([z.string(), z.array(z.string())])
+    .transform((value) => (Array.isArray(value) ? value : [value]))
+    .pipe(z.array(z.string().trim().min(1).max(60)).max(20))
+    .catch([]),
+  desde: z.iso.date().optional().catch(undefined),
+  hasta: z.iso.date().optional().catch(undefined),
+  pagina: z.coerce.number().int().min(1).catch(1),
+});

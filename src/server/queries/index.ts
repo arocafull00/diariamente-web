@@ -14,7 +14,9 @@ import {
 } from "drizzle-orm";
 
 import { db } from "@/db";
+import { APP_TIME_ZONE } from "@/lib/dates";
 import { RECORD_VIEW_ACTION } from "@/lib/privacy";
+import type { RecordFilters } from "@/lib/record-filters";
 import { resolveAvatarUrls } from "@/server/profiles/resolve-avatar-urls";
 import {
   auditEvents,
@@ -45,10 +47,54 @@ export async function getPatientRecords(patientId: string) {
     .orderBy(desc(patientRecords.occurredAt));
 }
 
-export async function getPatientRecordsForPsychologist(
+const RECORDS_PAGE_SIZE = 6;
+
+export async function getPatientRecordSummaries(patientId: string) {
+  return db
+    .select({
+      id: patientRecords.id,
+      occurredAt: patientRecords.occurredAt,
+      createdAt: patientRecords.createdAt,
+      emotions: patientRecords.emotions,
+      quadrant: patientRecords.quadrant,
+      context: patientRecords.context,
+    })
+    .from(patientRecords)
+    .where(eq(patientRecords.patientId, patientId))
+    .orderBy(desc(patientRecords.occurredAt));
+}
+
+export async function getPatientRecordsPageForPsychologist(
   patientId: string,
   psychologistId: string,
+  filters: RecordFilters,
 ) {
+  const where = and(
+    eq(patientRecords.patientId, patientId),
+    filters.emotions.length > 0
+      ? or(
+          ...filters.emotions.map(
+            (emotion) =>
+              sql`${patientRecords.emotions} @> ${JSON.stringify([{ emotion }])}::jsonb`,
+          ),
+        )
+      : undefined,
+    filters.from
+      ? sql`${patientRecords.occurredAt} >= (${filters.from}::date::timestamp at time zone ${APP_TIME_ZONE}::text)`
+      : undefined,
+    filters.to
+      ? sql`${patientRecords.occurredAt} < ((${filters.to}::date + 1)::timestamp at time zone ${APP_TIME_ZONE}::text)`
+      : undefined,
+  );
+
+  const [result] = await db
+    .select({ total: count() })
+    .from(patientRecords)
+    .where(where);
+  const total = Number(result?.total ?? 0);
+  const pageCount = Math.max(1, Math.ceil(total / RECORDS_PAGE_SIZE));
+  const page = Math.min(filters.page, pageCount);
+
   const records = await db
     .select({
       id: patientRecords.id,
@@ -75,13 +121,20 @@ export async function getPatientRecordsForPsychologist(
         eq(recordNotes.psychologistId, psychologistId),
       ),
     )
-    .where(eq(patientRecords.patientId, patientId))
-    .orderBy(desc(patientRecords.occurredAt));
+    .where(where)
+    .orderBy(desc(patientRecords.occurredAt), desc(patientRecords.id))
+    .limit(RECORDS_PAGE_SIZE)
+    .offset((page - 1) * RECORDS_PAGE_SIZE);
 
-  return records.map(({ noteId, ...record }) => ({
-    ...record,
-    hasNote: noteId !== null,
-  }));
+  return {
+    records: records.map(({ noteId, ...record }) => ({
+      ...record,
+      hasNote: noteId !== null,
+    })),
+    total,
+    page,
+    pageCount,
+  };
 }
 
 export async function getLastTherapySession(

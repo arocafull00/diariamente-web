@@ -1,7 +1,6 @@
 import { AppHeaderBackButton } from "@/components/app-shell/app-header-back-button";
 import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { formatLastActivityLabel, getFullName, getInitials } from "@/lib/utils-app";
 
 type PatientDetailHeaderProps = {
@@ -9,7 +8,6 @@ type PatientDetailHeaderProps = {
   firstName: string | null;
   lastName: string | null;
   avatarUrl: string | null;
-  recordCount: number;
   lastActivityAt: Date | null;
 };
 
@@ -18,11 +16,9 @@ export function PatientDetailHeader({
   firstName,
   lastName,
   avatarUrl,
-  recordCount,
   lastActivityAt,
 }: PatientDetailHeaderProps) {
   const patientName = getFullName(firstName, lastName);
-  const recordLabel = recordCount === 1 ? "registro" : "registros";
   const activityLabel = lastActivityAt
     ? `Última actividad ${formatLastActivityLabel(lastActivityAt)}`
     : "Sin actividad reciente";
@@ -47,25 +43,10 @@ export function PatientDetailHeader({
         </Avatar>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="truncate text-base font-semibold text-foreground">
-              {patientName}
-            </h1>
-            <Badge className="h-auto rounded-full bg-intensity-low px-2 py-0.5 text-[11px] font-medium text-intensity-low-foreground ring-1 ring-inset ring-intensity-low-accent/20">
-              Activo
-            </Badge>
-          </div>
-
-          <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-            <span>
-              {recordCount} {recordLabel}
-            </span>
-            <span
-              className="size-1 rounded-full bg-border"
-              aria-hidden="true"
-            />
-            <span>{activityLabel}</span>
-          </div>
+          <h1 className="truncate text-base font-semibold text-foreground">
+            {patientName}
+          </h1>
+          <p className="mt-1 text-xs text-muted-foreground">{activityLabel}</p>
         </div>
 
         <PatientUnlinkButton
