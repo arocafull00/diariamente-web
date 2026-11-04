@@ -1,5 +1,6 @@
-import { AlertTriangle, Link2Off, UserCheck, UserRoundCheck } from "lucide-react";
+import { AlertTriangle, Link2Off, UserCheck } from "lucide-react";
 
+import { ConnectExistingPsychologist } from "@/components/invitations/connect-existing-psychologist";
 import { ConnectRequestCard } from "@/components/invitations/connect-request-card";
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
 import type { UserRole } from "@/db/schema";
@@ -59,16 +60,17 @@ export async function ConnectPageContent({
     );
   }
 
-  const existingLink = await getPatientPsychologist(profileId);
+  const [existingLink, psychologist] = await Promise.all([
+    getPatientPsychologist(profileId),
+    getProfileById(link.psychologistId),
+  ]);
 
-  if (existingLink) {
+  if (existingLink && psychologist) {
     return (
-      <ConnectStatusCard
-        icon={UserRoundCheck}
-        title="¡Ya tienes psicólogo/a!"
-        description="Si quieres conectar con otro profesional, desvincúlate antes desde tu perfil."
-        href="/perfil"
-        hrefLabel="Ir a mi perfil"
+      <ConnectExistingPsychologist
+        currentPsychologist={existingLink}
+        invitingPsychologist={psychologist}
+        isSamePsychologist={existingLink.psychologistId === psychologist.id}
       />
     );
   }
@@ -89,8 +91,6 @@ export async function ConnectPageContent({
       />
     );
   }
-
-  const psychologist = await getProfileById(link.psychologistId);
 
   if (!psychologist) {
     return (

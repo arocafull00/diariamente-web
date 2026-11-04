@@ -6,17 +6,17 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   PRIVACY_POLICY_PATH,
   PSYCHOLOGIST_HIDDEN_DATA,
   PSYCHOLOGIST_VISIBLE_DATA,
 } from "@/lib/privacy";
-import { getFullName, getInitials } from "@/lib/utils-app";
 import { requestConnection } from "@/server/actions/invitations";
 
-import { ConnectConsentList } from "./connect-consent-list";
+import { ConnectConsentDetails } from "./connect-consent-details";
+import { ConnectHeroCard } from "./connect-hero-card";
+import { ConnectPsychologistRow } from "./connect-psychologist-row";
 
 type ConnectRequestCardProps = {
   psychologist: {
@@ -47,68 +47,75 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl bg-secondary p-6 text-center">
-      <Avatar className="size-16">
-        {psychologist.avatarUrl ? (
-          <AvatarImage src={psychologist.avatarUrl} alt="" />
-        ) : null}
-        <AvatarFallback>
-          {getInitials(psychologist.firstName, psychologist.lastName)}
-        </AvatarFallback>
-      </Avatar>
-      <div>
-        <h1 className="text-lg font-semibold text-foreground">
-          {getFullName(psychologist.firstName, psychologist.lastName)}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          ¡Te invita a conectar en Diariamente! Envía la solicitud y, en cuanto la acepte, estaréis conectados.
-        </p>
-      </div>
-      <div className="w-full space-y-4 rounded-2xl bg-card p-4 text-left">
-        <ConnectConsentList
-          title="Qué podrá ver"
+    <ConnectHeroCard
+      faceIds={["alegria", "03_verde_morado"]}
+      title={
+        <>
+          ¡Conecta con tu{" "}
+          <span className="text-mood-lp-strong italic">psicólogo/a</span>!
+        </>
+      }
+      description="En cuanto acepte tu solicitud, estaréis conectados."
+    >
+      <div className="divide-y divide-border/70 overflow-hidden rounded-3xl border border-border/60 bg-card shadow-xs">
+        <ConnectPsychologistRow
+          psychologist={psychologist}
+          label="Te invita"
+          tone="green"
+        />
+        <ConnectConsentDetails
           icon={Eye}
+          tone="blue"
+          title="Qué podrá ver"
+          description="Tus registros y lo que escribes en ellos."
           items={PSYCHOLOGIST_VISIBLE_DATA}
         />
-        <ConnectConsentList
-          title="Qué no podrá ver ni hacer"
+        <ConnectConsentDetails
           icon={EyeOff}
+          tone="yellow"
+          title="Qué no podrá ver ni hacer"
+          description="Tu correo, ni editar o borrar nada."
           items={PSYCHOLOGIST_HIDDEN_DATA}
         />
-        <p className="text-xs text-muted-foreground">
-          Podrás ver cuándo consulta cada registro y retirar el consentimiento
-          en cualquier momento desvinculándote desde tu perfil.{" "}
-          <Link href={PRIVACY_POLICY_PATH} data-cuelume-tap="type" className="font-medium text-primary underline">
-            Política de privacidad
-          </Link>
-        </p>
       </div>
-      <label className="flex w-full items-start gap-3 text-left text-sm text-foreground">
+      <label className="flex w-full cursor-pointer items-start gap-3 rounded-2xl bg-mood-lp-soft p-3 text-left text-sm leading-snug text-mood-foreground/80">
         <input
           type="checkbox"
           data-cuelume-toggle=""
           checked={consent}
           onChange={(event) => setConsent(event.target.checked)}
-          className="mt-0.5 size-4 shrink-0 accent-primary"
+          className="mt-0.5 size-4 shrink-0 accent-mood-lp-3"
         />
         <span>
-          He leído qué información verá y doy mi consentimiento explícito para
-          compartir mis datos de salud con este profesional.
+          Doy mi consentimiento explícito para compartir mis datos de salud con
+          este profesional.
         </span>
       </label>
-      <Button
-        size="lg"
-        className="w-full"
-        disabled={pending || !consent}
-        onClick={handleRequest}
-      >
-        {pending ? (
-          <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-        ) : (
-          <UserPlus data-icon="inline-start" aria-hidden="true" />
-        )}
-        {pending ? "Enviando..." : "Solicitar conexión"}
-      </Button>
-    </div>
+      <div className="space-y-3">
+        <Button
+          size="lg"
+          className="w-full"
+          disabled={pending || !consent}
+          onClick={handleRequest}
+        >
+          {pending ? (
+            <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
+          ) : (
+            <UserPlus data-icon="inline-start" aria-hidden="true" />
+          )}
+          {pending ? "Enviando..." : "Solicitar conexión"}
+        </Button>
+        <p className="text-xs leading-5 text-pretty text-muted-foreground">
+          Puedes retirar tu consentimiento cuando quieras desde tu perfil.{" "}
+          <Link
+            href={PRIVACY_POLICY_PATH}
+            data-cuelume-tap="type"
+            className="font-medium text-mood-lu-strong underline underline-offset-2"
+          >
+            Política de privacidad
+          </Link>
+        </p>
+      </div>
+    </ConnectHeroCard>
   );
 }
