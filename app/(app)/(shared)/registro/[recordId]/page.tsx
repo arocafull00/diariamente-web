@@ -1,10 +1,14 @@
 import { AppHeader } from "@/components/app-shell/app-header";
 import { RecordDetail } from "@/components/records/record-detail";
 import { RecordNoteSheet } from "@/components/records/record-note-sheet";
+import { RecordPatientReply } from "@/components/records/record-patient-reply";
+import { RecordReplyCard } from "@/components/records/record-reply-card";
+import { RecordReplySheet } from "@/components/records/record-reply-sheet";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import {
   getProfileGrammaticalGender,
   getRecordNote,
+  getRecordReply,
   getRecordViews,
 } from "@/server/queries";
 
@@ -24,6 +28,25 @@ export default async function RecordPage({ params }: RecordPageProps) {
       ? profile.grammaticalGender
       : await getProfileGrammaticalGender(record.patientId);
   const views = profile.role === "patient" ? await getRecordViews(recordId) : [];
+  const reply = await getRecordReply(record.id);
+  const ownReplyContent =
+    reply?.psychologistId === profile.id ? reply.content : "";
+  const patientReply = reply ? (
+    <RecordPatientReply recordId={record.id} reply={reply} />
+  ) : null;
+  const replySlot =
+    profile.role === "psychologist" ? (
+      <RecordReplyCard
+        title="Tu respuesta"
+        content={ownReplyContent || null}
+        placeholder="Escríbele unas palabras. Las verá junto a su registro."
+        action={
+          <RecordReplySheet recordId={record.id} initialContent={ownReplyContent} />
+        }
+      />
+    ) : (
+      patientReply
+    );
 
   return (
     <>
@@ -42,6 +65,7 @@ export default async function RecordPage({ params }: RecordPageProps) {
         note={note}
         gender={gender}
         views={views}
+        reply={replySlot}
       />
     </>
   );

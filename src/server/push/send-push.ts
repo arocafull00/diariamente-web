@@ -9,6 +9,7 @@ type PushTopic =
   | "connection_request"
   | "connection_resolved"
   | "patient_record"
+  | "record_reply"
   | "reminder"
   | "account_inactivity"
   | "trial_ending";
