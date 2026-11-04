@@ -9,9 +9,10 @@ type HomeWeekStripProps = {
 export function HomeWeekStrip({ days }: HomeWeekStripProps) {
   return (
     <ol className="grid grid-cols-7 gap-1" aria-label="Tu semana">
-      {days.map((day) => (
+      {days.map((day, index) => (
         <HomeWeekDay
           key={day.key}
+          index={index}
           label={day.label}
           isToday={day.isToday}
           isFuture={day.isFuture}

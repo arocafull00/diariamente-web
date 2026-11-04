@@ -59,25 +59,32 @@ export function FeedbackPromptCard() {
   }
 
   return (
-    <section className="relative space-y-4 rounded-[2rem] bg-mood-hp-soft/60 p-5 ring-1 ring-border/50">
+    <section className="relative space-y-4 rounded-[2rem] bg-mood-hp-soft/60 p-5 ring-1 ring-border/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart">
       {step === "question" ? (
         <button
           type="button"
           aria-label="Ahora no"
           disabled={pending}
           onClick={handleDismiss}
-          className="absolute top-3 right-3 inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+          data-cuelume-tap="close"
+          className="pressable-sm absolute top-3 right-3 inline-flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
       ) : null}
       <div className="flex items-start gap-3 pr-8">
-        <Illustration name="sugerencias" className="size-10" />
+        <Illustration
+          name="sugerencias"
+          className="size-10 motion-safe:animate-pop-in motion-safe:[animation-delay:150ms]"
+        />
         <div className="space-y-0.5">
           <p className="text-xs font-semibold tracking-wide text-mood-hp-strong uppercase">
             {FEEDBACK_COPY.promptTitle}
           </p>
-          <p className="font-semibold text-balance">
+          <p
+            key={step}
+            className="font-semibold text-balance motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-300"
+          >
             {step === "question"
               ? FEEDBACK_COPY.promptQuestion
               : FEEDBACK_COPY.promptThanks}

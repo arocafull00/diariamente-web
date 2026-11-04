@@ -9,9 +9,13 @@ export function NewRecordHeaderButton() {
     <Link
       href="/nuevo-registro"
       data-cuelume-tap=""
-      className={cn(buttonVariants(), "hidden lg:inline-flex")}
+      className={cn(buttonVariants(), "group hidden lg:inline-flex")}
     >
-      <Plus data-icon="inline-start" aria-hidden="true" />
+      <Plus
+        data-icon="inline-start"
+        aria-hidden="true"
+        className="transition-[rotate] duration-300 ease-spring group-hover:rotate-90"
+      />
       Nuevo registro
     </Link>
   );

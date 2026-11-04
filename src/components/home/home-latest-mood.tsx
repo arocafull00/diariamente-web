@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 
+import { PressableLink } from "@/components/motion/pressable-link";
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
 import type { GrammaticalGender, PatientRecord } from "@/db/schema";
 import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
@@ -21,9 +21,8 @@ export function HomeLatestMood({ record, gender }: HomeLatestMoodProps) {
   return (
     <section className="space-y-3">
       <h2 className="px-1 font-semibold">Tu último registro</h2>
-      <Link
+      <PressableLink
         href={`/registro/${record.id}`}
-        data-cuelume-tap="type"
         className="group relative block rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <MoodSummaryCard
@@ -35,15 +34,15 @@ export function HomeLatestMood({ record, gender }: HomeLatestMoodProps) {
           )}
           note={record.situation}
           occurredAt={new Date(record.occurredAt)}
-          className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md"
+          className="transition-shadow duration-300 group-hover:shadow-md"
         />
         <span
-          className="absolute right-4 bottom-4 flex size-10 items-center justify-center rounded-full bg-foreground text-background transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          className="absolute right-4 bottom-4 flex size-10 items-center justify-center rounded-full bg-foreground text-background transition-[translate,scale] duration-300 ease-spring group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-110"
           aria-hidden="true"
         >
           <ArrowUpRight className="size-5" />
         </span>
-      </Link>
+      </PressableLink>
     </section>
   );
 }

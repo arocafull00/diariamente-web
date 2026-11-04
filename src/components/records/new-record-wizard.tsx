@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 
 import { NewRecordBodyStep } from "@/components/records/new-record-body-step";
 import { NewRecordContextStep } from "@/components/records/new-record-context-step";
@@ -49,9 +49,17 @@ function isReflectionStep(step: NewRecordStep): step is ReflectionStep {
 
 const stepVariants = {
   enter: (direction: number) => ({ opacity: 0, x: direction * 48 }),
-  center: { opacity: 1, x: 0 },
-  exit: (direction: number) => ({ opacity: 0, x: direction * -48 }),
-};
+  center: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", visualDuration: 0.25, bounce: 0.15 },
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction * -48,
+    transition: { duration: 0.15, ease: [0.3, 0, 1, 1] },
+  }),
+} satisfies Variants;
 
 type NewRecordWizardProps = {
   gender: GrammaticalGender;
@@ -100,7 +108,6 @@ export function NewRecordWizard({ gender }: NewRecordWizardProps) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.22, ease: "easeOut" }}
             className="absolute inset-0"
           >
             {savedRecord ? (

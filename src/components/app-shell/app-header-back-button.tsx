@@ -15,10 +15,13 @@ export function AppHeaderBackButton() {
       size="icon"
       aria-label="Volver"
       data-cuelume-tap="type"
-      className="size-10 text-primary"
+      className="group size-10 text-primary"
       onClick={() => router.back()}
     >
-      <ArrowLeft className="size-5" aria-hidden="true" />
+      <ArrowLeft
+        className="size-5 transition-[translate] duration-200 ease-spring group-hover:-translate-x-0.5 group-active:-translate-x-1"
+        aria-hidden="true"
+      />
     </Button>
   );
 }

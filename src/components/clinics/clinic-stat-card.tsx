@@ -15,18 +15,18 @@ export function ClinicStatCard({ label, value, quadrant }: ClinicStatCardProps) 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl p-4 lg:p-5",
+        "group relative overflow-hidden rounded-3xl p-4 lg:p-5",
         styles.soft,
       )}
     >
       <MoodBubble
         quadrant={quadrant}
         tone={1}
-        className="absolute -top-6 -right-6 size-16 opacity-70"
+        className="absolute -top-6 -right-6 size-16 opacity-70 transition-[scale] duration-500 ease-out-quart group-hover:scale-125"
       />
       <p
         className={cn(
-          "relative font-display text-4xl leading-none font-medium tracking-tight",
+          "relative font-display text-4xl leading-none font-medium tracking-tight motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart",
           styles.strong,
         )}
       >

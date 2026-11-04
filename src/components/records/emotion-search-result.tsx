@@ -23,9 +23,12 @@ export function EmotionSearchResult({
         data-cuelume-select="ready"
         data-cuelume-theme="bubble"
         onClick={onSelect}
-        className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-secondary focus-visible:bg-secondary"
+        className="group pressable flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left outline-none hover:bg-secondary focus-visible:bg-secondary active:bg-accent"
       >
-        <MoodBubble quadrant={quadrant} className="size-9" />
+        <MoodBubble
+          quadrant={quadrant}
+          className="size-9 transition-[scale] duration-200 ease-spring group-hover:scale-110 group-active:scale-95"
+        />
         <span className="min-w-0">
           <span className="block font-semibold">{name}</span>
           <span className="block truncate text-sm text-muted-foreground">

@@ -23,7 +23,7 @@ export function HomeCheckIn({
   return (
     <section className="space-y-8 rounded-[2rem] bg-card/80 px-4 py-6 shadow-sm ring-1 ring-border/50 backdrop-blur sm:px-6 lg:px-10 lg:py-10">
       <HomeWeekStrip days={week} />
-      <div className="space-y-2 text-center">
+      <div className="space-y-2 text-center motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart motion-safe:[animation-delay:120ms]">
         <Face
           faceId="01_gradiente"
           size={64}

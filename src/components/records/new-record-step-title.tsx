@@ -20,11 +20,11 @@ export function NewRecordStepTitle({
   return (
     <div className={cn("space-y-2 pt-4", className)}>
       {eyebrow ? (
-        <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+        <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:fill-mode-both motion-safe:duration-350 motion-safe:ease-out-quart motion-safe:[animation-delay:40ms]">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="font-display text-3xl leading-tight font-medium text-balance sm:text-4xl">
+      <h2 className="font-display text-3xl leading-tight font-medium text-balance motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-both motion-safe:duration-350 motion-safe:ease-out-quart motion-safe:[animation-delay:80ms] sm:text-4xl">
         {before}
         {emphasis ? (
           <>

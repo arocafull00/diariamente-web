@@ -19,10 +19,13 @@ export function FeedbackSidebarButton({ role }: FeedbackSidebarButtonProps) {
       <button
         type="button"
         data-cuelume-tap=""
-        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="group pressable flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
         onClick={() => setOpen(true)}
       >
-        <Illustration name="sugerencias" className="size-8" />
+        <Illustration
+          name="sugerencias"
+          className="size-8 transition-[rotate,scale] duration-300 ease-spring group-hover:scale-110 group-hover:-rotate-6"
+        />
         {FEEDBACK_COPY.entryTitle}
       </button>
       <FeedbackSheet

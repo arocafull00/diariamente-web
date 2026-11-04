@@ -30,10 +30,14 @@ export function RecordIntensityDots({
         <span
           key={level}
           className={cn(
-            "w-2.5 rounded-full transition-all",
+            "w-2.5 origin-bottom rounded-full transition-[background-color,scale] duration-300 ease-spring motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-50 motion-safe:fill-mode-both",
             level <= intensity ? styles.tones[3] : "bg-foreground/10",
           )}
-          style={{ height: `${8 + level * 2}px` }}
+          style={{
+            height: `${8 + level * 2}px`,
+            animationDelay: `${level * 30}ms`,
+            transitionDelay: `${level * 20}ms`,
+          }}
         />
       ))}
     </div>

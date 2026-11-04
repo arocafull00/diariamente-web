@@ -5,7 +5,7 @@ import type { IllustrationName } from "@/lib/illustrations";
 import { cn } from "@/lib/utils";
 
 export const settingsRowClassName =
-  "flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors outline-none hover:bg-muted/60 focus-visible:bg-muted/60 active:bg-muted disabled:pointer-events-none disabled:opacity-60";
+  "group/row flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors duration-150 outline-none hover:bg-muted/60 focus-visible:bg-muted/60 active:bg-muted disabled:pointer-events-none disabled:opacity-60";
 
 const toneClassNames = {
   primary: "bg-accent text-primary",
@@ -36,7 +36,7 @@ export function SettingsRowContent({
     <>
       <span
         className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-2xl",
+          "flex size-10 shrink-0 items-center justify-center rounded-2xl transition-[scale,rotate] duration-200 ease-spring group-hover/row:scale-105 group-active/row:scale-90 group-active/row:-rotate-3",
           typeof Icon !== "string" && toneClassNames[tone],
         )}
       >
@@ -65,7 +65,7 @@ export function SettingsRowContent({
       </span>
       {trailing ?? (
         <ChevronRight
-          className="size-5 shrink-0 text-muted-foreground/60"
+          className="size-5 shrink-0 text-muted-foreground/60 transition-[translate,color] duration-200 ease-spring group-hover/row:translate-x-0.5 group-hover/row:text-muted-foreground group-active/row:translate-x-1"
           aria-hidden="true"
         />
       )}

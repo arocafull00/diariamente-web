@@ -60,7 +60,12 @@ function BottomNav({ items }: { items: NavItem[] }) {
                   <NavIcon name={item.icon} className="size-7" />
                 </motion.span>
               </motion.span>
-              <span>{item.label}</span>
+              <motion.span
+                animate={{ y: active ? -1 : 0, scale: active ? 1.04 : 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              >
+                {item.label}
+              </motion.span>
             </Link>
           );
         })}

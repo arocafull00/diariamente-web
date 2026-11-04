@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import type { MoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,20 @@ export function ContextTagChip({
           : "bg-card text-foreground ring-1 ring-border hover:bg-secondary",
       )}
     >
-      {selected ? <Check className="size-4" aria-hidden="true" /> : null}
+      <AnimatePresence initial={false}>
+        {selected ? (
+          <motion.span
+            key="check"
+            initial={{ scale: 0, width: 0, marginRight: -6 }}
+            animate={{ scale: 1, width: 16, marginRight: 0 }}
+            exit={{ scale: 0, width: 0, marginRight: -6 }}
+            transition={{ type: "spring", stiffness: 500, damping: 26 }}
+            className="flex shrink-0 overflow-hidden"
+          >
+            <Check className="size-4" aria-hidden="true" />
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
       {label}
     </motion.button>
   );

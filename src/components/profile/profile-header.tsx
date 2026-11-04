@@ -32,7 +32,7 @@ export function ProfileHeader({
   return (
     <header className="flex flex-col items-center gap-4 pt-4 pb-4 text-center lg:rounded-3xl lg:border lg:border-border/60 lg:bg-card lg:p-8 lg:shadow-xs">
       <div className="relative">
-        <Avatar className="size-28 text-lg shadow-lg ring-4 ring-card lg:size-32">
+        <Avatar className="size-28 text-lg shadow-lg ring-4 ring-card motion-safe:animate-pop-in lg:size-32">
           {resolvedAvatarUrl ? (
             <AvatarImage src={resolvedAvatarUrl} alt="" />
           ) : null}
@@ -47,7 +47,7 @@ export function ProfileHeader({
           imageUrl={imageUrl ?? null}
         />
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-2 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart motion-safe:[animation-delay:150ms]">
         <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
           {getFullName(firstName, lastName)}
         </h1>

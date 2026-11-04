@@ -27,7 +27,7 @@ export function NewRecordTopBar({
         onClick={canGoBack ? onBack : onClose}
         data-cuelume-tap={canGoBack ? "type" : "close"}
         aria-label={canGoBack ? "Volver al paso anterior" : "Cerrar"}
-        className="flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="pressable-sm flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none hover:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         {canGoBack ? (
           <ArrowLeft className="size-5" aria-hidden="true" />
@@ -64,7 +64,7 @@ export function NewRecordTopBar({
           onClick={onClose}
           data-cuelume-close=""
           aria-label="Cerrar"
-          className="flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none transition-transform active:scale-90 focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="pressable-sm flex size-11 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur outline-none hover:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <X className="size-5" aria-hidden="true" />
         </button>

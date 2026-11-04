@@ -15,14 +15,17 @@ export function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
   return (
     <p
       className={cn(
-        "mx-auto inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-wide uppercase",
+        "mx-auto inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-wide uppercase motion-safe:animate-pop-in motion-safe:[animation-delay:300ms]",
         streak > 0
           ? "bg-mood-hp-soft text-mood-hp-strong"
           : "bg-foreground/5 text-muted-foreground",
       )}
     >
       <Zap
-        className={cn("size-3.5", streak > 0 && "fill-current")}
+        className={cn(
+          "size-3.5",
+          streak > 0 && "fill-current motion-safe:animate-wiggle motion-safe:[animation-delay:500ms]",
+        )}
         aria-hidden="true"
       />
       {label}

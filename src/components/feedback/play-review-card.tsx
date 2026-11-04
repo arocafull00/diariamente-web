@@ -14,10 +14,13 @@ export function PlayReviewCard() {
   }
 
   return (
-    <section className="space-y-4 rounded-[2rem] bg-mood-hp-soft/60 p-5 ring-1 ring-border/50">
+    <section className="space-y-4 rounded-[2rem] bg-mood-hp-soft/60 p-5 ring-1 ring-border/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart">
       <div className="flex items-start gap-3">
-        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl bg-card text-mood-hp-strong">
-          <Star className="size-5 fill-current" aria-hidden="true" />
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl bg-card text-mood-hp-strong motion-safe:animate-pop-in motion-safe:[animation-delay:150ms]">
+          <Star
+            className="size-5 fill-current motion-safe:animate-wiggle motion-safe:[animation-delay:500ms]"
+            aria-hidden="true"
+          />
         </span>
         <div className="space-y-0.5">
           <p className="text-xs font-semibold tracking-wide text-mood-hp-strong uppercase">

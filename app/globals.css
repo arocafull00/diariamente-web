@@ -174,6 +174,11 @@
     0 1px 2px #0006,
     0 8px 24px -6px color-mix(in oklab, var(--primary) 60%, transparent);
 
+  transition:
+    translate 100ms ease-out,
+    box-shadow 100ms ease-out,
+    filter 150ms ease-out;
+
   &:active {
     translate: 0 1px;
     box-shadow: inset 0 2px 4px #0004;
@@ -187,6 +192,11 @@
     inset 0 -2px 0 #0003,
     0 1px 2px #0006,
     0 8px 24px -6px color-mix(in oklab, var(--mood-lp-3) 60%, transparent);
+
+  transition:
+    translate 100ms ease-out,
+    box-shadow 100ms ease-out,
+    filter 150ms ease-out;
 
   &:active {
     translate: 0 1px;
@@ -202,18 +212,110 @@
     0 1px 2px #0006,
     0 8px 24px -6px color-mix(in oklab, var(--destructive) 60%, transparent);
 
+  transition:
+    translate 100ms ease-out,
+    box-shadow 100ms ease-out,
+    filter 150ms ease-out;
+
   &:active {
     translate: 0 1px;
     box-shadow: inset 0 2px 4px #0004;
   }
 }
 
+@utility pressable {
+  transition-property: scale, translate, background-color, border-color, color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-spring);
+
+  &:active {
+    scale: 0.97;
+  }
+}
+
+@utility pressable-sm {
+  transition-property: scale, translate, background-color, border-color, color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-spring);
+
+  &:active {
+    scale: 0.92;
+  }
+}
+
 @theme {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-pop-in: pop-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-wiggle: wiggle 600ms ease-in-out both;
+  --animate-shake: shake 350ms ease-in-out both;
+  --animate-nudge-x: nudge-x 450ms ease-in-out both;
   --animate-mood-ghost: mood-orbit 7s linear infinite, mood-wobble 6s ease-in-out infinite;
   --animate-mood-float: mood-float 7s ease-in-out infinite;
   --animate-mood-wobble: mood-wobble 5s ease-in-out infinite;
   --animate-face-enter: face-enter 450ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-face-exit: face-exit 400ms ease-in forwards;
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      scale: 0.5;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    20% {
+      rotate: -12deg;
+    }
+    40% {
+      rotate: 10deg;
+    }
+    60% {
+      rotate: -6deg;
+    }
+    80% {
+      rotate: 3deg;
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    20% {
+      translate: -6px 0;
+    }
+    40% {
+      translate: 5px 0;
+    }
+    60% {
+      translate: -3px 0;
+    }
+    80% {
+      translate: 2px 0;
+    }
+  }
+
+  @keyframes nudge-x {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 4px 0;
+    }
+  }
 
   @keyframes face-enter {
     from {

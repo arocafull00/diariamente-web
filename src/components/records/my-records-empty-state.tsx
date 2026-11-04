@@ -12,14 +12,19 @@ export function MyRecordsEmptyState() {
       <div className="mb-6">
         <FaceRow faceIds={DECORATIVE_FACE_IDS.slice(1)} className="size-14" />
       </div>
-      <h2 className="font-display text-2xl font-medium">Tu espacio está listo</h2>
-      <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
+      <h2 className="font-display text-2xl font-medium motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart motion-safe:[animation-delay:100ms]">
+        Tu espacio está listo
+      </h2>
+      <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted-foreground motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-out-quart motion-safe:[animation-delay:200ms]">
         Cuenta cómo te sientes y aquí irás viendo todo tu recorrido. ¡Empieza cuando quieras!
       </p>
       <Link
         href="/nuevo-registro"
         data-cuelume-tap=""
-        className={cn(buttonVariants({ size: "lg" }), "mt-6")}
+        className={cn(
+          buttonVariants({ size: "lg" }),
+          "mt-6 motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-90 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-spring motion-safe:[animation-delay:320ms]",
+        )}
       >
         <Plus data-icon="inline-start" aria-hidden="true" />
         Crear mi primer registro
