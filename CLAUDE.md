@@ -19,24 +19,18 @@ pnpm typecheck      # tsc --noEmit
 pnpm db:generate    # drizzle-kit generate (schema: src/db/schema.ts -> drizzle/)
 pnpm db:migrate     # apply migrations to DATABASE_URL (from .env.local = development DB)
 pnpm db:push
+pnpm db:migrate:prod  # apply migrations to PROD_DATABASE_URL (from .env.prod = production DB)
 ```
 
 The Husky pre-commit hook runs `pnpm typecheck` and `pnpm lint`; both must pass to commit.
 
 ## Databases
 
-- `.env.local` points to the **development** database: Neon project `cold-hill-93045329` (Vercel store `diariamente-dev`, aws eu-central-1, no real data). Never put a production connection string in any `.env*` file, and never point `.env.local` at production.
+- `.env.local` holds `DATABASE_URL` for the **development** database: Neon project `cold-hill-93045329` (Vercel store `diariamente-dev`, aws eu-central-1, no real data). It is what `pnpm dev`, `db:migrate` and `db:push` use. Never point it at production, and keep database variables out of `.env` (Next.js falls back to `.env` when `.env.local` lacks a variable).
+- `.env.prod` holds only `PROD_DATABASE_URL`, the **unpooled** production string. Next.js never loads that file; only `drizzle.production.config.ts` (`pnpm db:migrate:prod`) reads it. Never read, print or query production data with it.
 - Production health data lives only in the production Neon project. Local development, `db:push` and experiments always run against the development DB.
-- **Production migrations are explicit, never the default.** Order: `pnpm db:generate` → review the SQL in `drizzle/` → `pnpm db:migrate` (development) → test locally → migrate production → deploy the code that needs the new schema.
-- To migrate production, set `DATABASE_URL` only in the current terminal (a shell variable overrides `.env.local` in `drizzle.config.ts`), using the **unpooled** production string from the Neon console, and clear it afterwards. Read it from a prompt so it does not end up in shell history:
-
-  ```powershell
-  $env:DATABASE_URL = Read-Host "Production DATABASE_URL (unpooled)"
-  pnpm db:migrate
-  Remove-Item Env:DATABASE_URL
-  ```
-
-  Do not run production migrations during the EU migration cutover window.
+- **Production migrations are explicit, never the default.** Order: `pnpm db:generate` → review the SQL in `drizzle/` → `pnpm db:migrate` (development) → test locally → `pnpm db:migrate:prod` → deploy the code that needs the new schema. When a migration drops or renames something the deployed code still uses, reverse the last two steps: deploy the code that stops using it first, then migrate. Destructive migrations (`DROP`, data-losing `ALTER`) need the user's explicit go-ahead right before running them in production.
+- Do not run production migrations during the EU migration cutover window.
 
 ## Notes
 
