@@ -1,10 +1,11 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
-import { useEffect } from "react";
+import { LogOut, RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { logger } from "@/lib/logger";
+import { signOutAndLeave } from "@/lib/sign-out";
 
 import "./globals.css";
 
@@ -13,10 +14,22 @@ type GlobalErrorProps = {
   unstable_retry: () => void;
 };
 
+type WindowWithClerk = Window & {
+  Clerk?: { session?: unknown; signOut: () => Promise<unknown> };
+};
+
 export default function GlobalError({ error, unstable_retry }: GlobalErrorProps) {
+  const [leaving, setLeaving] = useState(false);
+
   useEffect(() => {
     logger.error("app.global_error", error, { digest: error.digest });
   }, [error]);
+
+  function signOut() {
+    setLeaving(true);
+    const clerk = (window as WindowWithClerk).Clerk;
+    void signOutAndLeave(clerk?.session ? () => clerk.signOut() : null);
+  }
 
   return (
     <html lang="es">
@@ -29,6 +42,16 @@ export default function GlobalError({ error, unstable_retry }: GlobalErrorProps)
         <Button size="lg" className="mt-8" onClick={() => unstable_retry()}>
           <RotateCcw data-icon="inline-start" aria-hidden="true" />
           Reintentar
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-3 text-muted-foreground"
+          disabled={leaving}
+          onClick={signOut}
+        >
+          <LogOut data-icon="inline-start" aria-hidden="true" />
+          Cerrar sesión
         </Button>
       </body>
     </html>

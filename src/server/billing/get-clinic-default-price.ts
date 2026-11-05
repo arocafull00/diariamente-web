@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 import { getStripe } from "./stripe";
 
 export async function getClinicDefaultPriceCents() {
@@ -7,7 +9,11 @@ export async function getClinicDefaultPriceCents() {
     return null;
   }
 
-  const price = await getStripe().prices.retrieve(priceId);
-
-  return price.unit_amount;
+  try {
+    const price = await getStripe().prices.retrieve(priceId);
+    return price.unit_amount;
+  } catch (error) {
+    logger.error("billing.clinic_default_price_failed", error);
+    return null;
+  }
 }
