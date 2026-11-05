@@ -3,7 +3,13 @@
 import { useSignIn, useSignUp, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+  type BaseSyntheticEvent,
+} from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -248,7 +254,7 @@ export function useOnboardingAccount(submitProfile: () => void) {
     }
   }
 
-  const submitCredentials = credentialsForm.handleSubmit(async ({ email, password }) => {
+  const submitNewAccount = credentialsForm.handleSubmit(async ({ email, password }) => {
     if (takenEmail !== null && takenEmail === email.trim().toLowerCase()) {
       await signInExisting(email, password);
       return;
@@ -312,6 +318,16 @@ export function useOnboardingAccount(submitProfile: () => void) {
     });
   });
 
+  function submitCredentials(event?: BaseSyntheticEvent) {
+    if (mode === "create") {
+      void submitNewAccount(event);
+      return;
+    }
+
+    event?.preventDefault();
+    confirm();
+  }
+
   function startGoogle() {
     if (!ensureLegal()) {
       return false;
@@ -347,6 +363,12 @@ export function useOnboardingAccount(submitProfile: () => void) {
 
     if (!answers.lastName && lastName) {
       setAnswer("lastName", lastName);
+    }
+
+    const email = isSignedIn ? user?.primaryEmailAddress?.emailAddress : signUp.emailAddress;
+
+    if (!credentialsForm.getValues("email") && email) {
+      credentialsForm.setValue("email", email);
     }
 
     if (!answers.submitRequested) {
@@ -385,7 +407,6 @@ export function useOnboardingAccount(submitProfile: () => void) {
     submitCredentials,
     startGoogle,
     confirm,
-    discardSignUp,
     emailTaken,
     readyToSave: mode !== "loading" && mode !== "create" && (!requiresLegal || legalAccepted),
     busy: working || (submitRequested && mode !== "create"),

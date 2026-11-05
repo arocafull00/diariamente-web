@@ -83,9 +83,6 @@ export function OnboardingFlow() {
               onSubmitCredentials={account.submitCredentials}
               onGoogleStart={account.startGoogle}
               emailTaken={account.emailTaken}
-              onUseAnotherEmail={
-                account.mode === "pending" ? account.discardSignUp : undefined
-              }
             />
           ) : (
             <OnboardingStepBody
@@ -98,13 +95,13 @@ export function OnboardingFlow() {
         </motion.div>
       </AnimatePresence>
 
-      {isAccountStep && !hasAccount ? (
+      {isAccountStep ? (
         <div className="flex justify-center pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           <SignOutLink label="Volver al inicio" className="min-h-11 py-1" />
         </div>
       ) : (
         <WelcomeFooter
-          label={isAccountStep ? "Crear mi perfil" : "Continuar"}
+          label="Continuar"
           disabled={!canContinue}
           pending={false}
           offersNotNow={false}

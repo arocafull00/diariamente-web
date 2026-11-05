@@ -8,7 +8,6 @@ import type { EmailPasswordValues } from "@/components/auth/auth-types";
 import { EmailPasswordForm } from "@/components/auth/email-password-form";
 import { GoogleSignInForm } from "@/components/auth/google-sign-in-form";
 import { OnboardingLegalAcceptance } from "@/components/onboarding/onboarding-legal-acceptance";
-import { Button } from "@/components/ui/button";
 
 type OnboardingAccountStepProps = {
   hasAccount: boolean;
@@ -19,7 +18,6 @@ type OnboardingAccountStepProps = {
   credentialsForm: UseFormReturn<EmailPasswordValues>;
   onSubmitCredentials: () => void;
   onGoogleStart: () => boolean;
-  onUseAnotherEmail?: () => void;
   emailTaken: boolean;
 };
 
@@ -32,7 +30,6 @@ export function OnboardingAccountStep({
   credentialsForm,
   onSubmitCredentials,
   onGoogleStart,
-  onUseAnotherEmail,
   emailTaken,
 }: OnboardingAccountStepProps) {
   const legal = requiresLegal ? (
@@ -42,28 +39,6 @@ export function OnboardingAccountStep({
       onChange={onLegalChange}
     />
   ) : null;
-
-  if (hasAccount) {
-    return (
-      <div className="space-y-4">
-        <p className="rounded-2xl bg-mood-lp-soft px-4 py-3 text-sm font-semibold text-mood-lp-strong">
-          Tu cuenta ya está creada. Solo falta guardar tu perfil.
-        </p>
-        {legal}
-        {onUseAnotherEmail ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="mx-auto flex text-muted-foreground"
-            onClick={onUseAnotherEmail}
-          >
-            Usar otro correo
-          </Button>
-        ) : null}
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
@@ -80,17 +55,21 @@ export function OnboardingAccountStep({
         passwordAutoComplete="new-password"
         beforeSubmit={legal}
       />
-      <AuthDivider />
-      <GoogleSignInForm redirectUrl="/onboarding" onBeforeRedirect={onGoogleStart} />
-      <p className="text-center text-sm text-muted-foreground">
-        ¿Ya tienes cuenta?{" "}
-        <Link
-          href="/login"
-          className="font-semibold text-primary underline-offset-4 hover:underline"
-        >
-          Inicia sesión
-        </Link>
-      </p>
+      {hasAccount ? null : (
+        <>
+          <AuthDivider />
+          <GoogleSignInForm redirectUrl="/onboarding" onBeforeRedirect={onGoogleStart} />
+          <p className="text-center text-sm text-muted-foreground">
+            ¿Ya tienes cuenta?{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              Inicia sesión
+            </Link>
+          </p>
+        </>
+      )}
     </div>
   );
 }
