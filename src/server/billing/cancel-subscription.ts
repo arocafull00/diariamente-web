@@ -44,5 +44,11 @@ export async function cancelSubscriptionNow(profileId: string) {
     return;
   }
 
-  await getStripe().subscriptions.cancel(subscriptionId);
+  const { subscriptions } = getStripe();
+  try {
+    await subscriptions.cancel(subscriptionId);
+  } catch (error) {
+    const current = await subscriptions.retrieve(subscriptionId).catch(() => null);
+    if (current?.status !== "canceled") throw error;
+  }
 }

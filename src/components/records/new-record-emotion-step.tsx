@@ -9,6 +9,7 @@ import { EmotionTreePicker } from "@/components/records/emotion-tree-picker";
 import type { GrammaticalGender, MoodQuadrant } from "@/db/schema";
 import {
   EMOTION_TREE,
+  EMOTION_TREE_GROUPS,
   EMOTION_TREE_OPTIONS,
   findEmotionTreeRoot,
 } from "@/lib/emotion-tree";
@@ -49,6 +50,20 @@ export function NewRecordEmotionStep({
   const treeRoot = isTree
     ? EMOTION_TREE.find((root) => root.id === selectedGroup)
     : undefined;
+  const currentTreeNames = new Set(
+    EMOTION_TREE_GROUPS.find((group) => group.id === selectedGroup)?.items.map(
+      (item) => item.name,
+    ),
+  );
+  const searchOptions = isTree ? EMOTION_TREE_OPTIONS : options;
+  const isCurrentGroup = (option: EmotionOption) =>
+    isTree
+      ? currentTreeNames.has(option.name)
+      : option.quadrant === selectedQuadrant;
+  const sortedSearchOptions = [
+    ...searchOptions.filter(isCurrentGroup),
+    ...searchOptions.filter((option) => !isCurrentGroup(option)),
+  ];
 
   function handleSearchSelect(option: EmotionOption) {
     const quadrant = option.quadrant ?? selectedQuadrant;
@@ -89,7 +104,7 @@ export function NewRecordEmotionStep({
 
       <div className="absolute top-19 right-4 z-20">
         <EmotionSearchSheet
-          options={isTree ? EMOTION_TREE_OPTIONS : options}
+          options={sortedSearchOptions}
           gender={gender}
           onSelect={handleSearchSelect}
         />
