@@ -1,5 +1,3 @@
-import type { UserRole } from "@/db/schema";
-
 export const CONSENT_VERSION = "2026-10";
 
 export const PRIVACY_POLICY_PATH = "/privacidad";
@@ -37,10 +35,3 @@ export const RECORD_VIEW_DEDUPE_MINUTES = 30;
 export const INACTIVE_ACCOUNT_RETENTION_MONTHS = 24;
 export const INACTIVE_ACCOUNT_WARNING_DAYS = 30;
 export const AUDIT_RETENTION_MONTHS = 24;
-
-export const IDLE_SIGN_OUT_MINUTES: Record<UserRole, number> = {
-  patient: 14 * 24 * 60,
-  psychologist: 30,
-  clinic: 30,
-  admin: 30,
-};

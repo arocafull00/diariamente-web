@@ -1,6 +1,5 @@
 import {
   AUDIT_RETENTION_MONTHS,
-  IDLE_SIGN_OUT_MINUTES,
   INACTIVE_ACCOUNT_RETENTION_MONTHS,
   INACTIVE_ACCOUNT_WARNING_DAYS,
 } from "@/lib/privacy";
@@ -34,7 +33,6 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
     title: "Cómo los protegemos",
     paragraphs: [
       "Comprobamos en el servidor quién eres y a qué tienes acceso en cada consulta. Las notificaciones nunca incluyen contenido clínico.",
-      `La sesión se cierra automáticamente tras ${IDLE_SIGN_OUT_MINUTES.psychologist} minutos sin actividad para profesionales y tras ${IDLE_SIGN_OUT_MINUTES.patient / (24 * 60)} días para pacientes.`,
     ],
   },
   {

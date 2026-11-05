@@ -4,7 +4,6 @@ import { useClerk } from "@clerk/nextjs";
 import { useCallback } from "react";
 
 import { clearAppShell } from "@/lib/app-shell-cache";
-import { clearLastActivity } from "@/lib/last-activity";
 import { logger } from "@/lib/logger";
 import { useOnboardingStore } from "@/stores/onboarding-store";
 import { useScreenCacheStore } from "@/stores/screen-cache-store";
@@ -19,7 +18,6 @@ export function useSignOut() {
 
   return useCallback(async () => {
     clearAppShell();
-    clearLastActivity();
     logger.identify(null);
     clearScreenCache();
     clearSession();
