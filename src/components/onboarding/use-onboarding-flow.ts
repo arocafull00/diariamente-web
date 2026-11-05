@@ -125,6 +125,11 @@ export function useOnboardingFlow() {
       return;
     }
 
+    if (steps[stepIndex + 1]?.id === "account" && account.readyToSave) {
+      account.confirm();
+      return;
+    }
+
     goToStep(stepIndex + 1);
   }
 

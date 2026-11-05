@@ -64,7 +64,8 @@ export function useOnboardingAccount(submitProfile: () => void) {
     signUp.status !== "abandoned" &&
     signUp.status !== "complete" &&
     Boolean(signUp.emailAddress) &&
-    !signUp.missingFields.includes("email_address");
+    !signUp.missingFields.includes("email_address") &&
+    !signUp.missingFields.includes("password");
   const mode: OnboardingAccountMode = !isLoaded
     ? "loading"
     : isSignedIn
@@ -277,9 +278,18 @@ export function useOnboardingAccount(submitProfile: () => void) {
       if (error) {
         await discardSignUp();
 
-        if (getAuthErrorCode(error) === "form_identifier_exists") {
+        const code = getAuthErrorCode(error);
+
+        if (code === "form_identifier_exists") {
           setTakenEmail(email.trim().toLowerCase());
           await signInExisting(email, password);
+          return "failed";
+        }
+
+        if (code?.startsWith("form_password")) {
+          credentialsForm.setError("password", {
+            message: getAuthErrorMessage(error, SIGN_UP_ERROR),
+          });
           return "failed";
         }
 
@@ -377,6 +387,7 @@ export function useOnboardingAccount(submitProfile: () => void) {
     confirm,
     discardSignUp,
     emailTaken,
+    readyToSave: mode !== "loading" && mode !== "create" && (!requiresLegal || legalAccepted),
     busy: working || (submitRequested && mode !== "create"),
   };
 }
