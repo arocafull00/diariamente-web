@@ -1,5 +1,4 @@
-import { Gift } from "lucide-react";
-
+import { Illustration } from "@/components/faces/illustration";
 import { ProfileSectionCard } from "@/components/profile/profile-section-card";
 
 import { ReferralShareButtons } from "./referral-share-buttons";
@@ -22,9 +21,7 @@ export function ProfileReferralCard({ code, joined, rewarded }: ProfileReferralC
   return (
     <ProfileSectionCard title="Invita a otro psicólogo">
       <div className="flex items-start gap-3">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-mood-hp-soft text-mood-hp-strong">
-          <Gift className="size-6" aria-hidden="true" />
-        </span>
+        <Illustration name="compartir-equipo" />
         <div className="min-w-0 flex-1">
           <p className="font-semibold">Un mes gratis para los dos</p>
           <p className="text-sm text-muted-foreground">

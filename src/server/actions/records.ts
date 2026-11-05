@@ -1,8 +1,9 @@
 "use server";
 
-import { and, eq, gte } from "drizzle-orm";
+import { and, eq, gte, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
+import { z } from "zod";
 
 import { db } from "@/db";
 import { auditEvents, patientRecords } from "@/db/schema";
@@ -14,6 +15,7 @@ import {
   RECORD_VIEW_DEDUPE_MINUTES,
 } from "@/lib/privacy";
 import { logAuditEvent } from "@/server/audit";
+import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
 import { requireRecordAccess } from "@/server/auth/require-record-access";
 import { requireRole } from "@/server/auth/get-current-profile";
 import { sendPushToUser } from "@/server/push/send-push";
@@ -192,6 +194,56 @@ export async function markRecordAsSeen(recordId: string): Promise<ActionResult> 
 
   revalidatePath("/pacientes");
   revalidatePath(`/registro/${recordId}`);
+
+  return { success: true };
+}
+
+export async function markPatientRecordsAsSeen(
+  patientId: string,
+): Promise<ActionResult> {
+  const parsed = z.string().min(1).safeParse(patientId);
+
+  if (!parsed.success) {
+    return { error: "No hemos encontrado a este paciente" };
+  }
+
+  const result = await requirePatientRelationship(parsed.data);
+
+  if (!("patient" in result)) {
+    return { error: "No tienes acceso a esto" };
+  }
+
+  const { profile } = result;
+
+  try {
+    const updated = await db
+      .update(patientRecords)
+      .set({ seenAt: new Date(), updatedAt: new Date() })
+      .where(
+        and(
+          eq(patientRecords.patientId, parsed.data),
+          isNull(patientRecords.seenAt),
+        ),
+      )
+      .returning({ id: patientRecords.id });
+
+    await logAuditEvent({
+      actorId: profile.id,
+      action: "records.marked_all_seen",
+      entityType: "profile",
+      entityId: parsed.data,
+      metadata: { count: updated.length },
+    });
+  } catch (error) {
+    logger.error("records.mark_all_seen_failed", error, {
+      patientId: parsed.data,
+      psychologistId: profile.id,
+    });
+    return { error: "Uy, no hemos podido marcarlos como leídos" };
+  }
+
+  revalidatePath("/pacientes");
+  revalidatePath(`/pacientes/${parsed.data}`);
 
   return { success: true };
 }

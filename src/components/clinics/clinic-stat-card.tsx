@@ -7,15 +7,22 @@ type ClinicStatCardProps = {
   label: string;
   value: number;
   quadrant: MoodQuadrant;
+  inline?: boolean;
 };
 
-export function ClinicStatCard({ label, value, quadrant }: ClinicStatCardProps) {
+export function ClinicStatCard({
+  label,
+  value,
+  quadrant,
+  inline = false,
+}: ClinicStatCardProps) {
   const styles = getMoodStyles(quadrant);
 
   return (
     <div
       className={cn(
         "group relative overflow-hidden rounded-3xl p-4 lg:p-5",
+        inline && "flex items-center gap-3 py-3.5 lg:py-4",
         styles.soft,
       )}
     >
@@ -32,7 +39,12 @@ export function ClinicStatCard({ label, value, quadrant }: ClinicStatCardProps) 
       >
         {value}
       </p>
-      <p className="relative mt-2 text-xs font-medium text-pretty text-mood-foreground/70">
+      <p
+        className={cn(
+          "relative text-xs font-medium text-pretty text-mood-foreground/70",
+          inline ? "text-sm" : "mt-2",
+        )}
+      >
         {label}
       </p>
     </div>

@@ -70,6 +70,7 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
               role={data.role}
               remindersEnabled={false}
               grammaticalGender={data.grammaticalGender}
+              subscription={{ billing: data.billing }}
             />
           }
         />
@@ -81,7 +82,6 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
           memberSince={data.memberSince}
           clinicName={data.clinicName}
           psychologistCount={data.psychologistCount}
-          billing={data.billing}
         />
       </>
     );
@@ -96,6 +96,11 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
             role={data.role}
             remindersEnabled={false}
             grammaticalGender={data.grammaticalGender}
+            subscription={
+              data.role === "psychologist"
+                ? { billing: data.billing, referral: data.referral }
+                : undefined
+            }
           />
         }
       />
@@ -107,8 +112,6 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
         memberSince={data.memberSince}
         patientCount={data.patientCount}
         clinic={data.clinic}
-        billing={data.billing}
-        referral={data.referral}
       />
     </>
   );

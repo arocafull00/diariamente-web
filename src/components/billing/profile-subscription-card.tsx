@@ -4,7 +4,6 @@ import { ProfileSectionCard } from "@/components/profile/profile-section-card";
 import { BillingPortalRow } from "./billing-portal-row";
 import { BillingRedirectButton } from "./billing-redirect-button";
 import { getBillingStatusCopy, type BillingSummary } from "./billing-status-copy";
-import { BillingSuccessToast } from "./billing-success-toast";
 
 type ProfileSubscriptionCardProps = {
   billing: BillingSummary;
@@ -16,16 +15,14 @@ export function ProfileSubscriptionCard({ billing }: ProfileSubscriptionCardProp
 
   if (canManage && !canSubscribe) {
     return (
-      <ProfileSectionCard title="Suscripción" flush>
-        <BillingSuccessToast />
+      <ProfileSectionCard title="Estado de la suscripción" flush>
         <BillingPortalRow icon={Icon} title={title} description={description} />
       </ProfileSectionCard>
     );
   }
 
   return (
-    <ProfileSectionCard title="Suscripción">
-      <BillingSuccessToast />
+    <ProfileSectionCard title="Estado de la suscripción">
       <div className="flex items-start gap-3">
         {typeof Icon === "string" ? (
           <Illustration name={Icon} />
@@ -40,11 +37,10 @@ export function ProfileSubscriptionCard({ billing }: ProfileSubscriptionCardProp
         </div>
       </div>
       {canSubscribe ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <BillingRedirectButton
-            action={billing.access === "trial_available" ? "trial" : "checkout"}
-          />
-        </div>
+        <BillingRedirectButton
+          action={billing.access === "trial_available" ? "trial" : "checkout"}
+          className="mt-4 w-full"
+        />
       ) : null}
     </ProfileSectionCard>
   );

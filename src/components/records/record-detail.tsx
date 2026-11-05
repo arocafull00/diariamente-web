@@ -38,7 +38,6 @@ type RecordDetailProps = {
   note: RecordNote | null;
   gender: GrammaticalGender;
   views: React.ComponentProps<typeof RecordAccessNotice>["views"];
-  reply: React.ReactNode;
 };
 
 export function RecordDetail({
@@ -47,7 +46,6 @@ export function RecordDetail({
   note,
   gender,
   views,
-  reply,
 }: RecordDetailProps) {
   const edit = useRecordEdit(record);
   const [openEditor, setOpenEditor] = useState<"emotion" | "body" | null>(null);
@@ -88,8 +86,6 @@ export function RecordDetail({
       />
 
       {isPatient ? <RecordAccessNotice views={views} /> : null}
-
-      {reply}
 
       <RecordContextSection
         context={record.context}

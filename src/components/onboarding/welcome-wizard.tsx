@@ -6,9 +6,7 @@ import { useEffect, useRef } from "react";
 import { useWelcomeWizard } from "@/components/onboarding/use-welcome-wizard";
 import { WelcomeFaceBunch } from "@/components/onboarding/welcome-face-bunch";
 import { WelcomeFooter } from "@/components/onboarding/welcome-footer";
-import { WelcomeInstallStep } from "@/components/onboarding/welcome-install-step";
 import { WelcomeMascot } from "@/components/onboarding/welcome-mascot";
-import { WelcomeNotificationsStep } from "@/components/onboarding/welcome-notifications-step";
 import { WelcomeTopBar } from "@/components/onboarding/welcome-top-bar";
 import { WelcomeTrustCircle } from "@/components/onboarding/welcome-trust-circle";
 import { playAccountCreatedSound } from "@/lib/account-created-sound";
@@ -30,7 +28,6 @@ export function WelcomeWizard({
     finish,
     finishing,
     goBack,
-    installGuide,
     isLastStep,
     primaryAction,
     progress,
@@ -86,16 +83,6 @@ export function WelcomeWizard({
 
           {step.faceRow ? <WelcomeFaceBunch faceIds={step.faceRow} /> : null}
           {step.id === "connect" ? <WelcomeTrustCircle /> : null}
-          {step.id === "notifications" ? (
-            <WelcomeNotificationsStep role={role} />
-          ) : null}
-          {step.id === "install" ? (
-            <WelcomeInstallStep
-              guideOpen={installGuide.open}
-              onGuideOpenChange={installGuide.onOpenChange}
-              platform={installGuide.platform}
-            />
-          ) : null}
         </motion.div>
       </AnimatePresence>
 

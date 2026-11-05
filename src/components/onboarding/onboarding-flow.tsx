@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef } from "react";
 
+import { SignOutLink } from "@/components/auth/sign-out-link";
 import { OnboardingAccountStep } from "@/components/onboarding/onboarding-account-step";
 import { OnboardingSaving } from "@/components/onboarding/onboarding-saving";
 import { OnboardingStepBody } from "@/components/onboarding/onboarding-step-body";
@@ -98,14 +99,17 @@ export function OnboardingFlow() {
       </AnimatePresence>
 
       {isAccountStep && !hasAccount ? (
-        <div className="pb-[max(1.5rem,env(safe-area-inset-bottom))]" />
+        <div className="flex justify-center pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+          <SignOutLink label="Volver al inicio" className="min-h-11 py-1" />
+        </div>
       ) : (
         <WelcomeFooter
           label={isAccountStep ? "Crear mi perfil" : "Continuar"}
           disabled={!canContinue}
           pending={false}
           offersNotNow={false}
-          showSignOut={hasAccount}
+          showSignOut
+          signOutLabel="Volver al inicio"
           onPrimary={goForward}
           onNotNow={noop}
         />

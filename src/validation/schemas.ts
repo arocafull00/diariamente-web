@@ -228,14 +228,6 @@ export const recordNoteSchema = z.object({
     .max(2000),
 });
 
-export const recordReplySchema = z.object({
-  content: z
-    .string()
-    .trim()
-    .min(1, "Escribe algo en la respuesta")
-    .max(500, "La respuesta puede tener hasta 500 caracteres"),
-});
-
 export const connectionConsentSchema = z.object({
   consent: z.literal(true, {
     error: "Debes dar tu consentimiento para conectar con tu profesional",

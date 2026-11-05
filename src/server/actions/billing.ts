@@ -21,6 +21,7 @@ type RedirectResult = ActionResult & { url?: string };
 
 const CHECKOUT_MIN_TRIAL_HOURS = 49;
 const PAID_ACCESS = ["lifetime", "clinic", "subscribed"];
+const BILLING_SETTINGS_PATH = "/perfil?suscripcion=gestionar";
 
 async function getOrigin() {
   const headerList = await headers();
@@ -140,7 +141,7 @@ export async function startCheckout(): Promise<RedirectResult> {
       },
       locale: "es",
       success_url: `${origin}/suscripcion?session_id={CHECKOUT_SESSION_ID}${trialPeriodDays ? "&inicio=1" : ""}`,
-      cancel_url: `${origin}${trialPeriodDays ? "/suscripcion" : "/perfil"}`,
+      cancel_url: `${origin}${trialPeriodDays ? "/suscripcion" : BILLING_SETTINGS_PATH}`,
     });
 
     if (!session.url) {
@@ -172,7 +173,7 @@ export async function openBillingPortal(): Promise<RedirectResult> {
     const origin = await getOrigin();
     const session = await getStripe().billingPortal.sessions.create({
       customer: profile.stripeCustomerId,
-      return_url: `${origin}/perfil`,
+      return_url: `${origin}${BILLING_SETTINGS_PATH}`,
       locale: "es",
     });
 

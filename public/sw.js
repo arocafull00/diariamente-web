@@ -1,4 +1,4 @@
-const SHELL_CACHE = "diariamente-shell-v8";
+const SHELL_CACHE = "diariamente-shell-v11";
 const STATIC_CACHE = "diariamente-static-v1";
 const OFFLINE_URL = "/offline";
 const HOME_KEY = "/__app-home";

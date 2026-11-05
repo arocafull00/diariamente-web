@@ -4,9 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 
 import { ONBOARDING_PROGRESS_SHARE } from "@/components/onboarding/onboarding-content";
-import { useWelcomeNotifications } from "@/components/onboarding/use-welcome-notifications";
 import { CONNECT_STEP, WELCOME_STEPS } from "@/components/onboarding/welcome-content";
-import { usePwaInstall } from "@/hooks/use-pwa-install";
 import { useWizardHistory } from "@/hooks/use-wizard-history";
 import { playCompletionSound } from "@/lib/completion-sound";
 import { acknowledgeScreen } from "@/server/actions/required-screens";
@@ -21,8 +19,6 @@ export function useWelcomeWizard(
   showConnect: boolean,
 ) {
   const router = useRouter();
-  const notifications = useWelcomeNotifications(role);
-  const install = usePwaInstall();
   const { goBack, goToStep, step: stepIndex } = useWizardHistory();
   const [finishing, startFinishTransition] = useTransition();
   const steps = showConnect ? [CONNECT_STEP, ...WELCOME_STEPS[role]] : WELCOME_STEPS[role];
@@ -56,33 +52,7 @@ export function useWelcomeWizard(
     goToStep(stepIndex + 1);
   }
 
-  async function activateNotifications() {
-    if (await notifications.activate()) {
-      goForward();
-    }
-  }
-
   function getPrimaryAction() {
-    if (step.id === "notifications" && !notifications.enabled) {
-      return {
-        label: "Activar notificaciones",
-        pending: notifications.loading,
-        onClick: activateNotifications,
-        offersNotNow: true,
-        onNotNow: goForward,
-      };
-    }
-
-    if (step.id === "install" && !install.installed) {
-      return {
-        label: "Descargar la aplicación",
-        pending: install.loading,
-        onClick: install.handleInstall,
-        offersNotNow: true,
-        onNotNow: goForward,
-      };
-    }
-
     if (isLastStep && offersFirstRecord) {
       return {
         label: "Hacer mi primer registro",
@@ -106,11 +76,6 @@ export function useWelcomeWizard(
     finish: () => finish(finishHref),
     finishing,
     goBack,
-    installGuide: {
-      open: install.guideOpen,
-      onOpenChange: install.setGuideOpen,
-      platform: install.platform,
-    },
     isLastStep,
     primaryAction: getPrimaryAction(),
     progress:

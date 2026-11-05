@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { ConnectionRequestsList } from "./connection-requests-list";
+import { InvitePatientFab } from "./invite-patient-fab";
 import { InviteLinkSection } from "./invite-link-section";
 import { InviteStep } from "./invite-step";
 
@@ -47,7 +48,7 @@ type InvitationsSheetProps = {
   token: string | null;
   origin: string;
   requests: ConnectionRequest[];
-  variant?: "icon" | "button";
+  variant?: "icon" | "button" | "floating";
 };
 
 export function InvitationsSheet({
@@ -60,7 +61,9 @@ export function InvitationsSheet({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      {variant === "button" ? (
+      {variant === "floating" ? (
+        <InvitePatientFab />
+      ) : variant === "button" ? (
         <SheetTrigger render={<Button />}>
           <UserPlus data-icon="inline-start" aria-hidden="true" />
           Invitar paciente

@@ -1,5 +1,6 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -71,6 +72,29 @@ export async function savePushSubscription(
         auth: keys.auth,
       },
     });
+
+  return { success: true };
+}
+
+export async function deletePushSubscription(
+  input: unknown,
+): Promise<ActionResult> {
+  const profile = await requireProfile();
+
+  const parsed = pushSubscriptionSchema.shape.endpoint.safeParse(input);
+
+  if (!parsed.success) {
+    return { error: "Suscripción no válida" };
+  }
+
+  await db
+    .delete(pushSubscriptions)
+    .where(
+      and(
+        eq(pushSubscriptions.endpoint, parsed.data),
+        eq(pushSubscriptions.userId, profile.id),
+      ),
+    );
 
   return { success: true };
 }

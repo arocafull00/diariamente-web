@@ -8,11 +8,11 @@ export function PatientSessionSummaryBlock({
   children,
 }: PatientSessionSummaryBlockProps) {
   return (
-    <div className="space-y-2">
-      <h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+    <section className="space-y-2 rounded-3xl border border-border/60 bg-card p-4 shadow-xs">
+      <h3 className="px-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
         {title}
       </h3>
       {children}
-    </div>
+    </section>
   );
 }

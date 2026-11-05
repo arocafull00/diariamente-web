@@ -1,3 +1,4 @@
+import { PatientMarkAllSeenButton } from "@/components/patients/patient-mark-all-seen-button";
 import { PatientRecordFilters } from "@/components/patients/patient-record-filters";
 import { PatientRecordsFilteredEmpty } from "@/components/patients/patient-records-filtered-empty";
 import { PatientRecordsPagination } from "@/components/patients/patient-records-pagination";
@@ -18,6 +19,7 @@ type PatientRecordsSectionProps = {
   total: number;
   pageCount: number;
   lastSessionAt: Date | null;
+  unseenCount: number;
 };
 
 export function PatientRecordsSection({
@@ -29,6 +31,7 @@ export function PatientRecordsSection({
   total,
   pageCount,
   lastSessionAt,
+  unseenCount,
 }: PatientRecordsSectionProps) {
   const recordLabel = total === 1 ? "registro" : "registros";
   const filteredLabel = hasActiveRecordFilters(filters)
@@ -46,6 +49,11 @@ export function PatientRecordsSection({
           {filteredLabel}
         </p>
       </div>
+      {unseenCount > 0 ? (
+        <div className="flex justify-end px-1">
+          <PatientMarkAllSeenButton patientId={patientId} />
+        </div>
+      ) : null}
       <PatientRecordFilters
         filters={filters}
         emotionOptions={emotionOptions}

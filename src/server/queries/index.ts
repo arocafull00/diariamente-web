@@ -31,7 +31,6 @@ import {
   profiles,
   psychologistPatient,
   recordNotes,
-  recordReplies,
   referrals,
   screenAcknowledgements,
   subscriptions,
@@ -169,27 +168,6 @@ export async function getRecordNote(recordId: string, psychologistId: string) {
     .limit(1);
 
   return note;
-}
-
-export async function getRecordReply(recordId: string) {
-  const [reply] = await db
-    .select({
-      id: recordReplies.id,
-      psychologistId: recordReplies.psychologistId,
-      content: recordReplies.content,
-      seenAt: recordReplies.seenAt,
-      updatedAt: recordReplies.updatedAt,
-      firstName: profiles.firstName,
-      lastName: profiles.lastName,
-      grammaticalGender: profiles.grammaticalGender,
-    })
-    .from(recordReplies)
-    .innerJoin(profiles, eq(profiles.id, recordReplies.psychologistId))
-    .where(eq(recordReplies.recordId, recordId))
-    .orderBy(desc(recordReplies.updatedAt))
-    .limit(1);
-
-  return reply ?? null;
 }
 
 export async function getPsychologistPatients(psychologistId: string) {
@@ -516,7 +494,6 @@ export async function getDataExport(profileId: string) {
     requests,
     sessions,
     notes,
-    replies,
     accessLog,
     activity,
     onboarding,
@@ -589,21 +566,6 @@ export async function getDataExport(profileId: string) {
       })
       .from(recordNotes)
       .where(eq(recordNotes.psychologistId, profileId)),
-    db
-      .select({
-        recordId: recordReplies.recordId,
-        content: recordReplies.content,
-        createdAt: recordReplies.createdAt,
-        updatedAt: recordReplies.updatedAt,
-      })
-      .from(recordReplies)
-      .innerJoin(patientRecords, eq(patientRecords.id, recordReplies.recordId))
-      .where(
-        or(
-          eq(recordReplies.psychologistId, profileId),
-          eq(patientRecords.patientId, profileId),
-        ),
-      ),
     getRecordAccessLog(profileId),
     db
       .select({ action: auditEvents.action, createdAt: auditEvents.createdAt })
@@ -678,7 +640,6 @@ export async function getDataExport(profileId: string) {
     connectionRequests: withCounterpart(requests),
     therapySessions: withCounterpart(sessions),
     recordNotes: notes,
-    recordReplies: replies,
     accessLog,
     activity,
     onboarding,

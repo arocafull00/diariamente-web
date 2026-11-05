@@ -2,7 +2,6 @@
 
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarRange } from "lucide-react";
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 
@@ -72,7 +71,6 @@ export function PatientRecordDateFilter({
       <PopoverTrigger
         className={getRecordFilterTriggerClassName(Boolean(rangeLabel))}
       >
-        <CalendarRange className="size-4 shrink-0" aria-hidden="true" />
         {rangeLabel ?? "Fechas"}
       </PopoverTrigger>
       <PopoverContent align="start" className="w-auto gap-3 rounded-3xl p-3">

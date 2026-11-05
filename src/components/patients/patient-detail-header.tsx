@@ -1,5 +1,5 @@
 import { AppHeaderBackButton } from "@/components/app-shell/app-header-back-button";
-import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
+import { PatientActionsMenu } from "@/components/patients/patient-actions-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatLastActivityLabel, getFullName, getInitials } from "@/lib/utils-app";
 
@@ -49,10 +49,9 @@ export function PatientDetailHeader({
           <p className="mt-1 text-xs text-muted-foreground">{activityLabel}</p>
         </div>
 
-        <PatientUnlinkButton
+        <PatientActionsMenu
           patientId={patientId}
           patientName={patientName}
-          layout="header"
         />
       </div>
     </header>

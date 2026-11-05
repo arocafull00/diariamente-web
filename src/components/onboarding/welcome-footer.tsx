@@ -10,6 +10,7 @@ type WelcomeFooterProps = {
   pending: boolean;
   offersNotNow: boolean;
   showSignOut: boolean;
+  signOutLabel?: string;
   onPrimary: () => void;
   onNotNow: () => void;
 };
@@ -20,6 +21,7 @@ export function WelcomeFooter({
   pending,
   offersNotNow,
   showSignOut,
+  signOutLabel = "Cerrar sesión",
   onPrimary,
   onNotNow,
 }: WelcomeFooterProps) {
@@ -43,7 +45,7 @@ export function WelcomeFooter({
           Por el momento no
         </Button>
       ) : null}
-      {showSignOut ? <SignOutLink className="py-1" /> : null}
+      {showSignOut ? <SignOutLink label={signOutLabel} className="min-h-11 py-1" /> : null}
     </div>
   );
 }

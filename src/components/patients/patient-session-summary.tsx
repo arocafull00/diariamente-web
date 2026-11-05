@@ -1,5 +1,7 @@
+import { differenceInCalendarDays } from "date-fns";
 import { CalendarCheck } from "lucide-react";
 
+import { ClinicStatCard } from "@/components/clinics/clinic-stat-card";
 import { PatientSessionButton } from "@/components/patients/patient-session-button";
 import { PatientSessionSummaryDetails } from "@/components/patients/patient-session-summary-details";
 import {
@@ -44,10 +46,13 @@ export function PatientSessionSummary({
     : "Antes de la primera sesión";
   const sessionLabel = lastSessionAt
     ? `Última sesión ${formatLastActivityLabel(lastSessionAt)}`
-    : "Marca la sesión al terminarla para ver qué pasa entre sesiones";
-  const rowDescription = lastSessionAt
+    : null;
+  const rowDescription = sessionLabel
     ? `${summary.recordCount} ${recordLabel} · ${sessionLabel.toLowerCase()}`
     : "Marca la sesión al terminarla";
+  const daysSinceSession = lastSessionAt
+    ? differenceInCalendarDays(new Date(), lastSessionAt)
+    : null;
 
   return (
     <Sheet>
@@ -69,23 +74,46 @@ export function PatientSessionSummary({
           <SheetTitle className="text-2xl font-bold tracking-tight">
             {title}
           </SheetTitle>
-          <SheetDescription>{sessionLabel}</SheetDescription>
+          {sessionLabel ? (
+            <SheetDescription>{sessionLabel}</SheetDescription>
+          ) : null}
         </SheetHeader>
-        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 pb-6">
-          <section className="space-y-5 rounded-[2rem] bg-card/80 px-5 py-6 shadow-sm ring-1 ring-border/50 backdrop-blur">
-            <p className="flex items-baseline gap-2">
-              <span className="font-display text-4xl leading-none font-medium text-mood-lp-strong tabular-nums">
-                {summary.recordCount}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {recordLabel}
-              </span>
-            </p>
-            {summary.recordCount > 0 ? (
-              <PatientSessionSummaryDetails summary={summary} gender={gender} />
+        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 pb-6">
+          <div
+            className={
+              daysSinceSession !== null
+                ? "grid grid-cols-2 gap-3"
+                : "grid gap-3"
+            }
+          >
+            <ClinicStatCard
+              label={
+                summary.recordCount === 1 ? "Registro nuevo" : "Registros nuevos"
+              }
+              value={summary.recordCount}
+              quadrant="LOW_PLEASANT"
+              inline={daysSinceSession === null}
+            />
+            {daysSinceSession !== null ? (
+              <ClinicStatCard
+                label={
+                  daysSinceSession === 1
+                    ? "Día desde la sesión"
+                    : "Días desde la sesión"
+                }
+                value={daysSinceSession}
+                quadrant="LOW_UNPLEASANT"
+              />
             ) : null}
-          </section>
-          <div className="mt-auto">
+          </div>
+          {summary.recordCount > 0 ? (
+            <PatientSessionSummaryDetails
+              patientId={patientId}
+              summary={summary}
+              gender={gender}
+            />
+          ) : null}
+          <div className="mt-auto pt-3">
             <PatientSessionButton
               patientId={patientId}
               patientName={patientName}

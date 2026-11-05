@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 
 type SignOutLinkProps = {
   className?: string;
+  label?: string;
 };
 
-export function SignOutLink({ className }: SignOutLinkProps) {
+export function SignOutLink({ className, label = "Cerrar sesión" }: SignOutLinkProps) {
   const signOut = useSignOut();
   const [pending, startTransition] = useTransition();
 
@@ -29,7 +30,7 @@ export function SignOutLink({ className }: SignOutLinkProps) {
         className,
       )}
     >
-      Cerrar sesión
+      {label}
     </button>
   );
 }

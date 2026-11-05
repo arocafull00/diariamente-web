@@ -1,14 +1,17 @@
 import { PatientDetailHeader } from "@/components/patients/patient-detail-header";
 import { PatientRecordsSection } from "@/components/patients/patient-records-section";
 import { PatientSessionSummary } from "@/components/patients/patient-session-summary";
-import { PatientUnlinkButton } from "@/components/patients/patient-unlink-button";
+import { PsychologistLiveSignals } from "@/components/realtime/psychologist-live-signals";
+import { RealtimeSignalsProvider } from "@/components/realtime/realtime-signals-provider";
 import { RecordMoodOverview } from "@/components/records/record-mood-overview";
 import { requirePatientRelationship } from "@/server/auth/require-patient-relationship";
 import {
   getLastTherapySession,
   getPatientRecordSummaries,
   getPatientRecordsPageForPsychologist,
+  getUnseenRecordCountForPatient,
 } from "@/server/queries";
+import { sealPsychologistSignals } from "@/server/realtime/psychologist-signals";
 import { logger } from "@/lib/logger";
 import { getRecordEmotionOptions } from "@/lib/record-filters";
 import { getFullName } from "@/lib/utils-app";
@@ -33,11 +36,14 @@ export default async function PatientDetailPage({
   const { profile, patient } = result;
   const { emocion, desde, hasta, pagina } = recordFiltersSchema.parse(query);
   const filters = { emotions: emocion, from: desde, to: hasta, page: pagina };
-  const [summaries, recordsPage, lastSession] = await Promise.all([
-    getPatientRecordSummaries(patientId),
-    getPatientRecordsPageForPsychologist(patientId, profile.id, filters),
-    getLastTherapySession(profile.id, patientId),
-  ]).catch((error: unknown) => {
+  const [summaries, recordsPage, lastSession, unseenCount, signals] =
+    await Promise.all([
+      getPatientRecordSummaries(patientId),
+      getPatientRecordsPageForPsychologist(patientId, profile.id, filters),
+      getLastTherapySession(profile.id, patientId),
+      getUnseenRecordCountForPatient(profile.id, patientId),
+      sealPsychologistSignals(profile.id),
+    ]).catch((error: unknown) => {
     logger.error("records.fetch_patient_failed", error, {
       patientId,
       psychologistId: profile.id,
@@ -49,6 +55,11 @@ export default async function PatientDetailPage({
 
   return (
     <>
+      {signals ? (
+        <RealtimeSignalsProvider>
+          <PsychologistLiveSignals {...signals} />
+        </RealtimeSignalsProvider>
+      ) : null}
       <PatientDetailHeader
         patientId={patientId}
         firstName={patient.firstName}
@@ -81,14 +92,9 @@ export default async function PatientDetailPage({
             total={recordsPage.total}
             pageCount={recordsPage.pageCount}
             lastSessionAt={lastSession?.heldAt ?? null}
+            unseenCount={unseenCount}
           />
         )}
-
-        <PatientUnlinkButton
-          patientId={patientId}
-          patientName={patientName}
-          layout="footer"
-        />
       </div>
     </>
   );

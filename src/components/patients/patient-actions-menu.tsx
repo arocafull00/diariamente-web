@@ -1,8 +1,8 @@
 "use client";
 
-import { LoaderCircle, Unlink } from "lucide-react";
+import { EllipsisVertical, LoaderCircle, Unlink } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -14,24 +14,27 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { unlinkPatient } from "@/server/actions/invitations";
 
-type PatientUnlinkButtonProps = {
+type PatientActionsMenuProps = {
   patientId: string;
   patientName: string;
-  layout?: "footer" | "header";
 };
 
-export function PatientUnlinkButton({
+export function PatientActionsMenu({
   patientId,
   patientName,
-  layout = "footer",
-}: PatientUnlinkButtonProps) {
+}: PatientActionsMenuProps) {
   const router = useRouter();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
   function handleUnlink() {
@@ -50,23 +53,27 @@ export function PatientUnlinkButton({
   }
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger
-        className={
-          layout === "header"
-            ? cn(
-                buttonVariants({ variant: "destructive", size: "sm" }),
-                "hidden shrink-0 shadow-xs sm:inline-flex",
-              )
-            : cn(buttonVariants({ variant: "destructive" }), "w-full sm:hidden")
-        }
-      >
-        {layout === "header" ? null : (
-          <Unlink data-icon="inline-start" aria-hidden="true" />
-        )}
-        Desvincular{layout === "footer" ? " paciente" : ""}
-      </AlertDialogTrigger>
-      <AlertDialogContent>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          ref={triggerRef}
+          aria-label="Más opciones del paciente"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:scale-95"
+        >
+          <EllipsisVertical className="size-5" aria-hidden="true" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuItem
+            variant="destructive"
+            className="min-h-11 gap-2 px-3"
+            onClick={() => setOpen(true)}
+          >
+            <Unlink aria-hidden="true" />
+            Desvincular paciente
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialogContent finalFocus={triggerRef}>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Desvincular a {patientName}?</AlertDialogTitle>
           <AlertDialogDescription>

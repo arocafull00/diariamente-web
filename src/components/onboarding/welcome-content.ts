@@ -15,11 +15,7 @@ export type WelcomeGoal = {
   label: string;
 };
 
-export type WelcomeStepId =
-  | "connect"
-  | "notifications"
-  | "install"
-  | "ready";
+export type WelcomeStepId = "connect" | "ready";
 
 export type WelcomeStep = {
   id: WelcomeStepId;
@@ -27,14 +23,6 @@ export type WelcomeStep = {
   title: string;
   description: string;
   faceRow?: readonly FaceId[];
-};
-
-const INSTALL_STEP: WelcomeStep = {
-  id: "install",
-  faceId: "04_naranja_amarillo",
-  title: "¡Llévame en el bolsillo!",
-  description:
-    "Añade Diariamente a tu pantalla de inicio para abrirla como una app, sin pasar por el navegador.",
 };
 
 const CELEBRATION_FACES: readonly FaceId[] = [
@@ -54,14 +42,6 @@ export const CONNECT_STEP: WelcomeStep = {
 
 const PATIENT_STEPS: readonly WelcomeStep[] = [
   {
-    id: "notifications",
-    faceId: "04_naranja_amarillo",
-    title: "¿Te aviso de lo importante?",
-    description:
-      "Así tu psicólogo/a podrá recordarte cosas entre sesiones y cada noche te avisaré para registrar tu día.",
-  },
-  INSTALL_STEP,
-  {
     id: "ready",
     faceId: "alegria",
     title: "¡Todo listo, {name}!",
@@ -72,14 +52,6 @@ const PATIENT_STEPS: readonly WelcomeStep[] = [
 ];
 
 const PSYCHOLOGIST_STEPS: readonly WelcomeStep[] = [
-  {
-    id: "notifications",
-    faceId: "04_naranja_amarillo",
-    title: "No te pierdas nada",
-    description:
-      "Te avisaré cuando un paciente quiera conectar contigo o añada un registro nuevo.",
-  },
-  INSTALL_STEP,
   {
     id: "ready",
     faceId: "alegria",

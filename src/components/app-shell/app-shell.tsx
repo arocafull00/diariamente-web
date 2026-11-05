@@ -1,4 +1,5 @@
 import { PageTransition } from "@/components/motion/page-transition";
+import { AppStartPrompts } from "@/components/pwa/app-start-prompts";
 import type { Profile } from "@/db/schema";
 
 import { AppHeader } from "./app-header";
@@ -41,6 +42,7 @@ export function AppShell({
       ) : null}
       {profile.role === "psychologist" ? <PsychologistNavigation /> : null}
       {profile.role === "clinic" ? <ClinicNavigation /> : null}
+      <AppStartPrompts role={profile.role!} />
     </div>
   );
 }

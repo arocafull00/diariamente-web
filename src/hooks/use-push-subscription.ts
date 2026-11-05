@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { logger } from "@/lib/logger";
+import { deletePushSubscription } from "@/server/actions/reminders";
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -53,9 +54,43 @@ async function createSubscription(
   }
 }
 
+async function getCurrentSubscription() {
+  if (
+    !("serviceWorker" in navigator) ||
+    !("PushManager" in window) ||
+    Notification.permission !== "granted"
+  ) {
+    return null;
+  }
+
+  const registration = await navigator.serviceWorker.getRegistration();
+  return (await registration?.pushManager.getSubscription()) ?? null;
+}
+
 export function usePushSubscription() {
   const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
   const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getCurrentSubscription()
+      .then((subscription) => {
+        if (!cancelled) {
+          setSubscribed(Boolean(subscription));
+        }
+      })
+      .catch((error: unknown) => {
+        logger.warn("push.subscription_check_failed", {
+          errorName: error instanceof Error ? error.name : null,
+        });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function subscribe() {
     if (!publicKey) {
@@ -79,8 +114,7 @@ export function usePushSubscription() {
       }
 
       if (!(await navigator.serviceWorker.getRegistration())) {
-        toast.error("Ahora mismo no podemos activar las notificaciones. Recarga la página y vuelve a probar.");
-        return false;
+        await navigator.serviceWorker.register("/sw.js");
       }
 
       const registration = await navigator.serviceWorker.ready;
@@ -102,6 +136,7 @@ export function usePushSubscription() {
         return false;
       }
 
+      setSubscribed(true);
       return true;
     } catch (error) {
       logger.error("push.subscribe_failed", error);
@@ -115,5 +150,27 @@ export function usePushSubscription() {
     }
   }
 
-  return { available: Boolean(publicKey), loading, subscribe };
+  async function unsubscribe() {
+    setLoading(true);
+
+    try {
+      const subscription = await getCurrentSubscription();
+
+      if (subscription) {
+        await deletePushSubscription(subscription.endpoint);
+        await subscription.unsubscribe();
+      }
+
+      setSubscribed(false);
+      return true;
+    } catch (error) {
+      logger.error("push.unsubscribe_failed", error);
+      toast.error("Uy, no hemos podido desactivar las notificaciones");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { available: Boolean(publicKey), loading, subscribed, subscribe, unsubscribe };
 }

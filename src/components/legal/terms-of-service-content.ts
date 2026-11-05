@@ -61,7 +61,7 @@ export const TERMS_OF_SERVICE_SECTIONS: {
     paragraphs: [
       "Tus registros siguen siendo tuyos. El uso de Diariamente no transfiere al titular la propiedad de su contenido. Su tratamiento se limita a prestar el servicio y a las finalidades descritas en la Política de privacidad.",
       "La Política de privacidad explica qué datos se tratan, quién puede acceder a ellos, los plazos de conservación y cómo ejercer tus derechos. El consentimiento para compartir datos de salud con un profesional es independiente de estas condiciones.",
-      "Puedes descargar tus datos desde Ajustes, Privacidad, y gestionar tu vinculación desde tu perfil.",
+      "Puedes descargar tus datos desde «Privacidad y cuenta» en Ajustes y gestionar tu vinculación desde tu perfil.",
     ],
   },
   {
@@ -85,7 +85,7 @@ export const TERMS_OF_SERVICE_SECTIONS: {
     id: "baja",
     title: "10. Baja y suspensión de la cuenta",
     paragraphs: [
-      "Puedes dejar de utilizar la aplicación y eliminar tu cuenta desde Ajustes. Antes de hacerlo, descarga los datos que quieras conservar. La eliminación de la cuenta y los plazos de conservación se describen en la Política de privacidad.",
+      "Puedes dejar de utilizar la aplicación y eliminar tu cuenta desde «Privacidad y cuenta» en Ajustes. Antes de hacerlo, descarga los datos que quieras conservar. La eliminación de la cuenta y los plazos de conservación se describen en la Política de privacidad.",
       "Podremos restringir o suspender el acceso cuando sea necesario para responder a un incumplimiento grave de estas condiciones, un riesgo de seguridad o una obligación legal. La medida será proporcionada y te comunicaremos el motivo y cómo contactar para solicitar su revisión, salvo que una obligación legal o la protección del servicio lo impidan.",
     ],
   },

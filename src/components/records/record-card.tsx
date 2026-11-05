@@ -1,16 +1,16 @@
 import { StickyNote } from "lucide-react";
+import { Face } from "@/components/faces/face";
 import { PressableLink } from "@/components/motion/pressable-link";
-import { MoodBubble } from "@/components/records/mood-bubble";
 import { Badge } from "@/components/ui/badge";
 import type { GrammaticalGender, PatientRecord } from "@/db/schema";
 import { getContextTagLabel, getContextTags } from "@/lib/context-tags";
-import { CIRCLE_CLIP_PATH, getEmotionShape } from "@/lib/emotion-shapes";
 import {
   getDominantEmotion,
   getEmotionLabel,
   getMoodStyles,
   getRecordQuadrant,
 } from "@/lib/emotions";
+import { getQuadrantFace } from "@/lib/faces";
 import { cn } from "@/lib/utils";
 import { formatOccurrenceTime, formatRecordDate } from "@/lib/utils-app";
 
@@ -40,9 +40,6 @@ export function RecordCard({
   const preview = record.situation || record.thoughts || record.behaviours;
   const occurredAt = new Date(record.occurredAt);
   const extraEmotions = record.emotions.length - 1;
-  const clipPath = dominant
-    ? getEmotionShape(dominant.emotion).clipPath
-    : CIRCLE_CLIP_PATH;
 
   return (
     <PressableLink
@@ -107,17 +104,20 @@ export function RecordCard({
             </p>
           ) : null}
         </div>
-        <span
-          className="shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6"
-          style={{ clipPath }}
-        >
-          <MoodBubble
-            quadrant={quadrant}
-            tone={3}
-            className="size-16 font-display text-xl font-semibold"
-          >
-            {dominant?.intensity}
-          </MoodBubble>
+        <span className="relative shrink-0 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105 motion-safe:group-hover:rotate-6">
+          <Face
+            faceId={getQuadrantFace(quadrant)}
+            size={64}
+            className="size-16"
+          />
+          {dominant ? (
+            <span
+              className="absolute -right-1 -bottom-1 flex size-7 items-center justify-center rounded-full bg-card font-display text-sm font-semibold shadow-sm ring-1 ring-border/60"
+              aria-label={`Intensidad: ${dominant.intensity} de 10`}
+            >
+              {dominant.intensity}
+            </span>
+          ) : null}
         </span>
       </article>
     </PressableLink>

@@ -1,22 +1,19 @@
 "use client";
 
-import { Bell, Settings } from "lucide-react";
+import { ArrowLeft, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
-import { PushSubscribeButton } from "@/components/pwa/push-subscribe-button";
-import { SettingsGrammaticalGenderRow } from "@/components/profile/settings-grammatical-gender-row";
+import { BillingReturnFeedback } from "@/components/billing/billing-return-feedback";
+import type { BillingSummary } from "@/components/billing/billing-status-copy";
+import { ProfileSubscriptionCard } from "@/components/billing/profile-subscription-card";
 import { SettingsDeleteAccountDialog } from "@/components/profile/settings-delete-account-dialog";
 import { SettingsGroup } from "@/components/profile/settings-group";
+import { SettingsMainView } from "@/components/profile/settings-main-view";
 import { SettingsPrivacyGroup } from "@/components/profile/settings-privacy-group";
-import {
-  SettingsRowContent,
-  settingsRowClassName,
-} from "@/components/profile/settings-row-content";
-import { SettingsSignOutDialog } from "@/components/profile/settings-sign-out-dialog";
-import { SettingsSoundRow } from "@/components/profile/settings-sound-row";
+import { ProfileReferralCard } from "@/components/referrals/profile-referral-card";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -25,32 +22,72 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
 import type { GrammaticalGender, UserRole } from "@/db/schema";
+import { cn } from "@/lib/utils";
 import { saveReminderSettings } from "@/server/actions/reminders";
 
 type SettingsSheetProps = {
   role: UserRole;
   remindersEnabled: boolean;
   grammaticalGender: GrammaticalGender;
+  subscription?: {
+    billing: BillingSummary;
+    referral?: { code: string; joined: number; rewarded: number };
+  };
 };
+
+const SETTINGS_SUBVIEWS = {
+  privacy: {
+    title: "Privacidad y cuenta",
+    description: "Consulta las políticas, descarga tus datos o elimina tu cuenta.",
+  },
+  subscription: { title: "Suscripción", description: "Consulta y gestiona tu plan." },
+};
+
+type SettingsView = "main" | keyof typeof SETTINGS_SUBVIEWS;
+
+const SUBVIEW_CLASS_NAME =
+  "absolute inset-0 overflow-y-auto px-5 pb-6 transition-[translate,opacity] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
 export function SettingsSheet({
   role,
   remindersEnabled,
   grammaticalGender,
+  subscription,
 }: SettingsSheetProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [{ open, view }, setSheet] = useState<{ open: boolean; view: SettingsView }>(
+    () => {
+      const billingReturn =
+        subscription && typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("suscripcion")
+          : null;
+      const open = billingReturn === "ok" || billingReturn === "gestionar";
+
+      return { open, view: open ? "subscription" : "main" };
+    },
+  );
   const [, startSaveTransition] = useTransition();
   const [enabled, setEnabled] = useState(remindersEnabled);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subview = view === "main" ? null : SETTINGS_SUBVIEWS[view];
+
+  useEffect(() => {
+    if (open) {
+      titleRef.current?.focus();
+    }
+  }, [open, view]);
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
       setEnabled(remindersEnabled);
     }
 
-    setOpen(nextOpen);
+    setSheet({ open: nextOpen, view: nextOpen ? "main" : view });
+  }
+
+  function showView(view: SettingsView) {
+    setSheet({ open, view });
   }
 
   function handleEnabledChange(checked: boolean) {
@@ -79,62 +116,93 @@ export function SettingsSheet({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="flex flex-col gap-0 bg-background sm:max-w-md"
+        initialFocus={titleRef}
+        className="flex flex-col gap-0 overflow-hidden bg-background sm:max-w-md"
       >
         <SheetHeader className="px-5 pt-6 pb-4">
-          <SheetTitle className="text-2xl font-bold tracking-tight">
-            Ajustes
-          </SheetTitle>
+          <div className="flex min-h-10 items-center gap-2 pr-8">
+            {subview ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-10 bg-mood-lu-soft text-mood-lu-strong"
+                aria-label="Volver a ajustes"
+                onClick={() => showView("main")}
+                data-cuelume-tap="type"
+              >
+                <ArrowLeft className="size-5" aria-hidden="true" />
+              </Button>
+            ) : null}
+            <SheetTitle
+              ref={titleRef}
+              tabIndex={-1}
+              className="text-2xl font-bold tracking-tight outline-none"
+            >
+              {subview?.title ?? "Ajustes"}
+            </SheetTitle>
+          </div>
           <SheetDescription>
-            {role === "patient"
-              ? "Ponlo todo a tu gusto: recordatorios, avisos y tu cuenta."
-              : "Ponlo todo a tu gusto."}
+            {subview?.description ??
+              (role === "patient"
+                ? "Ponlo todo a tu gusto: recordatorios, avisos y tu cuenta."
+                : "Ponlo todo a tu gusto.")}
           </SheetDescription>
         </SheetHeader>
-        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 pb-6">
-          <SettingsGroup title="Preferencias">
-            <SettingsGrammaticalGenderRow
-              key={grammaticalGender}
+        <div className="relative min-h-0 flex-1 overflow-hidden">
+          <div
+            inert={view !== "main"}
+            aria-hidden={view !== "main"}
+            className={cn(
+              SUBVIEW_CLASS_NAME,
+              "flex flex-col gap-6",
+              view !== "main"
+                ? "pointer-events-none -translate-x-full opacity-0"
+                : "translate-x-0 opacity-100",
+            )}
+          >
+            <SettingsMainView
+              role={role}
               grammaticalGender={grammaticalGender}
+              enabled={enabled}
+              onEnabledChange={handleEnabledChange}
+              onPrivacy={() => showView("privacy")}
+              onSubscription={subscription ? () => showView("subscription") : undefined}
             />
-            {role === "patient" ? (
-              <label
-                htmlFor="reminders"
-                data-slot="settings-row"
-                className={settingsRowClassName}
-              >
-                <SettingsRowContent
-                  icon={Bell}
-                  tone="yellow"
-                  title="Recordatorio diario"
-                  description="Un toque a las 21:00 para contar qué tal tu día."
-                  trailing={
-                    <Switch
-                      id="reminders"
-                      checked={enabled}
-                      onCheckedChange={handleEnabledChange}
-                    />
-                  }
-                />
-              </label>
-            ) : null}
-            <SettingsSoundRow />
-            <PushSubscribeButton />
-          </SettingsGroup>
-
-          <SettingsPrivacyGroup role={role} />
-
-          <SettingsGroup title="Cuenta">
-            <SettingsSignOutDialog />
-          </SettingsGroup>
-
-          <PwaInstallButton />
-
-          <div className="mt-auto">
+          </div>
+          <div
+            inert={view !== "privacy"}
+            aria-hidden={view !== "privacy"}
+            className={cn(
+              SUBVIEW_CLASS_NAME,
+              "grid content-start gap-6",
+              view === "privacy"
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none translate-x-full opacity-0",
+            )}
+          >
+            <SettingsPrivacyGroup role={role} />
             <SettingsGroup title="Zona de peligro">
               <SettingsDeleteAccountDialog />
             </SettingsGroup>
           </div>
+          {subscription ? (
+            <div
+              inert={view !== "subscription"}
+              aria-hidden={view !== "subscription"}
+              className={cn(
+                SUBVIEW_CLASS_NAME,
+                "grid content-start gap-6",
+                view === "subscription"
+                  ? "translate-x-0 opacity-100"
+                  : "pointer-events-none translate-x-full opacity-0",
+              )}
+            >
+              {view === "subscription" ? <BillingReturnFeedback /> : null}
+              <ProfileSubscriptionCard billing={subscription.billing} />
+              {subscription.referral ? <ProfileReferralCard {...subscription.referral} /> : null}
+            </div>
+          ) : null}
         </div>
       </SheetContent>
     </Sheet>

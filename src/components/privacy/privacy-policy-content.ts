@@ -19,7 +19,7 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
     paragraphs: [
       "Solo tú y, si das tu consentimiento explícito al vincularte, el profesional con el que conectas. Antes de enviar la solicitud te mostramos exactamente qué verá.",
       "Puedes retirar el consentimiento en cualquier momento desvinculándote desde tu perfil: tu profesional dejará de tener acceso de inmediato.",
-      "Cada vez que tu profesional abre uno de tus registros queda anotado y puedes consultarlo en Ajustes, Historial de accesos.",
+      "Cada vez que tu profesional abre uno de tus registros queda anotado. Puedes consultarlo en el historial de accesos de la sección «Privacidad y cuenta» de Ajustes.",
     ],
   },
   {
@@ -50,8 +50,8 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
   {
     title: "Tus derechos",
     paragraphs: [
-      "Puedes acceder a tus datos y descargarlos en JSON o PDF desde Ajustes, Privacidad (derecho de acceso y portabilidad).",
-      "Puedes corregir tu perfil y tus registros desde la app, y eliminar tu cuenta desde Ajustes (derecho de rectificación y supresión).",
+      "Puedes acceder a tus datos y descargarlos en JSON o PDF desde «Privacidad y cuenta» en Ajustes (derecho de acceso y portabilidad).",
+      "Puedes corregir tu perfil y tus registros desde la app, y eliminar tu cuenta desde «Privacidad y cuenta» en Ajustes (derecho de rectificación y supresión).",
     ],
   },
 ];

@@ -1,6 +1,4 @@
-import { Plus } from "lucide-react";
-import Link from "next/link";
-
+import { HomeNewRecordButton } from "@/components/home/home-new-record-button";
 import type { MoodQuadrant } from "@/db/schema";
 import { getMoodStyles } from "@/lib/emotions";
 import { cn } from "@/lib/utils";
@@ -55,18 +53,7 @@ export function HomeMoodRing({ todayRecords }: HomeMoodRingProps) {
               }
         }
       />
-      <Link
-        href="/nuevo-registro"
-        aria-label="Nuevo registro"
-        data-cuelume-tap=""
-        className="group absolute inset-0 m-auto flex size-20 items-center justify-center rounded-full bg-card text-foreground shadow-xl ring-1 ring-border/60 outline-none transition-[scale,box-shadow] duration-300 ease-spring hover:scale-110 hover:shadow-2xl active:scale-90 active:shadow-md focus-visible:ring-4 focus-visible:ring-ring/50"
-      >
-        <Plus
-          className="size-8 transition-transform duration-300 group-hover:rotate-90"
-          strokeWidth={2.5}
-          aria-hidden="true"
-        />
-      </Link>
+      <HomeNewRecordButton />
     </div>
   );
 }

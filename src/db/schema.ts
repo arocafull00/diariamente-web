@@ -329,33 +329,6 @@ export const recordNotes = pgTable(
   ],
 );
 
-export const recordReplies = pgTable(
-  "record_replies",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    recordId: uuid("record_id")
-      .notNull()
-      .references(() => patientRecords.id, { onDelete: "cascade" }),
-    psychologistId: text("psychologist_id")
-      .notNull()
-      .references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
-    content: text("content").notNull(),
-    seenAt: timestamp("seen_at", { withTimezone: true }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    unique("record_replies_record_psychologist_unique").on(
-      table.recordId,
-      table.psychologistId,
-    ),
-  ],
-);
-
 export const inviteLinks = pgTable("invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
@@ -519,7 +492,6 @@ export const feedback = pgTable(
 export type Profile = typeof profiles.$inferSelect;
 export type PatientRecord = typeof patientRecords.$inferSelect;
 export type RecordNote = typeof recordNotes.$inferSelect;
-export type RecordReply = typeof recordReplies.$inferSelect;
 export type CustomEmotion = typeof customEmotions.$inferSelect;
 export type InviteLink = typeof inviteLinks.$inferSelect;
 export type ConnectionRequest = typeof connectionRequests.$inferSelect;

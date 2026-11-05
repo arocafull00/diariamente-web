@@ -54,7 +54,7 @@ export function PatientSessionButton({
         )}
       >
         <CalendarCheck data-icon="inline-start" aria-hidden="true" />
-        Marcar sesión de hoy
+        Hoy hemos tenido sesión
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

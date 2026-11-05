@@ -48,7 +48,7 @@ export function ReferralShareButtons({ code }: ReferralShareButtonsProps) {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       <Button className="flex-1" onClick={handleCopy}>
         {copied ? (
           <Check data-icon="inline-start" aria-hidden="true" />

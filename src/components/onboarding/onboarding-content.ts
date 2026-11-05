@@ -428,12 +428,6 @@ const PROFESSIONAL_ACCOUNT_STEP: OnboardingStep = {
 const PATIENT_STEPS: readonly OnboardingStep[] = [
   ROLE_STEP,
   {
-    id: "hello",
-    faceId: "alegria",
-    title: "¡Hola! Soy tu diario emocional",
-    hero: true,
-  },
-  {
     id: "name",
     faceId: "02_azul_rosa",
     title: "¿Cómo te podemos llamar?",
@@ -485,12 +479,6 @@ const PATIENT_STEPS: readonly OnboardingStep[] = [
 
 const PSYCHOLOGIST_STEPS: readonly OnboardingStep[] = [
   ROLE_STEP,
-  {
-    id: "hello",
-    faceId: "alegria",
-    title: "¡Hola! Encantados de conocerte",
-    hero: true,
-  },
   {
     id: "name",
     faceId: "02_azul_rosa",

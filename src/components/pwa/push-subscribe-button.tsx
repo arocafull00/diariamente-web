@@ -7,14 +7,23 @@ import {
   SettingsRowContent,
   settingsRowClassName,
 } from "@/components/profile/settings-row-content";
+import { Switch } from "@/components/ui/switch";
 import { usePushSubscription } from "@/hooks/use-push-subscription";
 
 export function PushSubscribeButton() {
-  const { available, loading, subscribe } = usePushSubscription();
+  const { available, loading, subscribed, subscribe, unsubscribe } =
+    usePushSubscription();
 
-  async function handleSubscribe() {
-    if (await subscribe()) {
-      toast.success("¡Notificaciones activadas!");
+  async function handleCheckedChange(checked: boolean) {
+    if (checked) {
+      if (await subscribe()) {
+        toast.success("¡Notificaciones activadas!");
+      }
+      return;
+    }
+
+    if (await unsubscribe()) {
+      toast.success("Notificaciones desactivadas en este dispositivo");
     }
   }
 
@@ -23,21 +32,30 @@ export function PushSubscribeButton() {
   }
 
   return (
-    <button
-      type="button"
-      data-cuelume-tap=""
+    <label
+      htmlFor="push-notifications"
       data-slot="settings-row"
       className={settingsRowClassName}
-      disabled={loading}
-      onClick={handleSubscribe}
     >
       <SettingsRowContent
         icon={BellRing}
         tone="blue"
-        title={loading ? "Activando..." : "Notificaciones"}
-        description="Recibe avisos en este dispositivo."
+        title="Notificaciones"
+        description={
+          subscribed
+            ? "Activadas en este dispositivo."
+            : "Recibe avisos en este dispositivo."
+        }
         loading={loading}
+        trailing={
+          <Switch
+            id="push-notifications"
+            checked={subscribed}
+            disabled={loading}
+            onCheckedChange={handleCheckedChange}
+          />
+        }
       />
-    </button>
+    </label>
   );
 }

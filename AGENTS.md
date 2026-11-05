@@ -41,6 +41,8 @@ No asumas APIs de versiones anteriores ni de la documentación sin versionar.
 
 **UI:** No uses emojis. Usa iconos de Lucide React o shadcn/ui.
 
+**Encabezados de tarjetas y secciones:** Prohibido poner un icono en un chip de color (icono Lucide dentro de un cuadrado/círculo `bg-mood-*-soft`) como encabezado de una tarjeta, bloque o sección. El encabezado va sin icono o con una cara SVG (`Face`, `FaceRow`, `Illustration`). Los chips de icono solo se usan en filas de lista (`SettingsRowContent`).
+
 **Server Components por defecto:** Usa Server Components para páginas, layouts y lectura de datos. Añade `"use client"` solo cuando sea estrictamente necesario (eventos, hooks, estado local, APIs del navegador).
 
 **Server Actions:** Usa Server Actions para mutaciones. Valida la entrada con Zod en el servidor. Tras mutaciones exitosas, usa `revalidatePath` en las rutas afectadas.

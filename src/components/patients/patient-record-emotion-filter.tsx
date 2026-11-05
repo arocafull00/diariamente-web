@@ -1,6 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
 import { useState } from "react";
 
 import { PatientRecordEmotionOption } from "@/components/patients/patient-record-emotion-option";
@@ -63,7 +62,6 @@ export function PatientRecordEmotionFilter({
         disabled={options.length === 0}
         className={getRecordFilterTriggerClassName(selected.length > 0)}
       >
-        <Sparkles className="size-4 shrink-0" aria-hidden="true" />
         Emociones
         {selected.length > 0 ? <Badge>{selected.length}</Badge> : null}
       </PopoverTrigger>
