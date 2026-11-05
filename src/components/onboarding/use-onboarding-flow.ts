@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useEffectEvent, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -67,6 +67,11 @@ function canContinueFrom(step: OnboardingStep, answers: OnboardingAnswers) {
   }
 }
 
+function firstPendingIndex(steps: readonly OnboardingStep[], answers: OnboardingAnswers) {
+  const index = steps.findIndex((step) => !canContinueFrom(step, answers));
+  return index === -1 ? steps.length - 1 : index;
+}
+
 function resolveStep(step: OnboardingStep, answers: OnboardingAnswers): OnboardingStep {
   return { ...step, title: fillName(step.title, answers.firstName) };
 }
@@ -75,17 +80,24 @@ export function useOnboardingFlow() {
   const answers = useOnboardingStore((state) => state.answers);
   const hasHydrated = useOnboardingStore((state) => state.hasHydrated);
   const setAnswer = useOnboardingStore((state) => state.setAnswer);
-  const { goBack, goToStep, step: historyStep } = useWizardHistory();
+  const { goBack, goToStep, resumeAt, step: historyStep } = useWizardHistory();
+  const [resumed, setResumed] = useState(false);
   const [submitting, startSubmit] = useTransition();
   const steps = ONBOARDING_STEPS[answers.role ?? "patient"];
   const stepIndex = Math.min(historyStep, steps.length - 1);
   const step = resolveStep(steps[stepIndex], answers);
   const accountIndex = steps.findIndex((item) => item.id === "account");
 
+  const resume = useEffectEvent(() => {
+    const saved = useOnboardingStore.getState().answers;
+    resumeAt(firstPendingIndex(ONBOARDING_STEPS[saved.role ?? "patient"], saved));
+    setResumed(true);
+  });
+
   useEffect(() => {
-    if (!useOnboardingStore.persist.hasHydrated()) {
-      useOnboardingStore.persist.rehydrate();
-    }
+    const { persist } = useOnboardingStore;
+
+    void Promise.resolve(persist.hasHydrated() || persist.rehydrate()).then(() => resume());
   }, []);
 
   function submitProfile() {
@@ -141,7 +153,7 @@ export function useOnboardingFlow() {
     goBack,
     goForward,
     progress: ((stepIndex + 1) / steps.length) * ONBOARDING_PROGRESS_SHARE,
-    ready: hasHydrated && account.mode !== "loading",
+    ready: hasHydrated && resumed && account.mode !== "loading",
     setAnswer,
     step,
     stepIndex,

@@ -71,7 +71,7 @@ export function useOnboardingAccount(submitProfile: () => void) {
     signUp.status !== "complete" &&
     Boolean(signUp.emailAddress) &&
     !signUp.missingFields.includes("email_address") &&
-    !signUp.missingFields.includes("password");
+    signUp.verifications.externalAccount.status === "verified";
   const mode: OnboardingAccountMode = !isLoaded
     ? "loading"
     : isSignedIn
@@ -409,6 +409,6 @@ export function useOnboardingAccount(submitProfile: () => void) {
     confirm,
     emailTaken,
     readyToSave: mode !== "loading" && mode !== "create" && (!requiresLegal || legalAccepted),
-    busy: working || (submitRequested && mode !== "create"),
+    busy: (working || submitRequested) && mode !== "create",
   };
 }

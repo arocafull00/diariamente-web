@@ -26,5 +26,28 @@ export function useWizardHistory() {
     window.history.back();
   }
 
-  return { goBack, goToStep, step };
+  function resumeAt(target: number) {
+    const current = window.history.state?.[HISTORY_STEP_KEY];
+
+    if (typeof current === "number") {
+      const next = Math.min(current, target);
+
+      if (next !== current) {
+        window.history.replaceState({ ...window.history.state, [HISTORY_STEP_KEY]: next }, "");
+      }
+
+      setStep(next);
+      return;
+    }
+
+    window.history.replaceState({ ...window.history.state, [HISTORY_STEP_KEY]: 0 }, "");
+
+    for (let index = 1; index <= target; index++) {
+      window.history.pushState({ [HISTORY_STEP_KEY]: index }, "");
+    }
+
+    setStep(target);
+  }
+
+  return { goBack, goToStep, resumeAt, step };
 }
