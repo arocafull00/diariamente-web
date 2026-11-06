@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Registro emocional diario",
     start_url: "/",
     display: "standalone",
-    background_color: "#fafafa",
-    theme_color: "#fafafa",
+    background_color: "#fff8f3",
+    theme_color: "#fff8f3",
     related_applications: [
       {
         platform: "webapp",

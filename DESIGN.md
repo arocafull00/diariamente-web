@@ -47,7 +47,7 @@ Las dos modalidades comparten tipografías, tokens, componentes y caras. Cambia 
 
 ### Fondos
 
-- `bg-background` es el fondo de la app. Debe ser un neutro **cálido** (objetivo: crema `#fff8f3`, ver Migración pendiente).
+- `bg-background` es el fondo de la app: crema cálido (`#fff8f3`). `bg-card` (blanco) apenas contrasta con él (1,05:1), así que toda tarjeta necesita su `ring`/`border` para separarse.
 - Para dar color a una composición expresiva, usa el `bg-mood-*-soft` de un cuadrante como fondo a sangre. No inventes fondos nuevos parecidos a los soft (menta, cielo, melocotón…): se confundirían con los cuadrantes.
 - Como mucho **un fondo de color por pantalla**.
 
@@ -165,20 +165,6 @@ Fuera de esta lista (por ejemplo, `strong` de un cuadrante sobre el `soft` de ot
 - CTA a pantalla completa: `size="lg"` (h-14).
 - Trigger de icono en cabecera: `inline-flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-accent active:scale-95`.
 - Iconos siempre Lucide; nunca emojis.
-
-## Migración pendiente
-
-Estos tokens se usan en este documento pero aún no existen o tienen otro valor en `app/globals.css`. Cuando una tarea los necesite, añádelos en `:root` y en `@theme inline` antes de usarlos:
-
-| Token | Valor actual | Valor objetivo |
-| --- | --- | --- |
-| `--background`, `--sidebar` | `#fafafa` | `#fff8f3` |
-| `--muted` | `#f5f5f5` | `#f6f0ea` |
-| `--success` / `--success-soft` | — | `#1f6f55` / `#e7f3ee` |
-| `--info` / `--info-soft` | — | `#2d5a96` / `#eaf0f8` |
-| `--warning` / `--warning-soft` | — | `#855000` / `#fbf0d9` |
-
-Al cambiar a crema, `bg-card` (blanco) apenas contrasta con el fondo (1,05:1): las tarjetas que se mantengan necesitan su `ring`/`border` para separarse.
 
 ## Referencias en el código
 
