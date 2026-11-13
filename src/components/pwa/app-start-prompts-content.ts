@@ -42,7 +42,7 @@ export const NOTIFICATION_PROMPTS: Record<"patient" | "psychologist", Notificati
     title: "No te pierdas",
     highlight: "nada",
     description:
-      "Te avisaré cuando un paciente quiera conectar contigo o añada un registro nuevo.",
+      "Te avisaré cuando un paciente se conecte contigo o añada un registro nuevo.",
     preview: {
       title: "Nuevo registro",
       body: "Un paciente ha añadido un registro nuevo.",

@@ -14,7 +14,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { ConnectionRequestsList } from "./connection-requests-list";
 import { InvitePatientFab } from "./invite-patient-fab";
 import { InviteLinkSection } from "./invite-link-section";
 import { InviteStep } from "./invite-step";
@@ -22,39 +21,30 @@ import { InviteStep } from "./invite-step";
 const INVITE_STEPS = [
   {
     icon: "generar-enlace",
-    title: "Crea tu enlace",
-    description: "Es personal. Puedes cambiarlo cuando quieras.",
+    title: "Enséñale tu QR",
+    description: "En consulta lo escanea con la cámara del móvil.",
   },
   {
     icon: "compartir-equipo",
-    title: "Compártelo con tu paciente",
-    description: "Por WhatsApp, email o en consulta.",
+    title: "O dile tu código",
+    description: "Lo escribe en su perfil, ideal en videollamada.",
   },
   {
     icon: "aceptar-invitacion",
-    title: "Acepta su solicitud",
-    description: "Aparecerá aquí y empezarás a ver sus registros.",
+    title: "Conectados al momento",
+    description: "Sin solicitudes: verás sus registros enseguida.",
   },
 ] as const;
 
-type ConnectionRequest = {
-  id: string;
-  firstName: string | null;
-  lastName: string | null;
-  avatarUrl: string | null;
-};
-
 type InvitationsSheetProps = {
-  token: string | null;
+  invite: { token: string; code: string } | null;
   origin: string;
-  requests: ConnectionRequest[];
   variant?: "icon" | "button" | "floating";
 };
 
 export function InvitationsSheet({
-  token,
+  invite,
   origin,
-  requests,
   variant = "icon",
 }: InvitationsSheetProps) {
   const [open, setOpen] = useState(false);
@@ -70,13 +60,10 @@ export function InvitationsSheet({
         </SheetTrigger>
       ) : (
         <SheetTrigger
-          className="relative inline-flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-accent active:scale-95"
+          className="inline-flex size-10 items-center justify-center rounded-full text-primary transition-colors hover:bg-accent active:scale-95"
           aria-label="Invitaciones"
         >
           <UserPlus className="size-5" aria-hidden="true" />
-          {requests.length > 0 ? (
-            <span className="absolute top-1.5 right-1.5 flex size-2 rounded-full bg-destructive" />
-          ) : null}
         </SheetTrigger>
       )}
       <SheetContent
@@ -88,18 +75,17 @@ export function InvitationsSheet({
             Invitaciones
           </SheetTitle>
           <SheetDescription>
-            Comparte tu enlace y da la bienvenida a tus pacientes.
+            Tus pacientes se conectan contigo al instante.
           </SheetDescription>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 pb-6">
-          <ConnectionRequestsList requests={requests} />
           <section className="space-y-5 rounded-[2rem] bg-card/80 px-5 py-6 text-center shadow-sm ring-1 ring-border/50 backdrop-blur">
             <FaceRow faceIds={["02_azul_rosa", "alegria", "05_rosa_verde"]} />
             <h3 className="font-display text-2xl leading-tight font-medium text-balance">
               Invita a tus{" "}
               <span className="text-mood-lp-strong italic">pacientes</span>
             </h3>
-            <InviteLinkSection token={token} origin={origin} />
+            <InviteLinkSection invite={invite} origin={origin} />
           </section>
           <section className="space-y-2">
             <h3 className="px-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">

@@ -20,7 +20,6 @@ import {
   getClinicByOwner,
   getClinicInviteLink,
   getClinicPsychologistStats,
-  getPatientPendingRequest,
   getPatientPsychologist,
   getPatientRecordCount,
   getPatientRecords,
@@ -120,19 +119,16 @@ export async function getProfileScreenData() {
   };
 
   if (profile.role === "patient") {
-    const [psychologist, pendingRequest, recordCount, reminderSettings] =
-      await Promise.all([
-        getPatientPsychologist(profile.id),
-        getPatientPendingRequest(profile.id),
-        getPatientRecordCount(profile.id),
-        getReminderSettings(profile.id),
-      ]);
+    const [psychologist, recordCount, reminderSettings] = await Promise.all([
+      getPatientPsychologist(profile.id),
+      getPatientRecordCount(profile.id),
+      getReminderSettings(profile.id),
+    ]);
 
     return {
       ...identity,
       role: profile.role,
       psychologist,
-      pendingRequest,
       recordCount,
       remindersEnabled: reminderSettings?.enabled ?? false,
     };

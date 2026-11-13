@@ -148,6 +148,13 @@
       "when": 1794556441728,
       "tag": "0020_soft_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1794588681337,
+      "tag": "0021_free_skrulls",
+      "breakpoints": true
     }
   ]
 }

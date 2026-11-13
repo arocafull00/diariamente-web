@@ -54,7 +54,6 @@ export function ProfileScreen({ refreshedAt }: ProfileScreenProps) {
           memberSince={data.memberSince}
           recordCount={data.recordCount}
           psychologist={data.psychologist}
-          pendingRequest={data.pendingRequest}
         />
       </>
     );

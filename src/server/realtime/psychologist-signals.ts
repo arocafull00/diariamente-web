@@ -1,26 +1,17 @@
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import {
-  connectionRequests,
-  patientRecords,
-  psychologistPatient,
-} from "@/db/schema";
+import { patientRecords, psychologistPatient } from "@/db/schema";
 
 import { realtime } from "./realtime";
 
 const RECORDS_SIGNAL_LIMIT = 50;
 
-function pendingRequestsSignalQuery(psychologistId: string) {
+function linkedPatientsSignalQuery(psychologistId: string) {
   return db
-    .select({ id: connectionRequests.id })
-    .from(connectionRequests)
-    .where(
-      and(
-        eq(connectionRequests.psychologistId, psychologistId),
-        eq(connectionRequests.status, "pending"),
-      ),
-    );
+    .select({ id: psychologistPatient.id })
+    .from(psychologistPatient)
+    .where(eq(psychologistPatient.psychologistId, psychologistId));
 }
 
 function patientRecordsSignalQuery(psychologistId: string) {
@@ -44,9 +35,9 @@ function requireRealtime() {
   return realtime;
 }
 
-export function sealPendingRequestsSignal(psychologistId: string) {
+export function sealLinkedPatientsSignal(psychologistId: string) {
   return requireRealtime().seal({
-    query: pendingRequestsSignalQuery(psychologistId),
+    query: linkedPatientsSignalQuery(psychologistId),
   });
 }
 
@@ -61,10 +52,10 @@ export async function sealPsychologistSignals(psychologistId: string) {
     return null;
   }
 
-  const [requests, records] = await Promise.all([
-    sealPendingRequestsSignal(psychologistId),
+  const [patients, records] = await Promise.all([
+    sealLinkedPatientsSignal(psychologistId),
     sealPatientRecordsSignal(psychologistId),
   ]);
 
-  return { requests, records };
+  return { patients, records };
 }

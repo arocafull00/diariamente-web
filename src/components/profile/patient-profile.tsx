@@ -12,13 +12,6 @@ type PatientPsychologist = {
   avatarUrl: string | null;
 };
 
-type PatientPendingRequest = {
-  id: string;
-  firstName: string | null;
-  lastName: string | null;
-  avatarUrl: string | null;
-};
-
 type PatientProfileProps = {
   firstName: string | null;
   lastName: string | null;
@@ -27,7 +20,6 @@ type PatientProfileProps = {
   memberSince: Date;
   recordCount: number;
   psychologist: PatientPsychologist | null;
-  pendingRequest: PatientPendingRequest | null;
 };
 
 export function PatientProfile({
@@ -38,7 +30,6 @@ export function PatientProfile({
   memberSince,
   recordCount,
   psychologist,
-  pendingRequest,
 }: PatientProfileProps) {
   return (
     <ProfileLayout
@@ -61,7 +52,7 @@ export function PatientProfile({
           avatarUrl={psychologist.avatarUrl}
         />
       ) : (
-        <ProfileLinkPsychologistCard pendingRequest={pendingRequest} />
+        <ProfileLinkPsychologistCard />
       )}
       <ProfileRecordsSummaryCard recordCount={recordCount} />
       <FeedbackProfileCard role="patient" />

@@ -62,7 +62,7 @@ export function ConnectSwitchPsychologistDialog({
               <span className="text-mood-lp-strong italic">psicólogo/a</span>?
             </>
           }
-          description={`Te desvincularás de ${currentName} y después podrás enviar tu solicitud a ${newName}.`}
+          description={`Te desvincularás de ${currentName} y después podrás conectar con ${newName}.`}
         />
         <div className="flex items-center gap-3 rounded-2xl bg-mood-hp-soft p-3">
           <span
@@ -75,7 +75,7 @@ export function ConnectSwitchPsychologistDialog({
             <span className="block font-semibold text-mood-hp-strong">
               {currentName} dejará de ver tus registros
             </span>
-            Para volver a conectar, necesitarás un nuevo enlace suyo.
+            Para volver a conectar, necesitarás su código.
           </p>
         </div>
         <AlertDialogFooter className={confirmDialogFooterClassName}>

@@ -1,11 +1,11 @@
-import { AlertTriangle, Link2Off, UserCheck } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 import { ConnectExistingPsychologist } from "@/components/invitations/connect-existing-psychologist";
-import { ConnectRequestCard } from "@/components/invitations/connect-request-card";
+import { ConnectCodeCard } from "@/components/invitations/connect-code-card";
+import { ConnectConfirmCard } from "@/components/invitations/connect-confirm-card";
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
 import type { UserRole } from "@/db/schema";
 import {
-  getConnectionRequestForPair,
   getInviteLinkByToken,
   getPatientPsychologist,
   getProfileById,
@@ -22,32 +22,6 @@ export async function ConnectPageContent({
   role,
   token,
 }: ConnectPageContentProps) {
-  if (!token) {
-    return (
-      <ConnectStatusCard
-        icon={Link2Off}
-        title="Este enlace no existe"
-        description="Pide a tu psicólogo/a que te lo vuelva a enviar."
-        href="/"
-        hrefLabel="Ir al inicio"
-      />
-    );
-  }
-
-  const link = await getInviteLinkByToken(token);
-
-  if (!link) {
-    return (
-      <ConnectStatusCard
-        icon={AlertTriangle}
-        title="Este enlace ya no funciona"
-        description="Pide a tu psicólogo/a que te mande uno nuevo."
-        href="/"
-        hrefLabel="Ir al inicio"
-      />
-    );
-  }
-
   if (role !== "patient") {
     return (
       <ConnectStatusCard
@@ -58,6 +32,16 @@ export async function ConnectPageContent({
         hrefLabel="Ir al inicio"
       />
     );
+  }
+
+  if (!token) {
+    return <ConnectCodeCard />;
+  }
+
+  const link = await getInviteLinkByToken(token);
+
+  if (!link) {
+    return <ConnectCodeCard expired />;
   }
 
   const [existingLink, psychologist] = await Promise.all([
@@ -75,23 +59,6 @@ export async function ConnectPageContent({
     );
   }
 
-  const pendingRequest = await getConnectionRequestForPair(
-    profileId,
-    link.psychologistId,
-  );
-
-  if (pendingRequest?.status === "pending") {
-    return (
-      <ConnectStatusCard
-        icon={UserCheck}
-        title="Tu solicitud está en camino"
-        description="En cuanto tu psicólogo/a la acepte, estaréis conectados."
-        href="/perfil"
-        hrefLabel="Ir a mi perfil"
-      />
-    );
-  }
-
   if (!psychologist) {
     return (
       <ConnectStatusCard
@@ -104,5 +71,5 @@ export async function ConnectPageContent({
     );
   }
 
-  return <ConnectRequestCard psychologist={psychologist} />;
+  return <ConnectConfirmCard psychologist={psychologist} />;
 }

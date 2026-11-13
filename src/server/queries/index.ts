@@ -374,69 +374,14 @@ export async function getInviteLinkByToken(token: string) {
   return link ?? null;
 }
 
-export async function getPendingConnectionRequests(psychologistId: string) {
-  return db
-    .select({
-      id: connectionRequests.id,
-      createdAt: connectionRequests.createdAt,
-      patientId: profiles.id,
-      firstName: profiles.firstName,
-      lastName: profiles.lastName,
-      avatarUrl: profiles.avatarUrl,
-    })
-    .from(connectionRequests)
-    .innerJoin(profiles, eq(profiles.id, connectionRequests.patientId))
-    .where(
-      and(
-        eq(connectionRequests.psychologistId, psychologistId),
-        eq(connectionRequests.status, "pending"),
-      ),
-    )
-    .orderBy(desc(connectionRequests.createdAt));
-}
-
-export async function getPatientPendingRequest(patientId: string) {
-  const [request] = await db
-    .select({
-      id: connectionRequests.id,
-      createdAt: connectionRequests.createdAt,
-      firstName: profiles.firstName,
-      lastName: profiles.lastName,
-      avatarUrl: profiles.avatarUrl,
-    })
-    .from(connectionRequests)
-    .innerJoin(profiles, eq(profiles.id, connectionRequests.psychologistId))
-    .where(
-      and(
-        eq(connectionRequests.patientId, patientId),
-        eq(connectionRequests.status, "pending"),
-      ),
-    )
+export async function getInviteLinkByCode(code: string) {
+  const [link] = await db
+    .select()
+    .from(inviteLinks)
+    .where(eq(inviteLinks.code, code))
     .limit(1);
 
-  return request ?? null;
-}
-
-export async function getConnectionRequestForPair(
-  patientId: string,
-  psychologistId: string,
-) {
-  const [request] = await db
-    .select({
-      id: connectionRequests.id,
-      status: connectionRequests.status,
-      createdAt: connectionRequests.createdAt,
-    })
-    .from(connectionRequests)
-    .where(
-      and(
-        eq(connectionRequests.patientId, patientId),
-        eq(connectionRequests.psychologistId, psychologistId),
-      ),
-    )
-    .limit(1);
-
-  return request ?? null;
+  return link ?? null;
 }
 
 export async function getRecordAccessLog(patientId: string) {

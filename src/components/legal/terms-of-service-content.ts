@@ -34,7 +34,7 @@ export const TERMS_OF_SERVICE_SECTIONS: {
     id: "vinculacion",
     title: "4. Vinculación con tu profesional",
     paragraphs: [
-      "Tú decides si te vinculas con un profesional. Antes de enviar la solicitud, la aplicación explica qué información podrá consultar. La vinculación requiere tu consentimiento explícito y la aceptación del profesional.",
+      "Tú decides si te vinculas con un profesional. Antes de vincularte, la aplicación explica qué información podrá consultar. La vinculación requiere tu consentimiento explícito y usa el enlace, el QR o el código que te facilita el profesional.",
       "Puedes desvincularte desde tu perfil. Al hacerlo, el profesional deja de tener acceso a tus datos en la aplicación. Esto no elimina la documentación que el profesional deba conservar legítimamente fuera de Diariamente en el marco de vuestra relación asistencial.",
       "La relación terapéutica, las citas y los acuerdos asistenciales se establecen entre paciente y profesional. Crear una cuenta o vincularse en Diariamente no supone contratar una terapia con el titular de la aplicación.",
     ],

@@ -3,11 +3,11 @@
 import { requireUser } from "@/server/auth/get-current-profile";
 import {
   sealPatientRecordsSignal,
-  sealPendingRequestsSignal,
+  sealLinkedPatientsSignal,
 } from "@/server/realtime/psychologist-signals";
 
-export async function renewPendingRequestsSignal() {
-  return sealPendingRequestsSignal(await requireUser());
+export async function renewLinkedPatientsSignal() {
+  return sealLinkedPatientsSignal(await requireUser());
 }
 
 export async function renewPatientRecordsSignal() {

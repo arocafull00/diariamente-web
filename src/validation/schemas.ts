@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { isPredefinedAvatarUrl } from "@/lib/avatars";
 import { MAX_BODY_SENSATIONS } from "@/lib/body-sensations";
+import { INVITE_CODE_LENGTH, normalizeInviteCode } from "@/lib/invitations";
 import {
   ACQUISITION_SOURCES,
   CASELOADS,
@@ -226,6 +227,17 @@ export const recordNoteSchema = z.object({
     .trim()
     .min(1, "Escribe algo en la nota")
     .max(2000),
+});
+
+export const inviteCodeSchema = z.object({
+  code: z
+    .string()
+    .transform(normalizeInviteCode)
+    .pipe(
+      z.string().length(INVITE_CODE_LENGTH, {
+        error: `El código tiene ${INVITE_CODE_LENGTH} caracteres`,
+      }),
+    ),
 });
 
 export const connectionConsentSchema = z.object({

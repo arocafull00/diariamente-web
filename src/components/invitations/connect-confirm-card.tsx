@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, LoaderCircle, UserPlus } from "lucide-react";
+import { Eye, EyeOff, Link2, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -12,13 +12,13 @@ import {
   PSYCHOLOGIST_HIDDEN_DATA,
   PSYCHOLOGIST_VISIBLE_DATA,
 } from "@/lib/privacy";
-import { requestConnection } from "@/server/actions/invitations";
+import { connectWithPsychologist } from "@/server/actions/invitations";
 
 import { ConnectConsentDetails } from "./connect-consent-details";
 import { ConnectHeroCard } from "./connect-hero-card";
 import { ConnectPsychologistRow } from "./connect-psychologist-row";
 
-type ConnectRequestCardProps = {
+type ConnectConfirmCardProps = {
   psychologist: {
     firstName: string | null;
     lastName: string | null;
@@ -26,22 +26,22 @@ type ConnectRequestCardProps = {
   };
 };
 
-export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
+export function ConnectConfirmCard({ psychologist }: ConnectConfirmCardProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [consent, setConsent] = useState(false);
 
-  function handleRequest() {
+  function handleConnect() {
     startTransition(async () => {
-      const result = await requestConnection({ consent });
+      const result = await connectWithPsychologist({ consent });
 
       if (result.error) {
         toast.error(result.error);
         return;
       }
 
-      toast.success("¡Solicitud enviada!");
-      router.replace("/perfil");
+      toast.success("¡Ya estáis conectados!");
+      router.replace("/inicio");
       router.refresh();
     });
   }
@@ -55,7 +55,7 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           <span className="text-mood-lp-strong italic">psicólogo/a</span>!
         </>
       }
-      description="En cuanto acepte tu solicitud, estaréis conectados."
+      description="Confirma y quedaréis conectados al momento."
     >
       <div className="divide-y divide-border/70 overflow-hidden rounded-3xl border border-border/60 bg-card shadow-xs">
         <ConnectPsychologistRow
@@ -96,14 +96,14 @@ export function ConnectRequestCard({ psychologist }: ConnectRequestCardProps) {
           size="lg"
           className="w-full"
           disabled={pending || !consent}
-          onClick={handleRequest}
+          onClick={handleConnect}
         >
           {pending ? (
             <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
           ) : (
-            <UserPlus data-icon="inline-start" aria-hidden="true" />
+            <Link2 data-icon="inline-start" aria-hidden="true" />
           )}
-          {pending ? "Enviando..." : "Solicitar conexión"}
+          {pending ? "Conectando..." : "Conectar"}
         </Button>
         <p className="text-xs leading-5 text-pretty text-muted-foreground">
           Puedes retirar tu consentimiento cuando quieras desde tu perfil.{" "}

@@ -340,6 +340,7 @@ export const recordNotes = pgTable(
 export const inviteLinks = pgTable("invite_links", {
   id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
+  code: text("code").notNull().unique(),
   psychologistId: text("psychologist_id")
     .notNull()
     .unique()

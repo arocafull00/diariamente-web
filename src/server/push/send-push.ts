@@ -6,8 +6,7 @@ import { pushSubscriptions } from "@/db/schema";
 import { logger } from "@/lib/logger";
 
 type PushTopic =
-  | "connection_request"
-  | "connection_resolved"
+  | "patient_linked"
   | "patient_record"
   | "reminder"
   | "account_inactivity"

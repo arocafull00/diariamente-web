@@ -1,54 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getFullName, getInitials } from "@/lib/utils-app";
+import { InviteCodeForm } from "@/components/invitations/invite-code-form";
 
-import { ProfileCancelConnectionButton } from "./profile-cancel-connection-button";
 import { ProfileSectionCard } from "./profile-section-card";
 
-type PatientPendingRequest = {
-  id: string;
-  firstName: string | null;
-  lastName: string | null;
-  avatarUrl: string | null;
-};
-
-type ProfileLinkPsychologistCardProps = {
-  pendingRequest: PatientPendingRequest | null;
-};
-
-export function ProfileLinkPsychologistCard({
-  pendingRequest,
-}: ProfileLinkPsychologistCardProps) {
-  if (pendingRequest) {
-    return (
-      <ProfileSectionCard title="Solicitud de conexión">
-        <div className="flex items-center gap-3">
-          <Avatar className="size-12 ring-2 ring-accent">
-            {pendingRequest.avatarUrl ? (
-              <AvatarImage src={pendingRequest.avatarUrl} alt="" />
-            ) : null}
-            <AvatarFallback>
-              {getInitials(pendingRequest.firstName, pendingRequest.lastName)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold">
-              {getFullName(pendingRequest.firstName, pendingRequest.lastName)}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Esperando respuesta
-            </p>
-          </div>
-          <ProfileCancelConnectionButton requestId={pendingRequest.id} />
-        </div>
-      </ProfileSectionCard>
-    );
-  }
-
+export function ProfileLinkPsychologistCard() {
   return (
     <ProfileSectionCard title="Tu psicólogo/a">
-      <p className="text-sm leading-relaxed text-muted-foreground">
-        Pide a tu psicólogo/a su enlace de invitación y conectad en un momento.
-      </p>
+      <div className="space-y-3">
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Escribe su código o escanea su QR y conectad al momento.
+        </p>
+        <InviteCodeForm />
+      </div>
     </ProfileSectionCard>
   );
 }

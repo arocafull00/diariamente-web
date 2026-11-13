@@ -17,7 +17,7 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
   {
     title: "Quién puede verlos",
     paragraphs: [
-      "Solo tú y, si das tu consentimiento explícito al vincularte, el profesional con el que conectas. Antes de enviar la solicitud te mostramos exactamente qué verá.",
+      "Solo tú y, si das tu consentimiento explícito al vincularte, el profesional con el que conectas. Antes de vincularte te mostramos exactamente qué verá.",
       "Puedes retirar el consentimiento en cualquier momento desvinculándote desde tu perfil: tu profesional dejará de tener acceso de inmediato.",
       "Cada vez que tu profesional abre uno de tus registros queda anotado. Puedes consultarlo en el historial de accesos de la sección «Privacidad y cuenta» de Ajustes.",
     ],
