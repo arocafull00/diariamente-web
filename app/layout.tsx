@@ -2,7 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/next"
+import { AcquisitionAnalytics } from "@/components/analytics/acquisition-analytics";
 
 import { Background } from "@/components/background";
 import { MotionProvider } from "@/components/motion/motion-provider";
@@ -96,7 +96,7 @@ export default function RootLayout({
           <Toaster richColors position="top-center" />
           <SoundFeedback />
           <ServiceWorkerRegister />
-          <Analytics />
+          <AcquisitionAnalytics />
         </ClerkProvider>
       </body>
     </html>
