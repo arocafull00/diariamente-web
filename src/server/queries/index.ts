@@ -33,6 +33,7 @@ import {
   recordNotes,
   referrals,
   screenAcknowledgements,
+  signupAttribution,
   subscriptions,
   therapySessions,
   userReminders,
@@ -497,6 +498,7 @@ export async function getDataExport(profileId: string) {
     accessLog,
     activity,
     onboarding,
+    acquisition,
   ] = await Promise.all([
     db
       .select()
@@ -584,6 +586,15 @@ export async function getDataExport(profileId: string) {
       .where(eq(onboardingAnswers.profileId, profileId))
       .limit(1)
       .then(([row]) => row ?? null),
+    db.select({
+      channel: signupAttribution.channel,
+      platform: signupAttribution.platform,
+      landingHost: signupAttribution.landingHost,
+      registeredAt: signupAttribution.registeredAt,
+    }).from(signupAttribution)
+      .where(eq(signupAttribution.profileId, profileId))
+      .limit(1)
+      .then(([row]) => row ?? null),
   ]);
 
   const counterpartIds = [
@@ -623,6 +634,7 @@ export async function getDataExport(profileId: string) {
 
   return {
     exportedAt: new Date(),
+    acquisition,
     profile: profile && {
       firstName: profile.firstName,
       lastName: profile.lastName,

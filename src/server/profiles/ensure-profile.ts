@@ -21,5 +21,5 @@ export async function ensureProfile(
     id: userId,
     avatarUrl,
     onboardingCompleted: false,
-  });
+  }).onConflictDoNothing();
 }

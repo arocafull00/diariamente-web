@@ -147,6 +147,14 @@ export const profiles = pgTable("profiles", {
     .notNull(),
 });
 
+export const signupAttribution = pgTable("signup_attribution", {
+  profileId: text("profile_id").primaryKey().references(() => profiles.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  channel: text("channel", { enum: ["linkedin", "instagram", "facebook", "web"] }),
+  platform: text("platform", { enum: ["web", "android"] }).notNull(),
+  landingHost: text("landing_host", { enum: ["info.diariamente.es", "clinicas.diariamente.es", "pacientes.diariamente.es"] }),
+  registeredAt: timestamp("registered_at", { withTimezone: true }).notNull(),
+}, (table) => [index("signup_attribution_registered_at_idx").on(table.registeredAt)]);
+
 export const patientRecords = pgTable("patient_records", {
   id: uuid("id").defaultRandom().primaryKey(),
   patientId: text("patient_id")

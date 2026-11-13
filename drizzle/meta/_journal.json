@@ -141,6 +141,13 @@
       "when": 1793869323877,
       "tag": "0019_magenta_redwing",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1794556441728,
+      "tag": "0020_soft_iron_fist",
+      "breakpoints": true
     }
   ]
 }

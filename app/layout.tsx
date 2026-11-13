@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import { AcquisitionAnalytics } from "@/components/analytics/acquisition-analytics";
+import { SignupAcquisition } from "@/components/analytics/signup-acquisition";
 
 import { Background } from "@/components/background";
 import { MotionProvider } from "@/components/motion/motion-provider";
@@ -97,6 +98,7 @@ export default function RootLayout({
           <SoundFeedback />
           <ServiceWorkerRegister />
           <AcquisitionAnalytics />
+          <SignupAcquisition />
         </ClerkProvider>
       </body>
     </html>

@@ -11,6 +11,7 @@ export const PRIVACY_POLICY_SECTIONS: { title: string; paragraphs: string[] }[] 
       "Tu nombre, tu foto de perfil y cómo prefieres que te llamemos. El correo y la contraseña los gestiona nuestro proveedor de identidad y no se guardan junto a tus registros.",
       "Si eres paciente, los registros que creas: fecha, emociones, intensidad, contexto, sensaciones corporales y lo que escribes sobre la situación, tus pensamientos y tus conductas. Son datos de salud, una categoría especial según el RGPD.",
       "Un registro de actividad con las acciones relevantes de tu cuenta, como vincularte, crear registros o cuándo tu profesional abre cada uno de ellos.",
+      "Al crear tu cuenta guardamos el canal por el que llegaste, la web informativa de procedencia si la conocemos y si te registraste desde la web o desde la app de Google Play. Esto nos permite conocer el origen de las altas, sin incluir el contenido de tus registros. Para conservar el origen durante el registro usamos una cookie temporal de hasta 24 horas que se borra al cerrar sesión.",
     ],
   },
   {
