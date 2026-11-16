@@ -4,7 +4,7 @@ import type { FaceId } from "@/lib/faces";
 type ConnectHeroCardProps = {
   faceIds: readonly FaceId[];
   title: React.ReactNode;
-  description: string;
+  description?: string;
   children: React.ReactNode;
 };
 
@@ -21,9 +21,11 @@ export function ConnectHeroCard({
         <h1 className="font-display text-3xl leading-tight font-medium text-balance">
           {title}
         </h1>
-        <p className="mx-auto max-w-xs text-sm leading-6 text-pretty text-muted-foreground">
-          {description}
-        </p>
+        {description ? (
+          <p className="mx-auto max-w-xs text-sm leading-6 text-pretty text-muted-foreground">
+            {description}
+          </p>
+        ) : null}
       </div>
       {children}
     </section>

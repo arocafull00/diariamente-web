@@ -55,7 +55,6 @@ export function InvitationsSheet({
         <InvitePatientFab />
       ) : variant === "button" ? (
         <SheetTrigger render={<Button />}>
-          <UserPlus data-icon="inline-start" aria-hidden="true" />
           Invitar paciente
         </SheetTrigger>
       ) : (
@@ -74,7 +73,7 @@ export function InvitationsSheet({
           <SheetTitle className="text-2xl font-bold tracking-tight">
             Invitaciones
           </SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="sr-only">
             Tus pacientes se conectan contigo al instante.
           </SheetDescription>
         </SheetHeader>

@@ -1,4 +1,3 @@
-import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Illustration } from "@/components/faces/illustration";
@@ -7,7 +6,7 @@ import type { IllustrationName } from "@/lib/illustrations";
 import { cn } from "@/lib/utils";
 
 type ConnectStatusCardProps = {
-  icon: LucideIcon | IllustrationName;
+  icon?: IllustrationName;
   title: string;
   description: string;
   href?: string;
@@ -22,17 +21,11 @@ export function ConnectStatusCard({
   hrefLabel,
 }: ConnectStatusCardProps) {
   return (
-    <div className="flex w-full max-w-sm flex-col items-center gap-4 rounded-2xl bg-secondary p-6 text-center">
-      {typeof Icon === "string" ? (
-        <Illustration name={Icon} className="size-14" />
-      ) : (
-        <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <Icon className="size-7" aria-hidden="true" />
-        </div>
-      )}
-      <div>
-        <h1 className="text-lg font-semibold text-foreground">{title}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+    <div className="flex w-full max-w-sm flex-col items-center gap-5 text-center">
+      {Icon ? <Illustration name={Icon} className="size-14" /> : null}
+      <div className="space-y-2">
+        <h1 className="font-display text-2xl leading-tight font-medium text-balance text-foreground">{title}</h1>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       {href && hrefLabel ? (
         <Link href={href} data-cuelume-tap="" className={cn(buttonVariants({ size: "lg" }), "w-full")}>

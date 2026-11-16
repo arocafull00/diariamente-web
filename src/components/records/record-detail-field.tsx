@@ -1,11 +1,8 @@
-import type { LucideIcon } from "lucide-react";
-
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 type RecordDetailFieldProps = {
   id: string;
-  icon: LucideIcon;
   label: string;
   placeholder: string;
   value: string;
@@ -15,7 +12,6 @@ type RecordDetailFieldProps = {
 
 export function RecordDetailField({
   id,
-  icon: Icon,
   label,
   placeholder,
   value,
@@ -28,19 +24,11 @@ export function RecordDetailField({
     <div className="space-y-3 p-5 sm:p-6">
       <div
         id={`${id}-label`}
-        className="flex items-center gap-2 text-sm leading-none font-medium"
+        className="flex min-h-6 items-center gap-2 text-xs leading-none font-semibold tracking-wider text-muted-foreground uppercase"
       >
-        <span
-          className={cn(
-            "flex size-8 items-center justify-center rounded-full transition-colors duration-300",
-            isEmpty ? "bg-foreground/5 text-muted-foreground" : "bg-secondary text-primary",
-          )}
-        >
-          <Icon className="size-4" aria-hidden="true" />
-        </span>
-        <span className="font-semibold">{label}</span>
+        <span>{label}</span>
         {isEmpty ? (
-          <span className="ml-auto rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-medium text-muted-foreground motion-safe:animate-pop-in">
+          <span className="ml-auto rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-medium tracking-normal normal-case text-muted-foreground motion-safe:animate-pop-in">
             Pendiente
           </span>
         ) : null}

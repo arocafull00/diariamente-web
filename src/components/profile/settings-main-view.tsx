@@ -76,7 +76,6 @@ export function SettingsMainView({
             icon={ShieldCheck}
             tone="blue"
             title="Privacidad y cuenta"
-            description="Gestiona tus datos o elimina tu cuenta."
           />
         </button>
       </SettingsGroup>
@@ -94,7 +93,6 @@ export function SettingsMainView({
               icon={CreditCard}
               tone="green"
               title="Suscripción"
-              description="Consulta y gestiona tu plan."
             />
           </button>
         </SettingsGroup>

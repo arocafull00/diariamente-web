@@ -1,6 +1,5 @@
 "use client";
 
-import { LogOut, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,6 @@ export default function GlobalError({ error, unstable_retry }: GlobalErrorProps)
           No sabemos muy bien qué ha pasado. ¿Lo intentamos otra vez?
         </p>
         <Button size="lg" className="mt-8" onClick={() => unstable_retry()}>
-          <RotateCcw data-icon="inline-start" aria-hidden="true" />
           Reintentar
         </Button>
         <Button
@@ -50,7 +48,6 @@ export default function GlobalError({ error, unstable_retry }: GlobalErrorProps)
           disabled={leaving}
           onClick={signOut}
         >
-          <LogOut data-icon="inline-start" aria-hidden="true" />
           Cerrar sesión
         </Button>
       </body>

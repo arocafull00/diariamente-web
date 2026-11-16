@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, UserMinus } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -55,7 +55,6 @@ export function ClinicRemovePsychologistButton({
           "w-full sm:w-auto",
         )}
       >
-        <UserMinus data-icon="inline-start" aria-hidden="true" />
         Quitar de la clínica
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -75,9 +74,7 @@ export function ClinicRemovePsychologistButton({
           >
             {pending ? (
               <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-            ) : (
-              <UserMinus data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Quitando..." : "Quitar"}
           </AlertDialogAction>
         </AlertDialogFooter>

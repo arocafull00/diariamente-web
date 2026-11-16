@@ -1,4 +1,3 @@
-import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { FaceRow } from "@/components/faces/face-row";
@@ -26,7 +25,6 @@ export function MyRecordsEmptyState() {
           "mt-6 motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-90 motion-safe:fill-mode-both motion-safe:duration-500 motion-safe:ease-spring motion-safe:[animation-delay:320ms]",
         )}
       >
-        <Plus data-icon="inline-start" aria-hidden="true" />
         Crear mi primer registro
       </Link>
     </section>

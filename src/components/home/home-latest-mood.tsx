@@ -1,5 +1,3 @@
-import { ArrowUpRight } from "lucide-react";
-
 import { PressableLink } from "@/components/motion/pressable-link";
 import { MoodSummaryCard } from "@/components/records/mood-summary-card";
 import type { GrammaticalGender, PatientRecord } from "@/db/schema";
@@ -36,12 +34,6 @@ export function HomeLatestMood({ record, gender }: HomeLatestMoodProps) {
           occurredAt={new Date(record.occurredAt)}
           className="transition-shadow duration-300 group-hover:shadow-md"
         />
-        <span
-          className="absolute right-4 bottom-4 flex size-10 items-center justify-center rounded-full bg-foreground text-background transition-[translate,scale] duration-300 ease-spring group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-110"
-          aria-hidden="true"
-        >
-          <ArrowUpRight className="size-5" />
-        </span>
       </PressableLink>
     </section>
   );

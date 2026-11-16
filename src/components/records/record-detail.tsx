@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Footprints,
-  LoaderCircle,
-  MapPin,
-  MessageCircleMore,
-  Save,
-} from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -114,7 +108,6 @@ export function RecordDetail({
         <div className="divide-y divide-border overflow-hidden rounded-3xl bg-card shadow-sm ring-1 ring-border/60">
           <RecordDetailField
             id="situation"
-            icon={MapPin}
             label="Situación"
             placeholder="¿Qué ha pasado?"
             value={situation}
@@ -123,7 +116,6 @@ export function RecordDetail({
           />
           <RecordDetailField
             id="thoughts"
-            icon={MessageCircleMore}
             label="Pensamientos"
             placeholder="¿Qué pasó por tu cabeza?"
             value={thoughts}
@@ -132,7 +124,6 @@ export function RecordDetail({
           />
           <RecordDetailField
             id="behaviours"
-            icon={Footprints}
             label="Conductas"
             placeholder="¿Qué hiciste?"
             value={behaviours}
@@ -192,9 +183,7 @@ export function RecordDetail({
               data-icon="inline-start"
               aria-hidden="true"
             />
-          ) : (
-            <Save data-icon="inline-start" aria-hidden="true" />
-          )}
+          ) : null}
               {pending ? "Guardando..." : "Guardar cambios"}
             </Button>
           </motion.div>

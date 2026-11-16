@@ -30,7 +30,6 @@ export function AppStartPromptDialog({
   onAccept,
   onDismiss,
 }: AppStartPromptDialogProps) {
-  const Icon = copy.icon;
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen || pending) {
@@ -69,9 +68,7 @@ export function AppStartPromptDialog({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <Icon data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {copy.action}
           </Button>
           <Button

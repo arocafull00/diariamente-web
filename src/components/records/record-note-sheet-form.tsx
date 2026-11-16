@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, Save } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -97,9 +97,7 @@ export function RecordNoteSheetForm({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <Save data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Guardando..." : "Guardar"}
           </Button>
         </div>

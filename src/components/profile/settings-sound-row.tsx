@@ -32,7 +32,6 @@ export function SettingsSoundRow() {
         icon={Volume2}
         tone="blue"
         title="Sonido"
-        description="Sonidos suaves al tocar botones y guardar registros."
         trailing={
           <Switch
             id="sound"

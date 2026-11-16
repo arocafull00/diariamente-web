@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCheck, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
@@ -44,9 +44,7 @@ export function PatientMarkAllSeenButton({
           data-icon="inline-start"
           aria-hidden="true"
         />
-      ) : (
-        <CheckCheck data-icon="inline-start" aria-hidden="true" />
-      )}
+      ) : null}
       Marcar todo como leído
     </Button>
   );

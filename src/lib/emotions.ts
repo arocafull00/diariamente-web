@@ -456,7 +456,6 @@ export type MoodStyles = {
   color: string;
   ring: string;
   ghost: string;
-  fade: string;
 };
 
 export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
@@ -467,7 +466,6 @@ export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
     color: "var(--mood-hu-2)",
     ring: "ring-mood-hu-strong",
     ghost: "bg-mood-hu-3/60",
-    fade: "to-mood-hu-1/70",
   },
   HIGH_PLEASANT: {
     tones: { 1: "bg-mood-hp-1", 2: "bg-mood-hp-2", 3: "bg-mood-hp-3" },
@@ -476,7 +474,6 @@ export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
     color: "var(--mood-hp-2)",
     ring: "ring-mood-hp-strong",
     ghost: "bg-mood-hp-3/60",
-    fade: "to-mood-hp-1/70",
   },
   LOW_UNPLEASANT: {
     tones: { 1: "bg-mood-lu-1", 2: "bg-mood-lu-2", 3: "bg-mood-lu-3" },
@@ -485,7 +482,6 @@ export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
     color: "var(--mood-lu-2)",
     ring: "ring-mood-lu-strong",
     ghost: "bg-mood-lu-3/60",
-    fade: "to-mood-lu-1/70",
   },
   LOW_PLEASANT: {
     tones: { 1: "bg-mood-lp-1", 2: "bg-mood-lp-2", 3: "bg-mood-lp-3" },
@@ -494,7 +490,6 @@ export const MOOD_STYLES: Record<MoodQuadrant, MoodStyles> = {
     color: "var(--mood-lp-2)",
     ring: "ring-mood-lp-strong",
     ghost: "bg-mood-lp-3/60",
-    fade: "to-mood-lp-1/70",
   },
 };
 
@@ -505,7 +500,6 @@ const NEUTRAL_MOOD_STYLES: MoodStyles = {
   color: "var(--primary)",
   ring: "ring-primary",
   ghost: "bg-primary/30",
-  fade: "to-accent",
 };
 
 export function getMoodStyles(quadrant: MoodQuadrant | null) {

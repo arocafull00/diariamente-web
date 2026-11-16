@@ -1,7 +1,5 @@
 "use client";
 
-import { Clock } from "lucide-react";
-
 import { Label } from "@/components/ui/label";
 import { formatOccurrenceTime, mergeOccurrenceTime } from "@/lib/utils-app";
 import { cn } from "@/lib/utils";
@@ -32,10 +30,6 @@ export function RecordTimeInput({
         {label}
       </Label>
       <div className="relative flex h-12 items-center gap-2 rounded-2xl bg-secondary px-3.5 transition-[background-color,box-shadow,scale] duration-200 ease-spring focus-within:ring-3 focus-within:ring-ring/50 hover:bg-secondary/70 active:scale-[0.98] has-disabled:opacity-50">
-        <Clock
-          className="pointer-events-none size-4 shrink-0 text-primary"
-          aria-hidden="true"
-        />
         <input
           id={id}
           type="time"

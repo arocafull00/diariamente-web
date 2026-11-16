@@ -47,10 +47,7 @@ export function RecordCard({
       className="group block h-full rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <article
-        className={cn(
-          "flex h-full items-center gap-4 rounded-3xl bg-linear-to-r from-card from-40% p-4 shadow-sm ring-1 ring-border/60 transition-shadow duration-200 ease-out group-hover:shadow-md sm:p-5",
-          styles.fade,
-        )}
+        className="flex h-full items-center gap-4 rounded-3xl bg-card p-4 shadow-sm ring-1 ring-border/60 transition-shadow duration-200 ease-out group-hover:shadow-md sm:p-5"
       >
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-1.5">

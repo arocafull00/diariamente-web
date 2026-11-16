@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle, Send } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -150,9 +150,7 @@ export function FeedbackForm({ role, trigger, onDone }: FeedbackFormProps) {
               data-icon="inline-start"
               aria-hidden="true"
             />
-          ) : (
-            <Send data-icon="inline-start" aria-hidden="true" />
-          )}
+          ) : null}
           {pending ? "Enviando..." : "Enviar"}
         </Button>
       </SheetFooter>

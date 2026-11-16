@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, Link2, LoaderCircle } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -55,7 +55,6 @@ export function ConnectConfirmCard({ psychologist }: ConnectConfirmCardProps) {
           <span className="text-mood-lp-strong italic">psicólogo/a</span>!
         </>
       }
-      description="Confirma y quedaréis conectados al momento."
     >
       <div className="divide-y divide-border/70 overflow-hidden rounded-3xl border border-border/60 bg-card shadow-xs">
         <ConnectPsychologistRow
@@ -100,9 +99,7 @@ export function ConnectConfirmCard({ psychologist }: ConnectConfirmCardProps) {
         >
           {pending ? (
             <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-          ) : (
-            <Link2 data-icon="inline-start" aria-hidden="true" />
-          )}
+          ) : null}
           {pending ? "Conectando..." : "Conectar"}
         </Button>
         <p className="text-xs leading-5 text-pretty text-muted-foreground">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -97,9 +97,7 @@ export function ClinicJoinCard({ clinicName }: ClinicJoinCardProps) {
       >
         {pending ? (
           <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-        ) : (
-          <Building2 data-icon="inline-start" aria-hidden="true" />
-        )}
+        ) : null}
         {pending ? "Uniéndote..." : "Unirme a la clínica"}
       </Button>
     </ConnectHeroCard>

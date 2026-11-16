@@ -1,5 +1,3 @@
-import { AlertTriangle, Link2Off } from "lucide-react";
-
 import { ConnectStatusCard } from "@/components/invitations/connect-status-card";
 import type { UserRole } from "@/db/schema";
 import {
@@ -23,7 +21,6 @@ export async function ClinicJoinContent({
   if (!token) {
     return (
       <ConnectStatusCard
-        icon={Link2Off}
         title="Este enlace no existe"
         description="Pide a tu clínica que te lo vuelva a enviar."
         href="/"
@@ -37,7 +34,6 @@ export async function ClinicJoinContent({
   if (!link) {
     return (
       <ConnectStatusCard
-        icon={AlertTriangle}
         title="Este enlace ya no funciona"
         description="Pide a tu clínica que te mande uno nuevo."
         href="/"
@@ -49,7 +45,6 @@ export async function ClinicJoinContent({
   if (role !== "psychologist") {
     return (
       <ConnectStatusCard
-        icon={AlertTriangle}
         title="Enlace solo para profesionales"
         description="Este enlace es para cuentas de psicólogo/a."
         href="/"

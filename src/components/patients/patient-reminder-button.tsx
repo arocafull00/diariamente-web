@@ -75,9 +75,7 @@ export function PatientReminderButton({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <BellRing data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Enviando..." : "Enviar"}
           </AlertDialogAction>
         </AlertDialogFooter>

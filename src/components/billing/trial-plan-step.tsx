@@ -1,5 +1,3 @@
-import { Check, Gift, Users } from "lucide-react";
-
 import { REFERRAL_BONUS_DAYS } from "@/lib/referrals";
 
 type TrialPlanStepProps = {
@@ -24,26 +22,16 @@ export function TrialPlanStep({
         <span className="text-mood-lp-strong italic">{trialDays} días gratis</span>
       </h1>
 
-      <section className="rounded-3xl border-2 border-mood-lp-3 bg-card p-4 shadow-sm">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-sm font-bold text-mood-lp-strong">{planName}</p>
-            <p className="flex flex-wrap items-baseline gap-x-1.5">
-              <span className="text-3xl font-black tracking-tight tabular-nums">{price}</span>
-              <span className="text-xs font-semibold text-foreground/65">/mes, IVA incluido</span>
-            </p>
-          </div>
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-mood-lp-3 text-mood-foreground">
-            <Check className="size-5" strokeWidth={3} aria-hidden="true" />
-          </span>
-        </div>
+      <section className="flex flex-col items-center gap-1 py-2 text-center">
+        <p className="text-sm font-bold text-mood-lp-strong">{planName}</p>
+        <p className="flex flex-wrap items-baseline justify-center gap-x-1.5">
+          <span className="font-display text-5xl font-medium tracking-tight tabular-nums">{price}</span>
+          <span className="text-sm font-semibold text-muted-foreground">/mes, IVA incluido</span>
+        </p>
       </section>
 
       {isClinic ? (
-        <div className="flex items-start gap-3 rounded-2xl bg-mood-lu-soft p-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-card text-mood-lu-strong">
-            <Users className="size-4" strokeWidth={2.5} aria-hidden="true" />
-          </span>
+        <div className="rounded-2xl bg-mood-lu-soft p-3">
           <p className="text-sm leading-5 text-foreground/75">
             Os llamamos para ajustaros el precio según cuántos psicólogos seáis.
           </p>
@@ -51,10 +39,7 @@ export function TrialPlanStep({
       ) : null}
 
       {referrerName ? (
-        <div className="flex items-start gap-3 rounded-2xl bg-mood-hp-soft p-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-card text-mood-hp-strong">
-            <Gift className="size-4" strokeWidth={2.5} aria-hidden="true" />
-          </span>
+        <div className="rounded-2xl bg-mood-hp-soft p-3">
           <p className="text-sm leading-5 text-foreground/75">
             {referrerName} te regala {REFERRAL_BONUS_DAYS} días extra.
           </p>

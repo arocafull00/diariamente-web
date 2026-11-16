@@ -95,9 +95,7 @@ export function PatientActionsMenu({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <Unlink data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Desvinculando..." : "Desvincular"}
           </AlertDialogAction>
         </AlertDialogFooter>

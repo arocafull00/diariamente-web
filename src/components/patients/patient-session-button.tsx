@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarCheck, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -53,7 +53,6 @@ export function PatientSessionButton({
           "w-full",
         )}
       >
-        <CalendarCheck data-icon="inline-start" aria-hidden="true" />
         Hoy hemos tenido sesión
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -74,9 +73,7 @@ export function PatientSessionButton({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <CalendarCheck data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Guardando..." : "Marcar sesión"}
           </AlertDialogAction>
         </AlertDialogFooter>

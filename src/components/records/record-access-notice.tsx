@@ -1,4 +1,3 @@
-import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 import type { GrammaticalGender } from "@/db/schema";
@@ -20,8 +19,7 @@ export function RecordAccessNotice({ views }: RecordAccessNoticeProps) {
 
   if (!latest) {
     return (
-      <p className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
-        <EyeOff className="size-4 shrink-0" aria-hidden="true" />
+      <p className="px-1 text-sm text-muted-foreground">
         Nadie ha abierto este registro todavía.
       </p>
     );
@@ -30,8 +28,7 @@ export function RecordAccessNotice({ views }: RecordAccessNoticeProps) {
   const otherViews = views.length - 1;
 
   return (
-    <p className="flex items-start gap-2 px-1 text-sm text-muted-foreground">
-      <Eye className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+    <p className="px-1 text-sm text-muted-foreground">
       <span>
         Tu {getPsychologistNoun(latest.grammaticalGender)}{" "}
         {getFullName(latest.firstName, latest.lastName)} lo vio el{" "}

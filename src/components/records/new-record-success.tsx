@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, House } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 
@@ -81,7 +81,7 @@ export function NewRecordSuccess({
             tags={tags}
             note={note}
             occurredAt={occurredAt}
-            className="min-h-64 shadow-xl"
+            className="min-h-64 shadow-md"
           />
         </motion.div>
       </div>
@@ -108,7 +108,6 @@ export function NewRecordSuccess({
           className="w-full"
           onClick={onGoHome}
         >
-          <House data-icon="inline-start" aria-hidden="true" />
           Volver al inicio
         </Button>
       </motion.div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Hand } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { NewRecordNextButton } from "@/components/records/new-record-next-button";
@@ -46,9 +45,8 @@ export function EmotionSelectionBar({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="flex h-full items-center gap-2 py-2 text-sm leading-snug text-muted-foreground"
+                className="flex h-full items-center py-2 text-sm leading-snug text-muted-foreground"
               >
-                <Hand className="size-4 shrink-0" aria-hidden="true" />
                 Toca una emoción. Mantén pulsado para guardar rápido.
               </motion.p>
             )}

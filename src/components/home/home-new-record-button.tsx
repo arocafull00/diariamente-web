@@ -17,7 +17,7 @@ export function HomeNewRecordButton() {
       href="/nuevo-registro"
       aria-label="Nuevo registro"
       data-cuelume-tap=""
-      className="absolute inset-0 m-auto flex size-20 items-center justify-center rounded-full bg-card text-foreground shadow-xl ring-1 ring-border/60 outline-none transition-[scale,box-shadow] duration-300 ease-spring hover:scale-110 hover:shadow-2xl active:scale-90 active:shadow-md focus-visible:ring-4 focus-visible:ring-ring/50 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+      className="absolute inset-0 m-auto flex size-20 items-center justify-center rounded-full bg-card text-foreground shadow-md ring-1 ring-border/60 outline-none transition-[scale,box-shadow] duration-300 ease-spring hover:scale-110 hover:shadow-lg active:scale-90 active:shadow-sm focus-visible:ring-4 focus-visible:ring-ring/50 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
       onNavigate={async (event) => {
         if (reducedMotion) return;
 

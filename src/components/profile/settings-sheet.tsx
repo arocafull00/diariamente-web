@@ -142,7 +142,7 @@ export function SettingsSheet({
               {subview?.title ?? "Ajustes"}
             </SheetTitle>
           </div>
-          <SheetDescription>
+          <SheetDescription className="sr-only">
             {subview?.description ??
               (role === "patient"
                 ? "Ponlo todo a tu gusto: recordatorios, avisos y tu cuenta."

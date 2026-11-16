@@ -1,5 +1,3 @@
-import { Bell, Download, type LucideIcon } from "lucide-react";
-
 export type AppStartPromptId = "notifications" | "install";
 
 export type AppStartPromptCopy = {
@@ -10,7 +8,6 @@ export type AppStartPromptCopy = {
   description: string;
   note: string;
   action: string;
-  icon: LucideIcon;
 };
 
 type NotificationPromptCopy = AppStartPromptCopy & {
@@ -22,7 +19,6 @@ const NOTIFICATION_PROMPT_BASE = {
   accentClassName: "text-mood-hp-strong",
   note: "Nunca mostramos el contenido de los registros en las notificaciones.",
   action: "Activar notificaciones",
-  icon: Bell,
 };
 
 export const NOTIFICATION_PROMPTS: Record<"patient" | "psychologist", NotificationPromptCopy> = {
@@ -59,5 +55,4 @@ export const INSTALL_PROMPT: AppStartPromptCopy = {
     "Añade Diariamente a tu pantalla de inicio para abrirla como una app, sin pasar por el navegador.",
   note: "También puedes instalarla más tarde desde Ajustes.",
   action: "Descargar la aplicación",
-  icon: Download,
 };

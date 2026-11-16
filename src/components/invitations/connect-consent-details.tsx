@@ -44,9 +44,9 @@ export function ConnectConsentDetails({
           }
         />
       </summary>
-      <ul className="space-y-2 px-4 pb-4 pl-[4.25rem] text-left text-sm text-muted-foreground">
+      <ul className="list-disc space-y-2 px-4 pb-4 pl-[5.25rem] text-left text-sm text-muted-foreground marker:text-border">
         {items.map((item) => (
-          <ConnectConsentItem key={item} icon={icon} text={item} />
+          <ConnectConsentItem key={item} text={item} />
         ))}
       </ul>
     </details>

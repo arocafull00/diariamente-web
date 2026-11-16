@@ -1,5 +1,3 @@
-import { AlertTriangle } from "lucide-react";
-
 import { ConnectExistingPsychologist } from "@/components/invitations/connect-existing-psychologist";
 import { ConnectCodeCard } from "@/components/invitations/connect-code-card";
 import { ConnectConfirmCard } from "@/components/invitations/connect-confirm-card";
@@ -25,7 +23,6 @@ export async function ConnectPageContent({
   if (role !== "patient") {
     return (
       <ConnectStatusCard
-        icon={AlertTriangle}
         title="Enlace solo para pacientes"
         description="Este enlace es para cuentas de paciente."
         href="/"
@@ -62,7 +59,6 @@ export async function ConnectPageContent({
   if (!psychologist) {
     return (
       <ConnectStatusCard
-        icon={AlertTriangle}
         title="Este enlace ya no funciona"
         description="Pide a tu psicólogo/a que te mande uno nuevo."
         href="/"

@@ -48,7 +48,6 @@ export function ClinicInviteSheet({
     <Sheet>
       {variant === "button" ? (
         <SheetTrigger render={<Button />}>
-          <UserPlus data-icon="inline-start" aria-hidden="true" />
           Invitar psicólogo/a
         </SheetTrigger>
       ) : (
@@ -67,7 +66,7 @@ export function ClinicInviteSheet({
           <SheetTitle className="text-2xl font-bold tracking-tight">
             Invitar al equipo
           </SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="sr-only">
             Comparte un enlace y suma a tu equipo en un momento.
           </SheetDescription>
         </SheetHeader>

@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, LogOut } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -65,9 +65,7 @@ export function ProfileLeaveClinicButton() {
           >
             {pending ? (
               <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-            ) : (
-              <LogOut data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Saliendo..." : "Salir"}
           </AlertDialogAction>
         </AlertDialogFooter>

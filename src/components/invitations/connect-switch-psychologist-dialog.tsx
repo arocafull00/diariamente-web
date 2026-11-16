@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightLeft, EyeOff, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -50,7 +50,6 @@ export function ConnectSwitchPsychologistDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger render={<Button size="lg" className="w-full" />}>
-        <ArrowRightLeft data-icon="inline-start" aria-hidden="true" />
         Cambiar a {newName}
       </AlertDialogTrigger>
       <AlertDialogContent className={confirmDialogContentClassName}>
@@ -64,14 +63,8 @@ export function ConnectSwitchPsychologistDialog({
           }
           description={`Te desvincularás de ${currentName} y después podrás conectar con ${newName}.`}
         />
-        <div className="flex items-center gap-3 rounded-2xl bg-mood-hp-soft p-3">
-          <span
-            aria-hidden="true"
-            className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-mood-hp-strong shadow-xs"
-          >
-            <EyeOff className="size-5" />
-          </span>
-          <p className="min-w-0 flex-1 text-left text-sm leading-snug text-mood-foreground/80">
+        <div className="rounded-2xl bg-mood-hp-soft p-3">
+          <p className="text-left text-sm leading-snug text-mood-foreground/80">
             <span className="block font-semibold text-mood-hp-strong">
               {currentName} dejará de ver tus registros
             </span>
@@ -96,9 +89,7 @@ export function ConnectSwitchPsychologistDialog({
                 data-icon="inline-start"
                 aria-hidden="true"
               />
-            ) : (
-              <ArrowRightLeft data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Desvinculando..." : "Desvincular y continuar"}
           </AlertDialogAction>
         </AlertDialogFooter>

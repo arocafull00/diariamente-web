@@ -1,5 +1,3 @@
-import { CalendarDays } from "lucide-react";
-
 import { Face } from "@/components/faces/face";
 import { MoodBubble } from "@/components/records/mood-bubble";
 import { RecordIntensityDots } from "@/components/records/record-intensity-dots";
@@ -94,8 +92,7 @@ export function RecordMoodHero({
             label="Intensidad de la emoción principal"
           />
         </div>
-        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <CalendarDays className="size-4" aria-hidden="true" />
+        <p className="text-sm text-muted-foreground tabular-nums">
           <time dateTime={occurredAt.toISOString()}>{formatRecordDate(occurredAt)}</time>
         </p>
       </div>

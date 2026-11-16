@@ -105,7 +105,6 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
           icon={ShieldCheck}
           tone="green"
           title="Política de privacidad"
-          description="Qué datos guardamos, durante cuánto tiempo y tus derechos."
         />
       </Link>
       <Link
@@ -118,7 +117,6 @@ export function SettingsPrivacyGroup({ role }: SettingsPrivacyGroupProps) {
           icon={FileCheck}
           tone="primary"
           title="Términos de servicio"
-          description="Condiciones de uso para pacientes y profesionales."
         />
       </Link>
     </SettingsGroup>

@@ -1,4 +1,4 @@
-import { ChevronRight, Eye } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import type { GrammaticalGender } from "@/db/schema";
@@ -29,9 +29,6 @@ export function AccessLogItem({
         data-cuelume-tap="type"
         className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-muted/60"
       >
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-          <Eye className="size-5" aria-hidden="true" />
-        </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-semibold">
             Tu {getPsychologistNoun(grammaticalGender)}{" "}

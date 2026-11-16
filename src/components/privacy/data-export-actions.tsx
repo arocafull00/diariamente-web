@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Printer } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,6 @@ export function DataExportActions() {
         Volver
       </Button>
       <Button size="lg" onClick={() => window.print()}>
-        <Printer data-icon="inline-start" aria-hidden="true" />
         Guardar como PDF
       </Button>
     </div>

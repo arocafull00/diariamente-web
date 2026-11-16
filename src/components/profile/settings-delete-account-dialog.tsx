@@ -64,15 +64,10 @@ export function SettingsDeleteAccountDialog() {
           }
           description="Sentiremos que te vayas."
         />
-        <div className="flex items-center gap-3 rounded-2xl bg-mood-hu-soft p-3">
-          <span
-            aria-hidden="true"
-            className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-mood-hu-strong shadow-xs"
-          >
-            <TriangleAlert className="size-5" />
-          </span>
-          <p className="min-w-0 flex-1 text-sm leading-snug text-mood-foreground/80">
-            <span className="block font-semibold text-mood-hu-strong">
+        <div className="rounded-2xl bg-mood-hu-soft p-3">
+          <p className="text-sm leading-snug text-mood-foreground/80">
+            <span className="flex items-center gap-1.5 font-semibold text-mood-hu-strong">
+              <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
               No se puede deshacer
             </span>
             Se eliminarán todos tus datos de forma permanente.

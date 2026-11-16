@@ -1,6 +1,6 @@
 "use client";
 
-import { Gift, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -55,11 +55,8 @@ export function ReferralCodeForm({ defaultCode }: ReferralCodeFormProps) {
       onSubmit={handleSubmit}
       className="mt-4 flex flex-col gap-2 rounded-3xl border border-border/60 bg-card p-3 shadow-xs"
     >
-      <label htmlFor="referral-code" className="flex items-center gap-2 px-1 text-sm font-semibold">
-        <span className="flex size-7 items-center justify-center rounded-xl bg-mood-hp-soft text-mood-hp-strong">
-          <Gift className="size-4" aria-hidden="true" />
-        </span>
-        Código de invitación
+      <label htmlFor="referral-code" className="px-1 text-sm font-semibold">
+          Código de invitación
       </label>
       <div className="flex gap-2">
         <Input

@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle, Pencil, Save } from "lucide-react";
+import { LoaderCircle, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -138,7 +138,7 @@ export function ProfileEditSheet({
       <SheetContent side="right" className="sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Editar perfil</SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="sr-only">
             Actualiza tu foto y nombre.
           </SheetDescription>
         </SheetHeader>
@@ -190,9 +190,7 @@ export function ProfileEditSheet({
             <Button type="submit" size="lg" className="w-full" disabled={pending}>
               {pending ? (
                 <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-              ) : (
-                <Save data-icon="inline-start" aria-hidden="true" />
-              )}
+              ) : null}
               {pending ? "Guardando..." : "Guardar cambios"}
             </Button>
           </SheetFooter>

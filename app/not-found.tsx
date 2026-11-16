@@ -1,4 +1,3 @@
-import { House } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -27,7 +26,6 @@ export default function NotFound() {
         Esta página se ha perdido por el camino. Volvamos al inicio.
       </p>
       <Link href="/" data-cuelume-tap="" className={cn(buttonVariants({ size: "lg" }), "mt-8")}>
-        <House data-icon="inline-start" aria-hidden="true" />
         Volver al inicio
       </Link>
     </div>

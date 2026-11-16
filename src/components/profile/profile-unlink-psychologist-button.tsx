@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, Unlink } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -65,9 +65,7 @@ export function ProfileUnlinkPsychologistButton() {
           >
             {pending ? (
               <LoaderCircle className="animate-spin" data-icon="inline-start" aria-hidden="true" />
-            ) : (
-              <Unlink data-icon="inline-start" aria-hidden="true" />
-            )}
+            ) : null}
             {pending ? "Desvinculando..." : "Desvincular"}
           </AlertDialogAction>
         </AlertDialogFooter>
