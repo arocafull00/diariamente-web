@@ -142,14 +142,18 @@ export function useBodyFigureCamera({ onTap, dragPoint, onDrag }: UseBodyFigureC
   }
 
   function getFigurePointOnBody(client: Point) {
-    const matrix = svgRef.current?.getScreenCTM();
+    const svg = svgRef.current;
+    const matrix = svg?.getScreenCTM();
     const path = hitPathRef.current;
 
-    if (!matrix || !path) {
+    if (!svg || !matrix || !path) {
       return null;
     }
 
-    const point = new DOMPoint(client.x, client.y).matrixTransform(matrix.inverse());
+    const screenPoint = svg.createSVGPoint();
+    screenPoint.x = client.x;
+    screenPoint.y = client.y;
+    const point = screenPoint.matrixTransform(matrix.inverse());
 
     if (!path.isPointInFill(point) && !path.isPointInStroke(point)) {
       return null;
