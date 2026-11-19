@@ -23,6 +23,13 @@ function toError(error: unknown, message: string) {
   return new Error(message);
 }
 
+const NETWORK_ERROR_PATTERN =
+  /^(Failed to fetch|Load failed|NetworkError when attempting to fetch resource)/;
+
+function isNetworkError(error: Error) {
+  return error.name === "TypeError" && NETWORK_ERROR_PATTERN.test(error.message);
+}
+
 function writeToConsole(level: LogLevel, message: string, details: unknown[]) {
   if (process.env.NODE_ENV === "production") {
     return;
@@ -45,12 +52,19 @@ export const logger = {
   },
   error(message: string, error: unknown, context?: LogContext) {
     const exception = toError(error, message);
-
-    Sentry.logger.error(message, {
+    const logContext = {
       ...context,
       errorName: exception.name,
       errorMessage: redactSensitiveText(exception.message),
-    });
+    };
+
+    if (isNetworkError(exception)) {
+      Sentry.logger.warn(message, logContext);
+      writeToConsole("warn", message, [context, error]);
+      return;
+    }
+
+    Sentry.logger.error(message, logContext);
     Sentry.captureException(exception, {
       tags: { event: message },
       extra: context,

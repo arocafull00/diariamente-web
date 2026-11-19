@@ -30,24 +30,44 @@ export function useCachedScreen<K extends ScreenKey>(
       return;
     }
 
+    let cancelled = false;
+    const startedAt = performance.now();
+
     getToken()
       .then(() => load())
       .then((data) => {
-        if (!data) {
+        if (cancelled || !data) {
           return;
         }
 
         setEntry(key, { ownerId: userId, data });
       })
       .catch((error: unknown) => {
-        logger.error("screen.fetch_failed", error, { screen: key });
+        if (cancelled) {
+          return;
+        }
 
-        if (useScreenCacheStore.getState().entries[key]?.ownerId === userId) {
+        const hasCachedData =
+          useScreenCacheStore.getState().entries[key]?.ownerId === userId;
+
+        logger.error("screen.fetch_failed", error, {
+          screen: key,
+          online: navigator.onLine,
+          visibility: document.visibilityState,
+          durationMs: Math.round(performance.now() - startedAt),
+          hasCachedData,
+        });
+
+        if (hasCachedData) {
           return;
         }
 
         toast.error("Uy, no hemos podido actualizar la información");
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [
     getToken,
     hasHydrated,
